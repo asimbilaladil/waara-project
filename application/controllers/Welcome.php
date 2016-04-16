@@ -36,4 +36,26 @@ class Welcome extends CI_Controller {
 		$this->load->view('website/signup');
         $this->load->view('common/footer');
 	}
+	    //when admin login button is click
+    public function user_login_check() {
+        $email = $this->input->post('email', true);
+        $password = $this->input->post('password', true);
+
+        //$result = $this->UserModel->user_login_check_info($email, $password);
+
+        //if query found any result i.e userfound
+        if($result) {
+            $data['user_id'] = $result->user_id;
+            $data['message'] = 'Your are successfully Login && your session has been start';
+            $this->session->set_userdata($data);
+            redirect('Welcome/');
+
+        }else{
+            $data['message'] = ' Your Email ID or Password is invalid  !!!!! ';
+            $this->session->set_userdata($data);
+            redirect('Welcome/login');
+        }
+
+
+    }
 }

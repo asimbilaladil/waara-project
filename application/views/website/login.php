@@ -27,22 +27,34 @@
         <div class="page-section">
           <div class="container">
             <div class="row">
+                    <?php
+            $login_message = $this->session->userdata('message');
+            if ($login_message) {
+
+                echo "<div style='text-align: center;' class='alert alert-danger alert-dismissable'>
+                                                         <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
+                                                               $login_message
+                                                        </div>";
+                $this->session->unset_userdata('message');
+            }
+        ?>
+
                 <!--Element Section Start-->
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="cs-signup-form">
                         <h6>login</h6>
-                        <form>
+                        <form action="<?php echo site_url('Welcome/user_login_check') ?>" method="post">
                             <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="cs-field-holder cs-has-error">
                                     <i class="icon-user"></i>
-                                    <input type="text" placeholder="Username or email address *">
+                                    <input name="email" type="text" placeholder="Username or email address *">
                                 </div>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="cs-field-holder">
                                     <i class="icon-lock2"></i>
-                                    <input type="password" placeholder="Password *">
+                                    <input name="password" type="password" placeholder="Password *">
                                 </div>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

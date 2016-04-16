@@ -1,0 +1,23 @@
+<?php if( ! defined('BASEPATH')) exit('No direct script access allowed');
+class UserModel extends CI_Model
+{
+
+    function __construct()
+    {
+        parent::__construct();
+    }
+
+
+    public function user_login_check_info($user_email, $user_password){
+        $this->db->select('*');
+        $this->db->from('user');
+        $this->db->where('email', $user_email);
+        $this->db->where('password', $user_password);
+        $quary_result=$this->db->get();
+        $result=$quary_result->row();
+        
+        return $result;
+    }
+
+
+}
