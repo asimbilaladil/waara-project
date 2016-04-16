@@ -36,8 +36,20 @@
         <a href="../../index2.html"><b>e</b>Admin Login</a>
     </div><!-- /.login-logo -->
     <div class="login-box-body">
+
+        <?php
+            $login_message = $this->session->userdata('message');
+            if ($login_message) {
+
+                echo "<div style='text-align: center;' class='alert alert-success alert-dismissable'>
+                                                         <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
+                                                               $login_message
+                                                        </div>";
+                $this->session->unset_userdata('message');
+            }
+        ?>
+
         <p class="login-box-msg">Sign in to start your session
-<?php echo $admin_email; ?>
         </p>
         <form action="<?php echo site_url('Admin/admin_login_check') ?>" method="post" id="defaultForm">
             <div class="form-group has-feedback">
@@ -58,6 +70,7 @@
 
     </div><!-- /.login-box-body -->
 </div><!-- /.login-box -->
+
 
 
 <!-- Bootstrap 3.3.5 -->
