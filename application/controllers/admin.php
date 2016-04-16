@@ -8,10 +8,19 @@ class Admin extends CI_Controller {
 
     function index()
     {
+        if($this->input->post('custom_field', true)){
+           //Insert custom field 
+           $this->addNewCustomField($this->input->post('custom_field', true));
+
+
+        } else {
+      
+
         $this->load->view('admin/common/header');
         $this->load->view('admin/common/sidebar');
         $this->load->view('admin/index');
         $this->load->view('admin/common/footer');
+    }
 
     }
 
@@ -41,12 +50,9 @@ class Admin extends CI_Controller {
 
     }
 
-    function addNewCustomField() {
-
-        $customField = $this->input->post('custom_field', true);
+    function addNewCustomField($customField) {
 
         //replace space with _ to make name of the field
-
         $fieldName = str_replace( ' ', '_' , $customField);
 
         $data = array (
@@ -71,6 +77,7 @@ class Admin extends CI_Controller {
         }
 
     }
+
 
 }
 ?>

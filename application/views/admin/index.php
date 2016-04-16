@@ -18,7 +18,10 @@
 
         <?php
             if( isset($data) ) {
-                echo($data['message']);
+                echo "<div style='text-align: center;' class='alert alert-success alert-dismissable'>
+                                                         <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"
+                                                               .$data['message'].
+                                                        "</div>";                
             } 
         ?>
 
@@ -31,7 +34,7 @@
                             <h3 class="box-title">Add new Custom Fields</h3>
                         </div><!-- /.box-header -->
                         <!-- form start -->
-                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/addNewCustomField') ?>" method="post" >
+                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/index') ?>" method="post" >
                             <div class="box-body">
 
                                 <div class="form-group">
