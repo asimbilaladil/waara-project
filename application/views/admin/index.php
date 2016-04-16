@@ -7,9 +7,7 @@
                 Dashboard
                 <small >Control panel</small>
             </h1>
-            <p style="padding-top: 5px; text-align: center;">
 
-            </p>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li class="active">Dashboard</li>
@@ -17,93 +15,70 @@
         </section>
         <!-- Main content -->
         <section class="content">
-            <!-- Small boxes (Stat box) -->
-            <div class="row" >
-                <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
-                    <div class="small-box bg-aqua">
-                        <div class="inner">
-                            <h3>150</h3>
-                            <p>New Orders</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-bag"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div><!-- ./col -->
-                <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
-                    <div class="small-box bg-green">
-                        <div class="inner">
-                            <h3>60<!-- <sup style="font-size: 20px">%</sup>--></h3>
-                            <p>Trade Amount</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-stats-bars"></i>
-                        </div>
-                        <a href="<?php echo base_url(); ?>report" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div><!-- ./col -->
-                <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
-                    <div class="small-box bg-yellow">
-                        <div class="inner">
-                            <h3>5</h3>
-                            <p>User Registrations</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-person-add"></i>
-                        </div>
-                        <a href="<?php echo base_url(); ?>user" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div><!-- ./col -->
-                <div class="col-lg-3 col-xs-6">
-                    <!-- small box -->
-                    <div class="small-box bg-red">
-                        <div class="inner">
-                            <h3>65</h3>
-                            <p>Unique Visitors</p>
-                        </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
-                        </div>
-                        <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-                    </div>
-                </div><!-- ./col -->
-            </div><!-- /.row -->
+
             <!-- Main row -->
             <div class="row">
                 <div class="col-md-12">
-                    <div class="box box-primary ">
-                        <div class="box-header">
-                            <h3 class="box-title">Inbox</h3>
+
+         
+
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Add new Category</h3>
                         </div><!-- /.box-header -->
-                        <div class="box-body">
-                            <table id="example1" class="table table-bordered table-striped">
-                                <thead>
-                                <tr>
-                                    <!--                                            <th>Period of Validation</th>-->
-                                    <th>Exporter Name</th>
-                                    <th>Authorized Person (Primary)</th>
-                                    <th>Epb Registration no.</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                        <!-- form start -->
+                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/setEvent') ?>" method="post" >
+                            <div class="box-body">
 
-                                    <tr>
-                                        <!--<td><?php echo $user->periodOfValidation; ?></td>-->
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div><!-- /.box-body -->
-                        <div class="box-footer no-padding">
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Title</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" name="event_title" class="form-control" id="" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Description</label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" rows="3" name="event_description"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Category</label>
+                                    <div class="col-sm-6">
+                                       <select class="form-control" name="category_id">
+                                            <option value="">Select</option>
+                                           <?php foreach($category as $cat):?>
+                                           <option value="<?php echo $cat['cat_id']?>"><?php echo $cat['cat_name']?></option>
+                                           <?php endforeach;?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Start Date</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" name="event_startDate" class="form-control datepicker"  id="" placeholder="">
+                                    </div>
+                                </div>
 
-                        </div>
-                    </div><!-- /. box -->
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">End Date</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" name="event_endDate" class="form-control datepicker" id="" placeholder="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-2">
+
+                                        <button type="submit" class="btn btn-primary btn-block">Save</button>
+                                    </div>
+                                </div>
+                            </div><!-- /.box-body -->
+                            <div class="box-footer">
+
+                            </div><!-- /.box-footer -->
+                        </form>
+                    </div><!-- /.box -->
                 </div>
 
             </div><!-- /.row (main row) -->
