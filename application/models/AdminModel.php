@@ -8,7 +8,7 @@ class AdminModel extends CI_Model
     }
 
 
-    public function admin_login_check_info($admin_email, $admin_password){
+    public function admin_login_check_info( $admin_email, $admin_password ){
         $this->db->select('*');
         $this->db->from('user');
         $this->db->where('email', $admin_email);
@@ -20,4 +20,22 @@ class AdminModel extends CI_Model
     }
 
 
+
+    /**
+     * Insert Method
+     * @param tableName
+     * @param dataObject
+     */
+    public function insert( $tableName ,$data ){
+
+        if ($this->db->insert($tableName, $data) ) {
+
+            return true;
+
+        } 
+
+        return false;
+
+    }
+    
 }

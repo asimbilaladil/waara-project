@@ -2,7 +2,7 @@
     <div class="pull-right hidden-xs">
         <b>Version</b> 1.1.0
     </div>
-    <strong>Designed & Developed By - <a href="www.facebook.com/shubhandu.sharma">Shubhandu</a>.</strong>
+    <strong>Designed & Developed By - <a href="www.facebook.com/shubhandu.sharma">Riksof</a>.</strong>
 </footer>
 
   

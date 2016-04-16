@@ -39,6 +39,36 @@ class Admin extends CI_Controller {
             redirect('admin/login');
         }
 
+    }
+
+    function addNewCustomField() {
+
+        $customField = $this->input->post('custom_field', true);
+
+        //replace space with _ to make name of the field
+
+        $fieldName = str_replace( ' ', '_' , $customField);
+
+        $data = array (
+            'input_type' => 'TEXT',
+            'field_name' => $fieldName,
+            'field_lable' => $customField
+            );
+
+
+        if ( $this->AdminModel->insert('customfields', $data) ) {
+
+            $data = array (
+                'message' => 'successfully inserted'
+                );
+
+            $this->load->view('admin/common/header');
+            $this->load->view('admin/common/sidebar');
+            $this->load->view('admin/index', array('data' => $data));
+            $this->load->view('admin/common/footer');
+
+            
+        }
 
     }
 
