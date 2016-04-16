@@ -19,5 +19,12 @@ class UserModel extends CI_Model
         return $result;
     }
 
+    public function getCustomFields (){
+        $this->db->select('*');
+        $this->db->from('customfields');
+        $quary_result=$this->db->get();
+        $result = $quary_result->result();
+        return $result;
+    }
 
 }
