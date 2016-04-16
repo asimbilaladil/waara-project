@@ -24,4 +24,10 @@ class Welcome extends CI_Controller {
 		$this->load->view('website/index');
         $this->load->view('common/footer');
 	}
+	public function login()
+	{
+		$this->load->view('common/header');
+		$this->load->view('website/login');
+        $this->load->view('common/footer');
+	}
 }

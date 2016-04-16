@@ -124,7 +124,7 @@
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <div class="cs-user">
                             <ul>
-                                <li><a data-target="#cs-login" href="remote.html" data-toggle="modal"><i class="icon-login"></i>Login</a></li>
+                                <li><a data-target="" href="<?php echo base_url("/index.php/Welcome/login") ?> " data-toggle="modal"><i class="icon-login"></i>Login</a></li>
                                 <li><a data-target="#cs-signup" href="remote.html" data-toggle="modal"><i class="icon-user2"></i>Signup</a></li>
                                 <li>
                                     <div class="cs-user-login">
