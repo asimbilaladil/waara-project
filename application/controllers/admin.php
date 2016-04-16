@@ -10,8 +10,13 @@ class Admin extends CI_Controller {
     {
         if($this->input->post('custom_field', true)){
            //Insert custom field 
-           $this->addNewCustomField($this->input->post('custom_field', true));
+            $this->addNewCustomField($this->input->post('custom_field', true));
 
+            $data = array (
+            'input_type' => 'TEXT',
+            'field_name' => $fieldName,
+            'field_lable' => $customField
+            );
 
         } else {
       
@@ -32,7 +37,7 @@ class Admin extends CI_Controller {
     //when admin login button is click
     function admin_login_check() {
         $admin_email = $this->input->post('email', true);
-        $admin_password = $this->input->post('password', true);
+        $admin_password = md5($this->input->post('password', true));
         $result = $this->AdminModel->admin_login_check_info($admin_email, $admin_password);
 
         //if query found any result i.e userfound

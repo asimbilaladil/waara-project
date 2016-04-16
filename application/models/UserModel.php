@@ -18,6 +18,10 @@ class UserModel extends CI_Model
         
         return $result;
     }
+    
+    /**
+     * Get Custom fields Method
+     */
 
     public function getCustomFields (){
         $this->db->select('*');
@@ -26,5 +30,22 @@ class UserModel extends CI_Model
         $result = $quary_result->result();
         return $result;
     }
+
+    /**
+     * Insert Method
+     * @param tableName
+     * @param dataObject
+     */
+    public function insert( $tableName ,$data ){
+
+        if ($this->db->insert($tableName, $data) ) {
+
+            return true;
+
+        } 
+
+        return false;
+
+    }    
 
 }
