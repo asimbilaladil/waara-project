@@ -1,2 +1,0 @@
-# waara-project
-Read me
