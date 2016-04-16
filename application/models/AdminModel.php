@@ -7,12 +7,17 @@ class AdminModel extends CI_Model
         parent::__construct();
     }
 
-    /*
-     * get a admin by admin_id
-     */
-    function get_admin($id)
-    {
-        return $this->db->get_where('admin',array('admin_id'=>$id))->row_array();
+
+    public function admin_login_check_info($admin_email, $admin_password){
+        $this->db->select('*');
+        $this->db->from('user');
+        $this->db->where('email', $admin_email);
+        $this->db->where('password', $admin_password);
+        $quary_result=$this->db->get();
+        $result=$quary_result->row();
+        
+        return $result;
     }
+
 
 }
