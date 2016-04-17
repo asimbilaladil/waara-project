@@ -16,49 +16,6 @@
         <!-- Main content -->
         <section class="content">
 
-        <?php
-            if( isset($data) ) {
-                echo "<div style='text-align: center;' class='alert alert-success alert-dismissable'>
-                                                         <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"
-                                                               .$data['message'].
-                                                        "</div>";                
-            } 
-        ?>
-
-            <!-- Main row -->
-            <div class="row">
-                <div class="col-md-12">
-
-                    <div class="box box-success">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Add new Custom Fields</h3>
-                        </div><!-- /.box-header -->
-                        <!-- form start -->
-                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/index') ?>" method="post" >
-                            <div class="box-body">
-
-                                <div class="form-group">
-                                    <label for="" class="col-sm-2 control-label">Title</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="custom_field" class="form-control" id="" placeholder="" required>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-2">
-
-                                        <button type="submit" class="btn btn-primary btn-block">Save</button>
-                                    </div>
-                                </div>
-                            </div><!-- /.box-body -->
-                            <div class="box-footer">
-
-                            </div><!-- /.box-footer -->
-                        </form>
-                    </div><!-- /.box -->
-                </div>
-
-            </div><!-- /.row (main row) -->
 
         </section><!-- /.content -->
     </div>
