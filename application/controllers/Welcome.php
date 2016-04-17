@@ -21,27 +21,50 @@ class Welcome extends CI_Controller {
 		$this->load->view('website/login');
         $this->load->view('common/footer');
 	}
-	public function signup()
-	{
-		if($this->input->post()){
+	public function signup() {
 
-			$token = $this->generateToken();
+		if($this->input->post()) {
+
+            $customFields = array();
+            $customFields['result'] = $this->UserModel->getCustomFields();
+
+            $token = $this->generateToken(); 
             $data = array (
-            'first_name' => $this->input->post('firstName', true),
-            'last_name' => $this->input->post('lastName', true),
-            'email' => $this->input->post('email', true),
-            'password' => md5($this->input->post('password', true)),
-            'phone' => $this->input->post('phone', true),
-            'type' => "USER",
-            'verified' => "false",
-            'token' => $token
-            );
-        $emailMessage = "Please verify your account using this link \n".base_url()."/Welcome/verify?token=".$token;     
-        $this->UserModel->insert('user', $data);
-        mail($data["email"],"User verification",$msg);
+                'first_name' => $this->input->post('firstName', true),
+                'last_name' => $this->input->post('lastName', true),
+                'email' => $this->input->post('email', true),
+                'password' => md5($this->input->post('password', true)),
+                'phone' => $this->input->post('phone', true),
+                'type' => "USER",
+                'verified' => "false",
+                'token' => $token
+                );
+            $emailMessage = "Please verify your account using this link \n".base_url()."/Welcome/verify?token=".$token;
 
-        redirect('Welcome/login');
+            //get inserted id of the user
+            $userInsertedId = $this->UserModel->insert('user', $data);
 
+            //iterate every custom field and check if the key exist in posted data. If exist insert it in user custom data
+            foreach( $customFields['result'] as $value ) {
+
+                if( array_key_exists( $value->field_name, $this->input->post() ) ) {
+
+                    $userCustomData = array (
+                        'user_id' => $userInsertedId,
+                        'customField_id' => $value->customField_id,
+                        'key' => $value->field_name,
+                        'value' => $this->input->post( $value->field_name , true)
+                        );
+
+                    $this->UserModel->insert('user_custom_data', $userCustomData);
+
+                }     
+
+            }
+
+            mail($data["email"],"User verification",$msg);
+
+            redirect('Welcome/login');
 
 		} else {
 			$data   = array();
@@ -51,6 +74,8 @@ class Welcome extends CI_Controller {
 	        $this->load->view('common/footer');
     	}
 	}
+
+
 	    //when admin login button is click
     public function user_login_check() {
         $email = $this->input->post('email', true);
@@ -71,8 +96,8 @@ class Welcome extends CI_Controller {
             redirect('Welcome/login');
         }
 
-
     }
+
     //genrate token for user verification
     public function generateToken($length = 15) {
 

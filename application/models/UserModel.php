@@ -40,11 +40,11 @@ class UserModel extends CI_Model
 
         if ($this->db->insert($tableName, $data) ) {
 
-            return true;
+            return $this->db->insert_id();
 
         } 
 
-        return false;
+        return -1 ;
 
     }    
 
