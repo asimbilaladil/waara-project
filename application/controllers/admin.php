@@ -7,28 +7,25 @@ class Admin extends CI_Controller {
     }
 
     function index()
-    {
+    {   
+        //if custom field is inserted
         if($this->input->post('custom_field', true)){
-           //Insert custom field 
-            $this->addNewCustomField($this->input->post('custom_field', true));
 
-            $data = array (
-            'input_type' => 'TEXT',
-            'field_name' => $fieldName,
-            'field_lable' => $customField
-            );
+           //Insert custom field 
+
+            $customField = $this->input->post('custom_field', true);
+            $this->addNewCustomField( $customField );
 
         } else {
       
+            $this->load->view('admin/common/header');
+            $this->load->view('admin/common/sidebar');
+            $this->load->view('admin/index');
+            $this->load->view('admin/common/footer');
 
-        $this->load->view('admin/common/header');
-        $this->load->view('admin/common/sidebar');
-        $this->load->view('admin/index');
-        $this->load->view('admin/common/footer');
+        }
+
     }
-
-    }
-
 
     function login() {
         $this->load->view('admin/login');
@@ -55,6 +52,11 @@ class Admin extends CI_Controller {
 
     }
 
+    /**
+     * Insert Custom field data
+     * 1. @param : customField
+     */
+
     function addNewCustomField($customField) {
 
         //replace space with _ to make name of the field
@@ -66,7 +68,6 @@ class Admin extends CI_Controller {
             'field_lable' => $customField
             );
 
-
         if ( $this->AdminModel->insert('customfields', $data) ) {
 
             $data = array (
@@ -77,7 +78,6 @@ class Admin extends CI_Controller {
             $this->load->view('admin/common/sidebar');
             $this->load->view('admin/index', array('data' => $data));
             $this->load->view('admin/common/footer');
-
             
         }
 
