@@ -584,23 +584,28 @@ table.fc-border-separate {
     
 
 </style>
-<body class="hold-transition skin-green sidebar-mini">
-<div class="wrapper">
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>
-                Dashboard
-                <small >Control panel</small>
-            </h1>
 
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Dashboard</li>
-            </ol>
-        </section>
-        <!-- Main content -->
-    <div id="calendar"></div>
-
+   <div class="main-section">
+    <div class="page-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <ul class="cs-breadcrumb">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Login</a></li>
+                    </ul>
+                </div>
+                <div class="page-sidebar col-lg-1 col-md-1 col-sm-12 col-xs-12">
+                </div>
+                <!--Element Section Start-->
+                <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+                    <div class="cs-signup-form">
+                        <div class="row">
+                            <div id="calendar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
