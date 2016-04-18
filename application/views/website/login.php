@@ -27,6 +27,9 @@
         <div class="page-section">
           <div class="container">
             <div class="row">
+                 <div class="page-sidebar col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                        
+                    </div>
                     <?php
             $login_message = $this->session->userdata('message');
             if ($login_message) {
