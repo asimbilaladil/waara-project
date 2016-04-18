@@ -57,6 +57,12 @@
         start: new Date(y, m, 28),
         end: new Date(y, m, 28),
         url: 'http://google.com/'
+      },
+        {
+        title: 'Click for PARTY',
+        start: new Date(y, m, 28),
+        end: new Date(y, m, 28),
+        url: 'http://google.com/'
       }
     ]
   });

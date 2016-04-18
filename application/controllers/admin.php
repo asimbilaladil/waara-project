@@ -20,6 +20,25 @@ class Admin extends CI_Controller {
         $this->load->view('admin/login');
     }
 
+    function addJK() {   
+      
+        $this->load->view('admin/common/header');
+        $this->load->view('admin/common/sidebar');
+        $this->load->view('admin/addJK');
+        $this->load->view('admin/common/footer');
+
+    }
+
+    function addDuty() {   
+      
+        $this->load->view('admin/common/header');
+        $this->load->view('admin/common/sidebar');
+        $this->load->view('admin/addDuty');
+        $this->load->view('admin/common/footer');
+
+    }
+
+
     //when admin login button is click
     function admin_login_check() {
         $admin_email = $this->input->post('email', true);
@@ -90,6 +109,7 @@ class Admin extends CI_Controller {
 
 
     }
+
 
 
 }
