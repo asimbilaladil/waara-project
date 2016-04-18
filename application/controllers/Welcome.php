@@ -81,7 +81,7 @@ class Welcome extends CI_Controller {
         $email = $this->input->post('email', true);
         $password = md5($this->input->post('password', true));
 
-        //$result = $this->UserModel->user_login_check_info($email, $password);
+        $result = $this->UserModel->user_login_check_info($email, $password);
 
         //if query found any result i.e userfound
         if($result) {
@@ -93,7 +93,7 @@ class Welcome extends CI_Controller {
         }else{
             $data['message'] = ' Your Email ID or Password is invalid  !!!!! ';
             $this->session->set_userdata($data);
-            redirect('Welcome/login');
+            redirect('Welcome/home');
         }
 
     }
@@ -109,4 +109,17 @@ class Welcome extends CI_Controller {
 	    }
 	    return $randomString;
 	}
+
+
+
+
+
+    //Home controller
+    public function home() {
+
+        $this->load->view('common/header');
+        $this->load->view('website/home');
+        $this->load->view('common/footer');
+
+    }
 }

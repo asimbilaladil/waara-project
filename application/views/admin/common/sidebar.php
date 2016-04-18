@@ -17,10 +17,6 @@
              <li class="treeview">
                 <a href="<?php echo site_url('admin/addDuty'); ?>"><i class="fa fa-desktop"></i> <span>Add Duty</span></a>                
             </li>
-           
-
-
-
 
         </ul>
     </section>
