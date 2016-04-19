@@ -18,6 +18,7 @@
 
         <?php
             if( isset($data) ) {
+                echo '<script>alert("DATA")</script>';
                 echo "<div style='text-align: center;' class='alert alert-success alert-dismissable'>
                                                          <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"
                                                                .$data['message'].
@@ -34,7 +35,7 @@
                             <h3 class="box-title">Add new JK</h3>
                         </div><!-- /.box-header -->
                         <!-- form start -->
-                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/addNewCustomField') ?>" method="post" >
+                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/addJK') ?>" method="post" >
                             <div class="box-body">
 
                                 <div class="form-group">

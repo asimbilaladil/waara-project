@@ -604,9 +604,13 @@ table.fc-border-separate {
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                 <li class="active">Dashboard</li>
             </ol>
+          
+                            <div id="calendar"></div>
+                </div>
         </section>
+ 
         <!-- Main content -->
-    <div id="calendar"></div>
+
 
     </div>
 </div>

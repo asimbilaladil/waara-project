@@ -21,11 +21,29 @@ class Admin extends CI_Controller {
     }
 
     function addJK() {   
-      
-        $this->load->view('admin/common/header');
-        $this->load->view('admin/common/sidebar');
-        $this->load->view('admin/addJK');
-        $this->load->view('admin/common/footer');
+        if($this->input->post()) {
+            $data = array (
+                'name' => $this->input->post('name', true),
+                'location' => $this->input->post('location', true)
+            );
+        if ( $this->AdminModel->addJK( $data ) ) {
+
+            $data = array (
+                    'message' => 'JK created successfully.'
+            );
+            $this->load->view('admin/common/header');
+            $this->load->view('admin/common/sidebar');
+            $this->load->view('admin/addJK',$data);
+            $this->load->view('admin/common/footer');
+        }
+
+      } else {
+            $this->load->view('admin/common/header');
+            $this->load->view('admin/common/sidebar');
+            $this->load->view('admin/addJK');
+            $this->load->view('admin/common/footer');
+      }
+
 
     }
 

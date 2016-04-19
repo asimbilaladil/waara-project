@@ -37,5 +37,24 @@ class AdminModel extends CI_Model
         return false;
 
     }
+
+    /**
+     * Add New JK Method
+     * @param data [ 
+     *      name : string 
+     *      location : string    
+     *      ]
+     */
+    public function addJK( $data ){
+
+        if ($this->db->insert('JK', $data) ) {
+
+            return true;
+
+        } 
+
+        return false;
+
+    }
     
 }
