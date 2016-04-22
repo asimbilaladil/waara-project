@@ -8,11 +8,8 @@ class Admin extends CI_Controller {
 
     function index()
     {   
-      
-        $this->load->view('admin/common/header');
-        $this->load->view('admin/common/sidebar');
-        $this->load->view('admin/index');
-        $this->load->view('admin/common/footer');
+    
+        $this->loadView('admin/index', null);
 
     }
 
@@ -31,19 +28,17 @@ class Admin extends CI_Controller {
             $data = array (
                     'message' => 'JK created successfully.'
             );
-            $this->load->view('admin/common/header');
-            $this->load->view('admin/common/sidebar');
-            $this->load->view('admin/addJK',$data);
-            $this->load->view('admin/common/footer');
+
+
+            $this->loadView('admin/addJK', $data);
+
         }
 
       } else {
-            $this->load->view('admin/common/header');
-            $this->load->view('admin/common/sidebar');
-            $this->load->view('admin/addJK');
-            $this->load->view('admin/common/footer');
-      }
 
+            $this->loadView('admin/addJK', null);
+
+      }
 
     }
 
@@ -77,6 +72,10 @@ class Admin extends CI_Controller {
                 }
             }
 
+            $data = array (
+                'message' => 'Duty successfully inserted.'
+            );
+
         }
 
         $jamatKhanas = $this->AdminModel->getJamatKhana();
@@ -91,10 +90,7 @@ class Admin extends CI_Controller {
         $data['jkArray'] = $jkArray;
         $data['jkDb'] = $jamatKhanas;
 
-        $this->load->view('admin/common/header');
-        $this->load->view('admin/common/sidebar');
-        $this->load->view('admin/addDuty', $data);
-        $this->load->view('admin/common/footer');
+        $this->loadView('admin/addDuty', $data);
 
     }
 
@@ -149,22 +145,29 @@ class Admin extends CI_Controller {
                     'message' => 'successfully inserted'
                     );
 
-                $this->load->view('admin/common/header');
-                $this->load->view('admin/common/sidebar');
-                $this->load->view('admin/addNewCustomField', array('data' => $data));
-                $this->load->view('admin/common/footer');
+                $this->loadView('admin/addNewCustomField', $data);
                 
             }
 
-
         } else {
-      
-            $this->load->view('admin/common/header');
-            $this->load->view('admin/common/sidebar');
-            $this->load->view('admin/addNewCustomField');
-            $this->load->view('admin/common/footer');
+            
+            $this->loadView('admin/addNewCustomField', null);
 
         }
+
+    }
+
+    /**
+     * Load view 
+     * @param 1 : view name
+     * @param 2 : data to be render on view. If no data pass null
+     */
+    function loadView($view, $data) {
+
+        $this->load->view('admin/common/header');
+        $this->load->view('admin/common/sidebar');
+        $this->load->view($view, array('data' => $data));
+        $this->load->view('admin/common/footer');
 
     }
 
