@@ -69,5 +69,13 @@ class AdminModel extends CI_Model
         return $result;
     }
 
+    public function getAllfromTable( $tableName ) {
+        $this->db->select('*');
+        $this->db->from( $tableName );
+        $quary_result=$this->db->get();
+        $result = $quary_result->result();
+        return $result;        
+    }
+
     
 }
