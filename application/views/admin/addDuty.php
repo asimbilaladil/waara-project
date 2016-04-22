@@ -56,7 +56,7 @@
                                     <label for="" class="col-sm-2 control-label">Select JK</label>
                                     <div class="col-sm-6">
 <select name="jk[]" multiple id="jk">                              
-<?php foreach($jkDb as $category):?>                                              
+<?php foreach($data['jkDb'] as $category):?>                                              
     <?php $selected = in_array($category->id,$jkArray) ? " selected " : null;?>
         <option value="<?=$category->id?>"
             <?=$selected?> ><?=$category->name?>
