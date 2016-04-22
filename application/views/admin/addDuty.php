@@ -17,7 +17,7 @@
         <section class="content">
 
         <?php
-            if( isset($data) ) {
+            if( isset($data['message']) ) {
                 echo "<div style='text-align: center;' class='alert alert-success alert-dismissable'>
                                                          <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"
                                                                .$data['message'].
@@ -34,7 +34,7 @@
                             <h3 class="box-title">Add new Duty</h3>
                         </div><!-- /.box-header -->
                         <!-- form start -->
-                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/addNewCustomField') ?>" method="post" >
+                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('admin/addDuty') ?>" method="post" >
                             <div class="box-body">
 
                                 <div class="form-group">
@@ -43,29 +43,29 @@
                                         <input type="text" name="name" class="form-control" id="" placeholder="" required>
                                     </div>
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Description</label>
+                                    <div class="col-sm-6">
+                                        <textarea type="text" name="description" class="form-control" id="" placeholder="" required >  
+                                        </textarea>
+                                    </div>
+                                </div>   
+
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Select JK</label>
                                     <div class="col-sm-6">
-                                          <select class="form-control" id="sel1">
-                                            <option>1</option>
-                                            <option>2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                          </select>                                    
+<select name="jk[]" multiple id="jk">                              
+<?php foreach($jkDb as $category):?>                                              
+    <?php $selected = in_array($category->id,$jkArray) ? " selected " : null;?>
+        <option value="<?=$category->id?>"
+            <?=$selected?> ><?=$category->name?>
+        </option>
+<?php endforeach?>
+</select>                                   
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="" class="col-sm-2 control-label">Start Time</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="location" class="form-control" id="" placeholder="" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="" class="col-sm-2 control-label">End Time</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="location" class="form-control" id="" placeholder="" required>
-                                    </div>
-                                </div>                                
+
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-2">
 

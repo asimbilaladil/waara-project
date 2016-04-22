@@ -54,7 +54,20 @@ class AdminModel extends CI_Model
         } 
 
         return false;
-
     }
+
+
+    /**
+     * Get JK
+     */
+
+    public function getJamatKhana (){
+        $this->db->select('*');
+        $this->db->from('jk');
+        $quary_result=$this->db->get();
+        $result = $quary_result->result();
+        return $result;
+    }
+
     
 }
