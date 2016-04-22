@@ -48,13 +48,56 @@ class Admin extends CI_Controller {
     }
 
     function addDuty() {   
-      
+    
+        if($this->input->post()) {
+
+            $selectJkIds = $this->input->post('jk', true);
+
+            $dutyItem = array (
+                "name" => $this->input->post('name', true),
+                "description" => $this->input->post('description', true)
+            );
+
+            //insert in duty table
+            $this->AdminModel->insert('duty', $dutyItem);
+
+            //get inserted id of duty
+            $dutyInsertedId = $this->db->insert_id();
+
+            if( count( $selectJkIds ) > 0 ) {
+                //iterate selected jk and add there ids 
+                foreach( $selectJkIds as $id ) {
+
+                    $dutyJkItem = array(
+                        "jk_id" => $id,
+                        "duty_id" => $dutyInsertedId
+                    );
+
+                    $this->AdminModel->insert('duty_jk', $dutyJkItem);
+                }
+            }
+
+        }
+
+        $jamatKhanas = $this->AdminModel->getJamatKhana();
+
+        $jkArray = array();
+
+        //populate array with Id as key and value
+        foreach($jamatKhanas as $item => $value) {
+            $jkArray[$value->id] = $value->name;
+        }
+
+        $data['jkArray'] = $jkArray;
+        $data['jkDb'] = $jamatKhanas;
+
         $this->load->view('admin/common/header');
         $this->load->view('admin/common/sidebar');
-        $this->load->view('admin/addDuty');
+        $this->load->view('admin/addDuty', $data);
         $this->load->view('admin/common/footer');
 
     }
+
 
 
     //when admin login button is click
@@ -122,9 +165,6 @@ class Admin extends CI_Controller {
             $this->load->view('admin/common/footer');
 
         }
-
-
-
 
     }
 
