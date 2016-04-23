@@ -38,6 +38,17 @@
                         </div><!-- /.box-header -->
 
 
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">Duty</label>
+                            <div class="col-sm-6">
+                <?php echo form_dropdown('duty', $data['duty'], ''); ?>
+                            </div>
+                        </div>
+
+
+                        <div class="box-footer">
+
+                        </div><!-- /.box-footer -->
 
 
                     <div class="row large-centered">
@@ -64,7 +75,6 @@
 
                             }
                         ?>                                
-
                                 </tbody>
                             </table>
                         </div>
