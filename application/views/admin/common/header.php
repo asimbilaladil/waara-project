@@ -39,8 +39,6 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>includes/plugins/formValidation/js/formValidation.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>includes/plugins/formValidation/js/framework/bootstrap.js"></script>
 
-
-
     </head>
     <header class="main-header">
         <!-- Logo -->

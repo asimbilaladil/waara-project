@@ -157,6 +157,34 @@ class Admin extends CI_Controller {
 
     }
 
+
+    function assign_duty() {   
+
+        $data['users'] = $this->AdminModel->getAllfromTable( 'user' );
+
+        $dutyArray = array();
+
+        foreach( $this->AdminModel->getAllfromTable( 'duty' ) as $item ) {
+
+            $dutyArray[ $item->duty_id ] = $item->name;
+
+        }
+
+        $data['duty'] = $dutyArray;
+
+        $this->loadView('admin/assign_duty', $data);
+
+    }
+
+    function assignment() {
+
+        $id =  $this->input->get('id');
+
+        $this->loadView('admin/assignment', null);
+
+    }
+
+
     /**
      * Load view 
      * @param 1 : view name
