@@ -80,6 +80,11 @@
                                     '<tr>
                                         <td> <a href="#">'. $item->name .' </a></td>
                                         <td> <a href="#">'. $item->location .' </a></td>
+                                        <td> 
+                                            <span class="glyphicon glyphicon-pencil"></span>
+                                            <span>&nbsp;&nbsp;</span>
+                                           <a href="deleteJK?id='.$item->id.'" > <span class="glyphicon glyphicon-trash"></span></a>
+                                         </td>
                                     </tr>';
 
                             }

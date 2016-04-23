@@ -199,6 +199,17 @@ class Admin extends CI_Controller {
 
     }
 
+    /**
+     * Load view 
+     * @param 1 : jk id
+     */
+    function deleteJK() {
+
+        $id = $this->input->get('id', TRUE);
+        $this->AdminModel->deleteJamatKhana( $id );
+        redirect('admin/addJK');
+
+    }
 
 
 }
