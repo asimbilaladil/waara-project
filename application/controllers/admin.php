@@ -35,8 +35,8 @@ class Admin extends CI_Controller {
         }
 
       } else {
-
-            $this->loadView('admin/addJK', null);
+            $data['JK'] = $this->AdminModel->getJamatKhana();
+            $this->loadView('admin/addJK', $data);
 
       }
 
