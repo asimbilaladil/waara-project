@@ -36,30 +36,51 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">Assign Duty</h3>
                         </div><!-- /.box-header -->
+                        <!-- form start -->
+                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/assign_duty') ?>" method="post" >
+                            <div class="box-body">
+
+                                <div class="form-group">
+                                    <label for="" class="col-sm-1 control-label">Duty:</label>
+                                    <div class="col-sm-2">
+                                    <!-- Select for Duty -->
+                                    <select id="duty" name="duty" onchange="selctcity()">
+                                        <option value="0"> Select Duty </option>
+                                        <?php
+
+                                    foreach($data['duty'] as $row) {
+
+                                        echo '
+                                        <option value="'. $row->duty_id .'" > '. $row->name .' </option>';
+                                            }
+                                        ?>
+                                    </select> <!-- Select end for Duty -->
+
+                                    <!-- Select for Jk -->
+                                    <select name="jk" id="jk" class="option3" >
+                                    <option value=""> Select Jamatkhana  - </option>
+                                     <!-- Select end for JK -->
+
+                                    </div>
+                                </div>
+                            </div><!-- /.box-body -->
 
 
-                        <div class="form-group">
-                            <label for="" class="col-sm-2 control-label">Duty</label>
-                            <div class="col-sm-6">
-                <?php echo form_dropdown('duty', $data['duty'], ''); ?>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
+
+                                </div>
                             </div>
-                        </div>
-
-
-                        <div class="box-footer">
-
-                        </div><!-- /.box-footer -->
-
-
-                    <div class="row large-centered">
-                            <input type="text" id="search" placeholder="Type to search..." />
-                            <table id="table" width="80%">
+                            <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
                                         <th>First Name</th>
                                         <th>Last Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
+                                        <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -71,15 +92,18 @@
                                         <td> <a href="#">'. $item->last_name .' </a></td>
                                         <td> <a href="#">'. $item->email .' </a></td>
                                         <td> <a href="#">'. $item->phone .' </a></td>
+                                        <td> <a href="'. site_url('Admin/assign_duty') .'"> <input type="button" value ="Assign"/> </a></td>
                                     </tr>';
 
                             }
                         ?>                                
                                 </tbody>
                             </table>
-                        </div>
-                        
+                    </div>
+                            <div class="box-footer">
 
+                            </div><!-- /.box-footer -->
+                        </form>
                     </div><!-- /.box -->
                 </div>
 
@@ -88,3 +112,28 @@
         </section><!-- /.content -->
     </div>
 </div>
+
+
+
+
+
+
+
+
+<script>
+    function selctcity() {
+
+        console.log('inside');
+
+   var state=$('#duty').val();
+
+        $.post('<?php echo site_url('Admin/ajaxJk') ?>', {
+            state:state
+        }, function(data) {
+        
+            $('#jk').html(data);
+
+        }); 
+
+}
+</script>

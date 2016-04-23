@@ -80,5 +80,25 @@ class AdminModel extends CI_Model
         $this->db->delete('jk', array('id' => $id)); 
     }    
 
+        /*
+        SELECT jk.name 
+        FROM duty, duty_jk, jk
+        WHERE duty.duty_id = '1' AND 
+        duty.duty_id = duty_jk.duty_id AND
+        duty_jk.jk_id = jk.id
+        */
+
+    public function getJkbyId( $id ) {
+
+        $query = $this->db->query('SELECT jk.name, jk.id 
+                        FROM duty, duty_jk, jk
+                        WHERE duty.duty_id = '. $id .' AND 
+                        duty.duty_id = duty_jk.duty_id AND
+                        duty_jk.jk_id = jk.id');
+        $query->result();
+
+        return $query->result();
+
+    }
     
 }

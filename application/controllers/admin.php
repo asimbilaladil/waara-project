@@ -170,7 +170,7 @@ class Admin extends CI_Controller {
 
         }
 
-        $data['duty'] = $dutyArray;
+        $data['duty'] = $this->AdminModel->getAllfromTable( 'duty' );
 
         $this->loadView('admin/assign_duty', $data);
 
