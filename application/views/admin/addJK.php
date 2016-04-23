@@ -17,7 +17,7 @@
         <section class="content">
 
         <?php
-            if( isset($data) ) {
+            if( isset($data['message']) ) {
                 echo '<script>alert("DATA")</script>';
                 echo "<div style='text-align: center;' class='alert alert-success alert-dismissable'>
                                                          <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"
@@ -56,12 +56,53 @@
                                         <button type="submit" class="btn btn-primary btn-block">Save</button>
                                     </div>
                                 </div>
+                                </br> </br>
+                        <div class="box-header with-border">
+                                <h3 class="box-title">List Of JK:</h3>
+                            </div>
+                                <div class="form-group">
+                                    <div class="col-sm-4">
+                                        <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
+
+                                    </div>
+                                </div>
+                            <table class="table table-striped" id="table" width="80%">
+                                <thead>
+                                    <tr>
+                                        <th> Name</th>
+                                        <th> Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        <?php
+                            foreach($data['JK'] as $item) {
+                                echo 
+                                    '<tr>
+                                        <td> <a href="#">'. $item->name .' </a></td>
+                                        <td> <a href="#">'. $item->location .' </a></td>
+                                        <td> 
+                                            <span class="glyphicon glyphicon-pencil"></span>
+                                            <span>&nbsp;&nbsp;</span>
+                                           <a href="deleteJK?id='.$item->id.'" > <span class="glyphicon glyphicon-trash"></span></a>
+                                         </td>
+                                    </tr>';
+
+                            }
+                        ?>                                
+                                </tbody>
+                            </table>                                    
                             </div><!-- /.box-body -->
                             <div class="box-footer">
 
                             </div><!-- /.box-footer -->
                         </form>
                     </div><!-- /.box -->
+                                            
+                        
+                        
+
+                    </div>
+                    
                 </div>
 
             </div><!-- /.row (main row) -->

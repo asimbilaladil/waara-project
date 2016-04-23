@@ -35,8 +35,8 @@ class Admin extends CI_Controller {
         }
 
       } else {
-
-            $this->loadView('admin/addJK', null);
+            $data['JK'] = $this->AdminModel->getJamatKhana();
+            $this->loadView('admin/addJK', $data);
 
       }
 
@@ -199,6 +199,17 @@ class Admin extends CI_Controller {
 
     }
 
+    /**
+     * Load view 
+     * @param 1 : jk id
+     */
+    function deleteJK() {
+
+        $id = $this->input->get('id', TRUE);
+        $this->AdminModel->deleteJamatKhana( $id );
+        redirect('admin/addJK');
+
+    }
 
 
 }

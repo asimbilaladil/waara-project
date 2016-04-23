@@ -76,6 +76,9 @@ class AdminModel extends CI_Model
         $result = $quary_result->result();
         return $result;        
     }
+    public function deleteJamatKhana ($id){
+        $this->db->delete('jk', array('id' => $id)); 
+    }    
 
     
 }
