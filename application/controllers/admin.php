@@ -160,19 +160,43 @@ class Admin extends CI_Controller {
 
     function assign_duty() {   
 
+        if($this->input->post()) {
+
+            $assignDuty = array (
+                "user_id" => $this->input->post('userid', true),
+                "jk_id" => $this->input->post('jk', true),
+                "duty_id" => $this->input->post('duty', true),
+            );
+
+            $data = array (
+                'message' => 'Assign Duty Successfully.'
+            );
+
+        } 
+
         $data['users'] = $this->AdminModel->getAllfromTable( 'user' );
 
         $dutyArray = array();
 
-        foreach( $this->AdminModel->getAllfromTable( 'duty' ) as $item ) {
-
-            $dutyArray[ $item->duty_id ] = $item->name;
-
-        }
-
         $data['duty'] = $this->AdminModel->getAllfromTable( 'duty' );
 
         $this->loadView('admin/assign_duty', $data);
+
+        
+    }
+
+
+    //ajax call to populate jk dropdown
+    function ajaxJk() {
+
+        $state=$this->input->post('state');
+
+        $jk = $this->AdminModel->getJkbyId( $state );
+
+        echo '<option value="">Select Jamatkhana </option>';
+            foreach($jk as $row) { 
+                 echo "<option value='".$row->id."'>".$row->name."</option>";
+        }
 
     }
 

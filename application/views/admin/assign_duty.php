@@ -47,11 +47,11 @@
                                     <select id="duty" name="duty" onchange="selctcity()">
                                         <option value="0"> Select Duty </option>
                                         <?php
+                                            foreach($data['duty'] as $row) {
 
-                                    foreach($data['duty'] as $row) {
+                                                echo '
+                                                <option value="'. $row->duty_id .'" > '. $row->name .' </option>';
 
-                                        echo '
-                                        <option value="'. $row->duty_id .'" > '. $row->name .' </option>';
                                             }
                                         ?>
                                     </select> <!-- Select end for Duty -->
@@ -85,6 +85,8 @@
                                 </thead>
                                 <tbody>
                         <?php
+
+                        
                             foreach($data['users'] as $item) {
                                 echo 
                                     '<tr>
@@ -92,7 +94,7 @@
                                         <td> <a href="#">'. $item->last_name .' </a></td>
                                         <td> <a href="#">'. $item->email .' </a></td>
                                         <td> <a href="#">'. $item->phone .' </a></td>
-                                        <td> <a href="'. site_url('Admin/assign_duty') .'"> <input type="button" value ="Assign"/> </a></td>
+                                        <td> <input type="hidden" name="userid" value="'.$item->user_id.'" />  <input type="submit" value ="Assign"/> </a></td>
                                     </tr>';
 
                             }
@@ -114,17 +116,8 @@
 </div>
 
 
-
-
-
-
-
-
 <script>
     function selctcity() {
-
-        console.log('inside');
-
    var state=$('#duty').val();
 
         $.post('<?php echo site_url('Admin/ajaxJk') ?>', {
