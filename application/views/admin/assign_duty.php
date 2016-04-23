@@ -44,7 +44,7 @@
                                     <label for="" class="col-sm-1 control-label">Duty:</label>
                                     <div class="col-sm-2">
                                     <!-- Select for Duty -->
-                                    <select id="duty" name="duty" onchange="selctcity()">
+                                    <select class="btn btn-default dropdown-toggle" id="duty" name="duty" onchange="selctcity()">
                                         <option value="0"> Select Duty </option>
                                         <?php
                                             foreach($data['duty'] as $row) {
@@ -57,7 +57,7 @@
                                     </select> <!-- Select end for Duty -->
 
                                     <!-- Select for Jk -->
-                                    <select name="jk" id="jk" class="option3" >
+                                    <select class="btn btn-default dropdown-toggle" name="jk" id="jk" class="option3" >
                                     <option value=""> Select Jamatkhana  - </option>
                                      <!-- Select end for JK -->
 
@@ -69,7 +69,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <div class="col-sm-4">
-                                    <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
+                                    <input class="form-control" type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
 
                                 </div>
                             </div>
@@ -94,7 +94,7 @@
                                         <td> <a href="#">'. $item->last_name .' </a></td>
                                         <td> <a href="#">'. $item->email .' </a></td>
                                         <td> <a href="#">'. $item->phone .' </a></td>
-                                        <td> <input type="hidden" name="userid" value="'.$item->user_id.'" />  <input type="submit" value ="Assign"/> </a></td>
+                                        <td> <input type="hidden" name="userid" value="'.$item->user_id.'" />  <input  type="submit" value ="Assign" class="btn btn-info"  /> </a></td>
                                     </tr>';
 
                             }
