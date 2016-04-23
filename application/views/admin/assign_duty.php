@@ -36,24 +36,27 @@
                         <div class="box-header with-border">
                             <h3 class="box-title">Assign Duty</h3>
                         </div><!-- /.box-header -->
+                        <!-- form start -->
+                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/addJK') ?>" method="post" >
+                            <div class="box-body">
+
+                                <div class="form-group">
+                                    <label for="" class="col-sm-1 control-label">Duty:</label>
+                                    <div class="col-sm-2">
+                                        <?php echo form_dropdown('duty', $data['duty'], ''); ?>
+                                    </div>
+                                </div>
+                            </div><!-- /.box-body -->
 
 
-                        <div class="form-group">
-                            <label for="" class="col-sm-2 control-label">Duty</label>
-                            <div class="col-sm-6">
-                <?php echo form_dropdown('duty', $data['duty'], ''); ?>
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="col-sm-4">
+                                    <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
+
+                                </div>
                             </div>
-                        </div>
-
-
-                        <div class="box-footer">
-
-                        </div><!-- /.box-footer -->
-
-
-                    <div class="row large-centered">
-                            <input type="text" id="search" placeholder="Type to search..." />
-                            <table id="table" width="80%">
+                            <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
                                         <th>First Name</th>
@@ -77,9 +80,14 @@
                         ?>                                
                                 </tbody>
                             </table>
-                        </div>
+                        
                         
 
+                    </div>
+                            <div class="box-footer">
+
+                            </div><!-- /.box-footer -->
+                        </form>
                     </div><!-- /.box -->
                 </div>
 
