@@ -166,14 +166,18 @@ class Admin extends CI_Controller {
                 "user_id" => $this->input->post('userid', true),
                 "jk_id" => $this->input->post('jk', true),
                 "duty_id" => $this->input->post('duty', true),
+                "start_date" => $this->input->post('startDate', true),
+                "end_date" => $this->input->post('endDate', true)
             );
 
             $data = array (
                 'message' => 'Assign Duty Successfully.'
             );
-
+            //insert in assign_duty table
+            $this->AdminModel->insert('assign_duty', $assignDuty);
         } 
-
+       
+        
         $data['users'] = $this->AdminModel->getAllfromTable( 'user' );
 
         $dutyArray = array();

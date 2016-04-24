@@ -20,7 +20,6 @@
 
         <?php
             if( isset($data['message']) ) {
-                echo '<script>alert("DATA")</script>';
                 echo "<div style='text-align: center;' class='alert alert-success alert-dismissable'>
                                                          <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"
                                                                .$data['message'].
@@ -42,7 +41,7 @@
                         <div class="col-sm-12">
 
   <div class="form-group">
-                                  <div class="col-sm-4">
+                                  <div class="col-sm-3">
 
     <label >Duty:</label>
                            <select id="duty" name="duty" onchange="selctcity()"  class="form-control">
@@ -57,12 +56,21 @@
                                         ?>
                                     </select> 
                                     </div>
-                                  <div class="col-sm-4">
+                                  <div class="col-sm-3">
 
     <label >Jamatkhana:</label>
            <select name="jk" id="jk"  class="form-control" >
                                     <option value=""> Select Jamatkhana  - </option>
                                     </select>    </div>
+                                     <div class="col-sm-3">
+   <label >Start Date:</label>
+                                        <input type='text' class="form-control" id='startDate' name="startDate" />
+   </div>
+      <div class="col-sm-3">
+   <label >End Date:</label>
+                                        <input type='text' class="form-control" id='endDate'  name="endDate" />
+   </div>
+                               
   </div>
  
 </div>
@@ -71,7 +79,7 @@
 
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <div class="col-sm-4">
+                                <div class="col-sm-6">
 
                                     <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
 
@@ -122,10 +130,18 @@
 
 
 <script>
+
+$(function() {
+    $( "#startDate" ).datepicker({  minDate: new Date() });
+    $( "#endDate" ).datepicker({  minDate: new Date() });
+
+  });
    var validateForm =  function () {
         var duty = document.forms["assignDuty"]["duty"].value;
         var jk = document.forms["assignDuty"]["jk"].value;
-        if (duty == 0 || jk == "") {
+        var startDate = document.forms["assignDuty"]["startDate"].value;
+        var endDate = document.forms["assignDuty"]["endDate"].value;
+        if (duty == 0 || jk == "" ||  startDate == "" || endDate == "") {
             return false;
         }
     }
