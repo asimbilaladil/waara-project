@@ -44,7 +44,7 @@
         <!-- Logo -->
         <a href="<?php echo site_url('Admin') ?>" class="logo">
             <!-- mini logo for sidebar mini 50x50 pixels -->
-            <span class="logo-mini"><b>e</b>E</span>
+            <span class="logo-mini"><b>W</b></span>
             <!-- logo for regular state and mobile devices -->
             <span class="logo-lg">Waara</span>
         </a>
