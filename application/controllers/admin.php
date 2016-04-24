@@ -8,8 +8,18 @@ class Admin extends CI_Controller {
 
     function index()
     {   
-    
-        $this->loadView('admin/index', null);
+        $data = $this->AdminModel->get_calendar_duties(); 
+        $events = [];
+        foreach($data as $row) {
+
+             $subevent['title'] = $row->duty_name;
+             $subevent['start'] = $row->start_date;
+             $subevent['end'] = $row->end_date;
+
+             array_push($events, $subevent);
+        }       
+
+        $this->loadView('admin/index', $events);
 
     }
 
@@ -219,7 +229,7 @@ class Admin extends CI_Controller {
      * @param 2 : data to be render on view. If no data pass null
      */
     function loadView($view, $data) {
-
+        //error_reporting(0);
         $this->load->view('admin/common/header');
         $this->load->view('admin/common/sidebar');
         $this->load->view($view, array('data' => $data));
