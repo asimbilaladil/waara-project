@@ -37,14 +37,15 @@
                             <h3 class="box-title">Assign Duty</h3>
                         </div><!-- /.box-header -->
                         <!-- form start -->
-                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/assign_duty') ?>" method="post" >
+                        <form name="assignDuty" id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/assign_duty') ?>" method="post" onsubmit="return validateForm()">
                             <div class="box-body">
+                        <div class="col-sm-12">
 
-                                <div class="form-group">
-                                    <label for="" class="col-sm-1 control-label">Duty:</label>
-                                    <div class="col-sm-2">
-                                    <!-- Select for Duty -->
-                                    <select id="duty" name="duty" onchange="selctcity()">
+  <div class="form-group">
+                                  <div class="col-sm-4">
+
+    <label >Duty:</label>
+                           <select id="duty" name="duty" onchange="selctcity()"  class="form-control">
                                         <option value="0"> Select Duty </option>
                                         <?php
                                             foreach($data['duty'] as $row) {
@@ -54,21 +55,24 @@
 
                                             }
                                         ?>
-                                    </select> <!-- Select end for Duty -->
-
-                                    <!-- Select for Jk -->
-                                    <select name="jk" id="jk" class="option3" >
-                                    <option value=""> Select Jamatkhana  - </option>
-                                     <!-- Select end for JK -->
-
+                                    </select> 
                                     </div>
-                                </div>
-                            </div><!-- /.box-body -->
+                                  <div class="col-sm-4">
+
+    <label >Jamatkhana:</label>
+           <select name="jk" id="jk"  class="form-control" >
+                                    <option value=""> Select Jamatkhana  - </option>
+                                    </select>    </div>
+  </div>
+ 
+</div>
+                          
 
 
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <div class="col-sm-4">
+
                                     <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
 
                                 </div>
@@ -102,6 +106,7 @@
                                 </tbody>
                             </table>
                     </div>
+                      </div><!-- /.box-body -->
                             <div class="box-footer">
 
                             </div><!-- /.box-footer -->
@@ -117,6 +122,13 @@
 
 
 <script>
+   var validateForm =  function () {
+        var duty = document.forms["assignDuty"]["duty"].value;
+        var jk = document.forms["assignDuty"]["jk"].value;
+        if (duty == 0 || jk == "") {
+            return false;
+        }
+    }
     function selctcity() {
    var state=$('#duty').val();
 
