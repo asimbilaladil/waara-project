@@ -39,7 +39,7 @@ class Admin extends CI_Controller {
                     'message' => 'JK created successfully.'
             );
 
-
+            $data['JK'] = $this->AdminModel->getJamatKhana();
             $this->loadView('admin/addJK', $data);
 
         }
