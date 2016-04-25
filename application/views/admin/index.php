@@ -614,7 +614,10 @@ table.fc-border-separate {
                             <h3 class="box-title">List of Duties</h3>
                         </div><!-- /.box-header -->
                             <div class="box-body">
-                           <div class="col-sm-12">
+   
+                            <div> 
+ 
+                        <div class="col-sm-12">
                  <div class="form-group">
                                     
                                     <div class="col-sm-9">
@@ -625,9 +628,6 @@ table.fc-border-separate {
                                 </div> 
 
                             </div>
-                            <div> 
- 
-
                                 <div class="form-group">
                                     
                                     <div class="col-sm-6">
@@ -640,7 +640,7 @@ table.fc-border-separate {
                                         <button type="submit" class="btn btn-primary btn-block">Save</button>
                                     </div>
                                     <div class="col-sm-2">
-</div>
+                                    </div>
                                 </div>
 
                             </div>

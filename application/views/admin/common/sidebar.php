@@ -25,6 +25,9 @@
                 <a href="<?php echo site_url('admin/assign_duty'); ?>"><i class="fa fa-desktop"></i> <span>Assign Duty</span></a>                
             </li>
 
+             <li class="treeview">
+                <a href="<?php echo site_url('admin/user'); ?>"><i class="fa fa-user"></i> <span>Assign Duty</span></a>                
+            </li>
 
         </ul>
     </section>

@@ -238,7 +238,7 @@ class Admin extends CI_Controller {
     }
 
     /**
-     * Load view 
+     * deleteJK
      * @param 1 : jk id
      */
     function deleteJK() {
@@ -249,6 +249,16 @@ class Admin extends CI_Controller {
 
     }
 
+    /**
+     * User
+     */
+    function user() {
+
+        $data['user'] = $this->AdminModel->getAllfromTable( 'user' );
+
+        $this->loadView('admin/user', $data);
+
+    }
 
 }
 ?>
