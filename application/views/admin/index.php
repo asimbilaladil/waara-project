@@ -14,6 +14,16 @@ var events =  <?php  echo json_encode($data); ?> ;
 
 
   $('#calendar').fullCalendar({
+        dayClick: function(date, allDay, jsEvent, view) {
+
+        if (allDay) {
+            alert('Clicked on the entire day: ' + date);
+        }else{
+            alert('Clicked on the slot: ' + date);
+        }
+
+
+    },
     header: {
       right: 'prev,next today',
       center: 'title',
@@ -22,6 +32,7 @@ var events =  <?php  echo json_encode($data); ?> ;
     editable: true,
     events: events
   });
+
 })
 
 </script>
@@ -575,7 +586,7 @@ table.fc-border-separate {
             <div class="row">
                           <div class="col-md-12">
 
-                <div class="col-md-12">
+                <div class="col-md-6">
 
                     <div class="box box-success">
                         <div class="box-header with-border">
@@ -595,6 +606,65 @@ table.fc-border-separate {
                         </form>
                     </div><!-- /.box -->
                 </div>
+
+                <div class="col-md-6">
+
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">List of Duties</h3>
+                        </div><!-- /.box-header -->
+                            <div class="box-body">
+                           <div class="col-sm-12">
+                 <div class="form-group">
+                                    
+                                    <div class="col-sm-9">
+<select name="jk[]"  id="jk" class="form-control">                              
+</select>
+
+                                    </div>
+                                </div> 
+
+                            </div>
+                            <div> 
+ 
+
+                                <div class="form-group">
+                                    
+                                    <div class="col-sm-6">
+                                        <input type="text" name="location" class="form-control" id="" placeholder="Search User.." required>
+                                    </div>
+                                </div> 
+                                <div class="form-group">
+                  
+                                    <div class="col-sm-3">
+                                        <button type="submit" class="btn btn-primary btn-block">Save</button>
+                                    </div>
+                                    <div class="col-sm-2">
+</div>
+                                </div>
+
+                            </div>
+                            </br></br></br></br>
+                                    <div class="col-sm-9">
+                                    <select name="jk[]" multiple id="jk" class="form-control">                              
+                                            <option value="" ></option>
+                                            <option value="" ></option>
+                                            <option value="" ></option>
+                                            <option value="" ></option>
+                                            <option value="" ></option>
+                                            <option value="" ></option>
+                                            <option value="" ></option>
+                                            <option value="" ></option>
+                                            <option value="" ></option>
+                                    </select>                                   
+                                    </div>
+                      
+                            </div><!-- /.box-body -->
+                            <div class="box-footer">
+
+                            </div><!-- /.box-footer -->
+                    </div><!-- /.box -->
+                </div>                
                 </div>
 
             </div><!-- /.row (main row) -->

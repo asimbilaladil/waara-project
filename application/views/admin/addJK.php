@@ -18,7 +18,6 @@
 
         <?php
             if( isset($data['message']) ) {
-                echo '<script>alert("DATA")</script>';
                 echo "<div style='text-align: center;' class='alert alert-success alert-dismissable'>
                                                          <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"
                                                                .$data['message'].
@@ -56,6 +55,8 @@
                                         <button type="submit" class="btn btn-primary btn-block">Save</button>
                                     </div>
                                 </div>
+                                                        </form>
+                                                        
                                 </br> </br>
                         <div class="box-header with-border">
                                 <h3 class="box-title">List Of JK:</h3>
@@ -95,7 +96,6 @@
                             <div class="box-footer">
 
                             </div><!-- /.box-footer -->
-                        </form>
                     </div><!-- /.box -->
                                             
                         
