@@ -244,7 +244,7 @@ class Admin extends CI_Controller {
     function deleteJK() {
 
         $id = $this->input->get('id', TRUE);
-        $this->AdminModel->deleteJamatKhana( $id );
+        $this->AdminModel->delete( 'id', $id, 'jk');
         redirect('admin/addJK');
 
     }
@@ -255,10 +255,39 @@ class Admin extends CI_Controller {
     function user() {
 
         $data['user'] = $this->AdminModel->getAllfromTable( 'user' );
+        $data['jk'] = $this->AdminModel->getAllfromTable( 'jk' );
 
         $this->loadView('admin/user', $data);
 
     }
 
+    function addUserRole() {
+
+     if($this->input->post()) {
+
+           echo  $userId = $this->input->post('userId', true);
+           echo $type = $this->input->post('type', true);
+           echo $jk_id = $this->input->post('jk_id', true);
+
+            $data = array (
+                "type" => $type, 
+                "jk_id" => $jk_id 
+            );
+            $this->AdminModel->update( 'user', 'user_id', $userId, $data );
+            redirect('admin/user');
+
+        }
+    }
+
+    /**
+     * deleteUser
+     */
+    function deleteUser() {
+
+        $id = $this->input->get('id', TRUE);
+        $this->AdminModel->delete( 'user_id', $id, 'user');
+        redirect('admin/user');
+
+    }
 }
 ?>
