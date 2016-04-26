@@ -95,11 +95,14 @@ class AdminModel extends CI_Model
                         WHERE duty.duty_id = '. $id .' AND 
                         duty.duty_id = duty_jk.duty_id AND
                         duty_jk.jk_id = jk.id');
+        
         $query->result();
 
         return $query->result();
 
     }
+
+
     public function get_calendar_duties() {
 
         $query = $this->db->query('CALL get_calendar_duties()');
@@ -108,6 +111,28 @@ class AdminModel extends CI_Model
         return $query->result();
 
     }
+
+
+    /*
+        SELECT duty.name, duty.duty_id 
+        FROM duty, duty_jk, jk
+        WHERE jk.id = '1' AND 
+        duty.duty_id = duty_jk.duty_id AND
+        duty_jk.jk_id = jk.id
+    */
+    public function getDutyByJk( $id ) {
+
+        $query = $this->db->query('SELECT duty.name, duty.duty_id 
+                        FROM duty, duty_jk, jk
+                        WHERE jk.id = ' . $id . ' AND 
+                        duty.duty_id = duty_jk.duty_id AND
+                        duty_jk.jk_id = jk.id');
+
+        $query->result();
+
+        return $query->result();
+
+    }    
 
 
     

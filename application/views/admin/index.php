@@ -558,117 +558,123 @@ table.fc-border-separate {
 
 </style>
 
-
-
-
-
-
 <body class="hold-transition skin-green sidebar-mini">
-<div class="wrapper">
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-            <h1>
-                Dashboard
-                <small >Control panel</small>
-            </h1>
-
-            <ol class="breadcrumb">
-                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                <li class="active">Dashboard</li>
-            </ol>
-        </section>
-        <!-- Main content -->
-        <section class="content">
-
-      
-            <!-- Main row -->
-            <div class="row">
-                          <div class="col-md-12">
-
-                <div class="col-md-6">
-
-                    <div class="box box-success">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Assigned Duties</h3>
-                        </div><!-- /.box-header -->
-                        <!-- form start -->
-                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/addNewCustomField') ?>" method="post" >
-                            <div class="box-body">
-
-                            <div id="calendar"></div>
-
-                      
-                            </div><!-- /.box-body -->
-                            <div class="box-footer">
-
-                            </div><!-- /.box-footer -->
-                        </form>
-                    </div><!-- /.box -->
-                </div>
-
-                <div class="col-md-6">
-
-                    <div class="box box-success">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">List of Duties</h3>
-                        </div><!-- /.box-header -->
-                            <div class="box-body">
-   
-                            <div> 
- 
-                        <div class="col-sm-12">
-                 <div class="form-group">
-                                    
-                                    <div class="col-sm-9">
-<select name="jk[]"  id="jk" class="form-control">                              
-</select>
-
+    <div class="wrapper">
+        <div class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header">
+                <h1>
+                    Dashboard
+                    <small >Control panel</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li class="active">Dashboard</li>
+                </ol>
+            </section>
+            <!-- Main content -->
+            <section class="content">
+                <!-- Main row -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Assigned Duties</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <!-- form start -->
+                                <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/addNewCustomField') ?>" method="post" >
+                                    <div class="box-body">
+                                        <div id="calendar"></div>
                                     </div>
-                                </div> 
-
+                                    <!-- /.box-body -->
+                                    <div class="box-footer">
+                                    </div>
+                                    <!-- /.box-footer -->
+                                </form>
                             </div>
-                                <div class="form-group">
-                                    
-                                    <div class="col-sm-6">
-                                        <input type="text" name="location" class="form-control" id="" placeholder="Search User.." required>
+                            <!-- /.box -->
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">List of Duties</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div>
+                                        <div class="col-sm-12">
+                                            <div class="form-group">
+                                                <div class="col-sm-9">
+                                                    <select name="jk" id="jk" onchange="ajaxCallDuty()"  id="jk" class="form-control">
+                                                    <?php
+                                                        foreach($data['jk'] as $jk) {
+                                                            echo '<option value="'. $jk->id .'"> '. $jk->name .' </option>';
+                                                        }
+                                                        
+                                                        ?>   
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <input list="users" name="users" class="form-control" id="" 
+                                                    placeholder="Search User.." required>
+                                                <datalist id="users">
+                                                    <?php
+                                                        foreach($data['users'] as $user) {
+                                                            echo '<option id="' . $user->user_id . '" value="' . $user->first_name . '">' ;
+                                                        }
+                                                        ?>
+                                                </datalist>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-3">
+                                                <button type="submit" class="btn btn-primary btn-block">Save</button>
+                                            </div>
+                                            <div class="col-sm-2">
+                                            </div>
+                                        </div>
                                     </div>
-                                </div> 
-                                <div class="form-group">
-                  
-                                    <div class="col-sm-3">
-                                        <button type="submit" class="btn btn-primary btn-block">Save</button>
-                                    </div>
-                                    <div class="col-sm-2">
+                                    </br></br></br></br>
+                                    <div class="col-sm-9">
+                                        <select id="duty" name="duty"   class="form-control">
+                                            <option value="0"> Select Duty </option>
+                                        </select>
                                     </div>
                                 </div>
-
+                                <!-- /.box-body -->
+                                <div class="box-footer">
+                                </div>
+                                <!-- /.box-footer -->
                             </div>
-                            </br></br></br></br>
-                                    <div class="col-sm-9">
-                                    <select name="jk[]" multiple id="jk" class="form-control">                              
-                                            <option value="" ></option>
-                                            <option value="" ></option>
-                                            <option value="" ></option>
-                                            <option value="" ></option>
-                                            <option value="" ></option>
-                                            <option value="" ></option>
-                                            <option value="" ></option>
-                                            <option value="" ></option>
-                                            <option value="" ></option>
-                                    </select>                                   
-                                    </div>
-                      
-                            </div><!-- /.box-body -->
-                            <div class="box-footer">
-
-                            </div><!-- /.box-footer -->
-                    </div><!-- /.box -->
-                </div>                
+                            <!-- /.box -->
+                        </div>
+                    </div>
                 </div>
-
-            </div><!-- /.row (main row) -->
-
-        </section><!-- /.content -->
+                <!-- /.row (main row) -->
+            </section>
+            <!-- /.content -->
+        </div>
     </div>
-</div>
+
+
+<script>
+
+function ajaxCallDuty() {
+   var state=$('#jk').val();
+
+        $.post('<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>', {
+            state:state
+        }, function(data) {
+        
+            $('#duty').html(data);
+
+        }); 
+
+}
+
+</script>

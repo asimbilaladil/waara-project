@@ -8,7 +8,7 @@ class Admin extends CI_Controller {
 
     function index()
     {   
-        $data = $this->AdminModel->get_calendar_duties(); 
+/*        $data = $this->AdminModel->get_calendar_duties(); 
         $events = [];
         foreach($data as $row) {
 
@@ -17,9 +17,33 @@ class Admin extends CI_Controller {
              $subevent['end'] = $row->end_date;
 
              array_push($events, $subevent);
-        }       
+        }*/
 
-        $this->loadView('admin/index', $events);
+        $duties = $this->AdminModel->getAllfromTable('jk');
+
+        $users = $this->AdminModel->getAllfromTable('user');
+
+        $data['users'] = $users;
+
+        $data['jk'] = $duties;
+
+        //getDutyByJk
+
+        $this->loadView('admin/index', $data);
+
+    }
+
+    function ajaxGetDutyFromJk() {
+
+        $state=$this->input->post('state');
+
+        $duty = $this->AdminModel->getDutyByJk( $state );
+
+        echo '<option value="">Select Duty </option>';
+            foreach($duty as $row) { 
+                 echo "<option value='".$row->duty_id."'>".$row->name."</option>";
+        }
+        
 
     }
 
