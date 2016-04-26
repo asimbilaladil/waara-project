@@ -33,7 +33,7 @@
 <body class="hold-transition login-page">
 <div class="login-box">
     <div class="login-logo">
-        <a href="../../index2.html"><b>e</b>Admin Login</a>
+       <b>Admin Login</b>
     </div><!-- /.login-logo -->
     <div class="login-box-body">
 
@@ -51,7 +51,7 @@
 
         <p class="login-box-msg">Sign in to start your session
         </p>
-        <form action="<?php echo site_url('Admin/admin_login_check') ?>" method="post" id="defaultForm">
+        <form action="<?php echo site_url('Login/index') ?>" method="post" id="defaultForm">
             <div class="form-group has-feedback">
                 <input type="email" name="email" class="form-control" placeholder="Email">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>

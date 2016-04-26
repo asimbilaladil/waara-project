@@ -3,7 +3,15 @@ class Admin extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model('AdminModel');
+        $id = $this->session->userdata('user_id');
+        if ($id == NULL) {
+            redirect('Login/');
+
+        } else {
+            $this->load->model('AdminModel');
+
+        }
+
     }
 
     function index()
@@ -21,10 +29,6 @@ class Admin extends CI_Controller {
 
         $this->loadView('admin/index', $events);
 
-    }
-
-    function login() {
-        $this->load->view('admin/login');
     }
 
     function addJK() {   
@@ -101,29 +105,6 @@ class Admin extends CI_Controller {
         $data['jkDb'] = $jamatKhanas;
 
         $this->loadView('admin/addDuty', $data);
-
-    }
-
-
-
-    //when admin login button is click
-    function admin_login_check() {
-        $admin_email = $this->input->post('email', true);
-        $admin_password = md5($this->input->post('password', true));
-        $result = $this->AdminModel->admin_login_check_info($admin_email, $admin_password);
-
-        //if query found any result i.e userfound
-        if($result) {
-            $data['user_id'] = $result->user_id;
-            $data['message'] = 'Your are successfully Login && your session has been start';
-            $this->session->set_userdata($data);
-            redirect('admin/');
-
-        }else{
-            $data['message'] = ' Your Email ID or Password is invalid  !!!!! ';
-            $this->session->set_userdata($data);
-            redirect('admin/login');
-        }
 
     }
 
@@ -289,5 +270,17 @@ class Admin extends CI_Controller {
         redirect('admin/user');
 
     }
+
+    /**
+     * logout
+     */
+    function logout() {
+
+        $this->session->sess_destroy();
+
+        redirect('admin/');
+
+    }
+
 }
 ?>
