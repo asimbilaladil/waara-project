@@ -29,6 +29,10 @@
                 <a href="<?php echo site_url('admin/user'); ?>"><i class="fa fa-user"></i> <span>User</span></a>                
             </li>
 
+            <li class="treeview">
+                <a href="<?php echo site_url('admin/logout'); ?>"><i class="fa fa-user"></i> <span>Logout</span></a>                
+            </li>
+
         </ul>
     </section>
     <!-- /.sidebar -->

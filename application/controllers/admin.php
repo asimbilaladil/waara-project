@@ -3,7 +3,15 @@ class Admin extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model('AdminModel');
+        $id = $this->session->userdata('user_id');
+        if ($id == NULL) {
+            redirect('Login/');
+
+        } else {
+            $this->load->model('AdminModel');
+
+        }
+
     }
 
     function index()
@@ -21,10 +29,6 @@ class Admin extends CI_Controller {
 
         $this->loadView('admin/index', $events);
 
-    }
-
-    function login() {
-        $this->load->view('admin/login');
     }
 
     function addJK() {   
@@ -108,8 +112,8 @@ class Admin extends CI_Controller {
 
     //when admin login button is click
     function admin_login_check() {
-        $admin_email = $this->input->post('email', true);
-        $admin_password = md5($this->input->post('password', true));
+        echo $admin_email = $this->input->post('email', true);
+        echo $admin_password = md5($this->input->post('password', true));
         $result = $this->AdminModel->admin_login_check_info($admin_email, $admin_password);
 
         //if query found any result i.e userfound
@@ -122,7 +126,7 @@ class Admin extends CI_Controller {
         }else{
             $data['message'] = ' Your Email ID or Password is invalid  !!!!! ';
             $this->session->set_userdata($data);
-            redirect('admin/login');
+           // redirect('admin/login');
         }
 
     }
@@ -289,5 +293,17 @@ class Admin extends CI_Controller {
         redirect('admin/user');
 
     }
+
+    /**
+     * logout
+     */
+    function logout() {
+
+        $this->session->sess_destroy();
+
+        redirect('admin/');
+
+    }
+
 }
 ?>

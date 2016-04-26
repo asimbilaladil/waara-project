@@ -8,11 +8,11 @@ class AdminModel extends CI_Model
     }
 
 
-    public function admin_login_check_info( $admin_email, $admin_password ){
+    public function admin_login_check_info( $data ){
         $this->db->select('*');
         $this->db->from('user');
-        $this->db->where('email', $admin_email);
-        $this->db->where('password', $admin_password);
+        $this->db->where('email', $data['email']);
+        $this->db->where('password', $data['password']);
         $quary_result=$this->db->get();
         $result=$quary_result->row();
         
