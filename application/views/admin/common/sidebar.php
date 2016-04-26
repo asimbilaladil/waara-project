@@ -26,7 +26,7 @@
             </li>
 
              <li class="treeview">
-                <a href="<?php echo site_url('admin/user'); ?>"><i class="fa fa-user"></i> <span>Assign Duty</span></a>                
+                <a href="<?php echo site_url('admin/user'); ?>"><i class="fa fa-user"></i> <span>User</span></a>                
             </li>
 
         </ul>

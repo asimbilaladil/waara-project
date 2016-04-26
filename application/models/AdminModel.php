@@ -76,8 +76,9 @@ class AdminModel extends CI_Model
         $result = $quary_result->result();
         return $result;        
     }
-    public function deleteJamatKhana ($id){
-        $this->db->delete('jk', array('id' => $id)); 
+    public function delete ( $whereParam1, $whereParam2, $tableName ){
+
+        $this->db->delete( $tableName , array( $whereParam1 => $whereParam2) ); 
     }    
 
         /*
@@ -109,6 +110,26 @@ class AdminModel extends CI_Model
 
     }
 
+    /**
+     * Insert Method
+     * @param tableName
+     * @param whereParam1
+     * @param whereParam2
+     * @param dataObject
+     */
+    public function update( $tableName, $whereParam1, $whereParam2 ,$data ){
+
+        $this->db->where( $whereParam1, $whereParam2 );
+        $result = $this->db->update( $tableName ,$data);
+        if ( $result ) {
+
+            return true;
+
+        } 
+
+        return false;
+
+    }
 
     
 }
