@@ -96,11 +96,14 @@ class AdminModel extends CI_Model
                         WHERE duty.duty_id = '. $id .' AND 
                         duty.duty_id = duty_jk.duty_id AND
                         duty_jk.jk_id = jk.id');
+        
         $query->result();
 
         return $query->result();
 
     }
+
+
     public function get_calendar_duties() {
 
         $query = $this->db->query('CALL get_calendar_duties()');
@@ -131,5 +134,40 @@ class AdminModel extends CI_Model
 
     }
 
-    
+    /*
+        SELECT duty.name, duty.duty_id 
+        FROM duty, duty_jk, jk
+        WHERE jk.id = '1' AND 
+        duty.duty_id = duty_jk.duty_id AND
+        duty_jk.jk_id = jk.id
+    */
+    public function getDutyByJk( $id ) {
+
+        $query = $this->db->query('SELECT duty.name, duty.duty_id 
+                        FROM duty, duty_jk, jk
+                        WHERE jk.id = ' . $id . ' AND 
+                        duty.duty_id = duty_jk.duty_id AND
+                        duty_jk.jk_id = jk.id');
+
+        $query->result();
+
+        return $query->result();
+
+    }
+
+    function getUsers($q){
+        $this->db->select('*');
+        $this->db->like('first_name', $q);
+        $query = $this->db->get('user');
+        if($query->num_rows() > 0){
+            foreach ($query->result_array() as $row){
+                $new_row['label']=htmlentities(stripslashes($row['first_name']));
+                $new_row['value']=htmlentities(stripslashes($row['user_id']));
+                $row_set[] = $new_row; //build an array
+            }
+            echo json_encode($row_set); //format the array into json data
+        }
+    }    
+
+
 }

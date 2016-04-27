@@ -20,6 +20,14 @@
 
 <script type="text/javascript" src="<?php echo base_url(); ?>includes/search.js"></script>   
 
+
+<script type="text/javascript" src="<?php echo base_url(); ?>includes/jquery.js"></script> 
+
+<script type="text/javascript" src="<?php echo base_url(); ?>includes/jquery-ui.js"></script>   
+
+
+<script type="text/javascript" src="<?php echo base_url(); ?>includes/typeahead.min.js"></script> 
+
 <!-- DataTables -->
 <script src="<?php echo base_url(); ?>includes/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="<?php echo base_url(); ?>includes/plugins/datatables/dataTables.bootstrap.min.js"></script>

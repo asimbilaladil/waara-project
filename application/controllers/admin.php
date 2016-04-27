@@ -16,20 +16,61 @@ class Admin extends CI_Controller {
 
     function index()
     {   
-        $data = $this->AdminModel->get_calendar_duties(); 
-        $events = [];
-        foreach($data as $row) {
+        if($this->input->post()) {
 
-             $subevent['title'] = $row->duty_name;
-             $subevent['start'] = $row->start_date;
-             $subevent['end'] = $row->end_date;
+            $assign = array( 
+                "user_id" => $this->input->post('selectedUser'),
+                "duty_id" => $this->input->post('duty'),
+                "jk_id" => $this->input->post('jk'),
+                "start_date" => $this->input->post('date')
+            );
 
-             array_push($events, $subevent);
-        }       
+            if ($this->AdminModel->insert('assign_duty', $assign) ) {
 
-        $this->loadView('admin/index', $events);
+            }
+        } 
+
+
+        $duties = $this->AdminModel->getAllfromTable('jk');
+
+        $users = $this->AdminModel->getAllfromTable('user');
+
+        $data['users'] = $users;
+
+        $data['jk'] = $duties;
+
+        $this->loadView('admin/index', $data);
+
+        
+
+
 
     }
+
+    function getUsers(){
+
+        if (isset($_GET['term'])){
+          $q = strtolower($_GET['term']);
+          $this->AdminModel->getUsers($q);
+        }
+
+    }
+
+
+    function ajaxGetDutyFromJk() {
+
+        $state=$this->input->post('state');
+
+        $duty = $this->AdminModel->getDutyByJk( $state );
+
+        echo '<option value="">Select Duty </option>';
+            foreach($duty as $row) { 
+                 echo "<option value='".$row->duty_id."'>".$row->name."</option>";
+        }
+        
+
+    }
+
 
     function addJK() {   
         if($this->input->post()) {

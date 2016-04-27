@@ -17,6 +17,9 @@
         <link rel="stylesheet" href="<?php echo base_url(); ?>includes/dist/css/AdminLTE.css">
 
 
+        <link rel="stylesheet" href="<?php echo base_url(); ?>includes/jquery-ui.css">        
+
+
         <link rel="stylesheet" href="<?php echo base_url(); ?>includes/plugins/formValidation/css/formValidation.css"/>
         <!-- AdminLTE Skins. Choose a skin from the css/skins
              folder instead of downloading all of them to reduce the load. -->
