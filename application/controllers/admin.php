@@ -8,16 +8,20 @@ class Admin extends CI_Controller {
 
     function index()
     {   
-/*        $data = $this->AdminModel->get_calendar_duties(); 
-        $events = [];
-        foreach($data as $row) {
+        if($this->input->post()) {
 
-             $subevent['title'] = $row->duty_name;
-             $subevent['start'] = $row->start_date;
-             $subevent['end'] = $row->end_date;
+            $assign = array( 
+                "user_id" => $this->input->post('selectedUser'),
+                "duty_id" => $this->input->post('duty'),
+                "jk_id" => $this->input->post('jk'),
+                "start_date" => $this->input->post('date')
+            );
 
-             array_push($events, $subevent);
-        }*/
+            if ($this->AdminModel->insert('assign_duty', $assign) ) {
+
+            }
+        } 
+
 
         $duties = $this->AdminModel->getAllfromTable('jk');
 
@@ -27,9 +31,20 @@ class Admin extends CI_Controller {
 
         $data['jk'] = $duties;
 
-        //getDutyByJk
-
         $this->loadView('admin/index', $data);
+
+        
+
+
+
+    }
+
+    function getUsers(){
+
+        if (isset($_GET['term'])){
+          $q = strtolower($_GET['term']);
+          $this->AdminModel->getUsers($q);
+        }
 
     }
 

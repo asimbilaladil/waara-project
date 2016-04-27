@@ -132,8 +132,20 @@ class AdminModel extends CI_Model
 
         return $query->result();
 
+    }
+
+    function getUsers($q){
+        $this->db->select('*');
+        $this->db->like('first_name', $q);
+        $query = $this->db->get('user');
+        if($query->num_rows() > 0){
+            foreach ($query->result_array() as $row){
+                $new_row['label']=htmlentities(stripslashes($row['first_name']));
+                $new_row['value']=htmlentities(stripslashes($row['user_id']));
+                $row_set[] = $new_row; //build an array
+            }
+            echo json_encode($row_set); //format the array into json data
+        }
     }    
 
-
-    
 }

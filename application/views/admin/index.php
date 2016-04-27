@@ -12,16 +12,10 @@ var events =  <?php  echo json_encode($data); ?> ;
   
 
 
-
   $('#calendar').fullCalendar({
         dayClick: function(date, allDay, jsEvent, view) {
 
-        if (allDay) {
-            alert('Clicked on the entire day: ' + date);
-        }else{
-            alert('Clicked on the slot: ' + date);
-        }
-
+        $('#date').val( date.toISOString() );
 
     },
     header: {
@@ -42,6 +36,8 @@ var events =  <?php  echo json_encode($data); ?> ;
     text-align: left;
     }
     
+.fc-state-highlight {background:red;}   
+
 .fc table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -584,7 +580,7 @@ table.fc-border-separate {
                                 </div>
                                 <!-- /.box-header -->
                                 <!-- form start -->
-                                <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/addNewCustomField') ?>" method="post" >
+                                
                                     <div class="box-body">
                                         <div id="calendar"></div>
                                     </div>
@@ -592,7 +588,7 @@ table.fc-border-separate {
                                     <div class="box-footer">
                                     </div>
                                     <!-- /.box-footer -->
-                                </form>
+                                
                             </div>
                             <!-- /.box -->
                         </div>
@@ -603,32 +599,27 @@ table.fc-border-separate {
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">
+                                <form id="defaultForm" action="<?php echo site_url('Admin/index') ?>" method="post" >
                                     <div>
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <div class="col-sm-9">
-                                                    <select name="jk" id="jk" onchange="ajaxCallDuty()"  id="jk" class="form-control">
+                                                    <select required name="jk" id="jk" onchange="ajaxCallDuty()"  id="jk" class="form-control">
                                                     <?php
                                                         foreach($data['jk'] as $jk) {
                                                             echo '<option value="'. $jk->id .'"> '. $jk->name .' </option>';
                                                         }
                                                         
-                                                        ?>   
+                                                    ?>   
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-6">
-                                                <input list="users" name="users" class="form-control" id="" 
+                                                <input type="text" name="users"  id="users" required 
                                                     placeholder="Search User.." required>
-                                                <datalist id="users">
-                                                    <?php
-                                                        foreach($data['users'] as $user) {
-                                                            echo '<option id="' . $user->user_id . '" value="' . $user->first_name . '">' ;
-                                                        }
-                                                        ?>
-                                                </datalist>
+                                                <input type="hidden" name="selectedUser" id="selectedUser"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -641,10 +632,13 @@ table.fc-border-separate {
                                     </div>
                                     </br></br></br></br>
                                     <div class="col-sm-9">
-                                        <select id="duty" name="duty"   class="form-control">
+                                        <select required id="duty" name="duty"   class="form-control">
                                             <option value="0"> Select Duty </option>
                                         </select>
                                     </div>
+
+                                    <input type="hidden" id="date" name="date" />
+                                </form>
                                 </div>
                                 <!-- /.box-body -->
                                 <div class="box-footer">
@@ -663,6 +657,21 @@ table.fc-border-separate {
 
 
 <script>
+
+
+$("#users").autocomplete({
+
+    source : "getUsers",
+    select: function(event, ui) {
+        event.preventDefault();
+        $("#users").val(ui.item.label);
+        $("#selectedUser").val(ui.item.value);
+    },
+    focus: function(event, ui) {
+        event.preventDefault();
+        $("#users").val(ui.item.label);
+    }
+});
 
 function ajaxCallDuty() {
    var state=$('#jk').val();
