@@ -58,6 +58,8 @@
                                     <tr>
                                         <th> Name</th>
                                         <th> Email</th>
+                                        <th> Type</th>
+                                        <th> Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -67,12 +69,13 @@
                                     '<tr>
                                         <td> <a href="#">'. $item->first_name .' </a></td>
                                         <td> <a href="#">'. $item->email .' </a></td>
+                                        <td> <a href="#">'. $item->type .' </a></td>
                                         <td> 
                                             <span class="glyphicon glyphicon-pencil"></span>
                                             <span>&nbsp;&nbsp;</span>
-                                           <a href="deleteJK?id=" > <span class="glyphicon glyphicon-trash"></span></a>
+                                           <a href="deleteUser?id='.$item->user_id.'" > <span class="glyphicon glyphicon-trash"></span></a>
                                            <span>&nbsp;&nbsp;</span>
-                                            <a data-toggle="modal" data-target="#myModal" > <span class="glyphicon glyphicon-user"></span></a>
+                                            <a onClick="getId(' . $item->user_id .')" data-toggle="modal" data-target="#myModal" > <span  class="glyphicon glyphicon-user"></span></a>
                                          </td>
                                     </tr>';
 
@@ -108,17 +111,30 @@
           <h4 class="modal-title">  User Role</h4>
 
         </div>
+        <form method="Post" action="<?php echo site_url('admin/addUserRole') ?>">
         <div class="container col-sm-12 ">
         <div  class="col-sm-12 ">
          <div class="form-group col-sm-12">
          </br>
       <label for="email">Select User Role:</label>
-
-<select id="duty" name="duty" onchange="selctcity()"  class="form-control">
-                           <option value=""> Super Admin </option>
-                           <option value=""> JK Admin </option>
-                           <option value=""> User </option>
-                           </select>    </div>
+<div  class="col-sm-12 ">
+<select id="role" name="type"   class="form-control" onchange="showJK()" >
+                           <option value="Super Admin"> Super Admin </option>
+                           <option value="JK Admin"> JK Admin </option>
+                           <option value="User"> User </option>
+                           </select> 
+                           <select style="display:none" id="jkList" name="jk_id"  class="form-control">
+                             <?php
+                            foreach($data['jk'] as $item) {
+                                echo '<option value="'. $item->id.'"> '. $item->name. '</option>';
+                       }
+                           ?> 
+                            </select> 
+                           <input name="userId"  type="hidden" id="userId">                                         
+                           <button type="submit"  class="btn btn-primary btn-block">Save</button>
+</div>
+</form>
+ </div>
 
 
     </div>
@@ -130,9 +146,27 @@
 
         </div>
         <div class="modal-footer">
+
         </div>
       </div>
       
     </div>
   </div>
+<script type="text/javascript">
+    var getId = function (id){
+        document.getElementById("userId").value = id;
 
+    }
+    var showJK = function (){
+        var role = document.getElementById("role").value;
+        if(role == "JK Admin"){
+            document.getElementById("jkList").style.display = "block";
+
+        } else {
+            document.getElementById("jkList").style.display = "none";
+            document.getElementById("jkList").value = "";
+        }
+
+    }
+
+</script>

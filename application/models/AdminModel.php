@@ -8,11 +8,11 @@ class AdminModel extends CI_Model
     }
 
 
-    public function admin_login_check_info( $admin_email, $admin_password ){
+    public function admin_login_check_info( $data ){
         $this->db->select('*');
         $this->db->from('user');
-        $this->db->where('email', $admin_email);
-        $this->db->where('password', $admin_password);
+        $this->db->where('email', $data['email']);
+        $this->db->where('password', $data['password']);
         $quary_result=$this->db->get();
         $result=$quary_result->row();
         
@@ -76,8 +76,9 @@ class AdminModel extends CI_Model
         $result = $quary_result->result();
         return $result;        
     }
-    public function deleteJamatKhana ($id){
-        $this->db->delete('jk', array('id' => $id)); 
+    public function delete ( $whereParam1, $whereParam2, $tableName ){
+
+        $this->db->delete( $tableName , array( $whereParam1 => $whereParam2) ); 
     }    
 
         /*
@@ -112,6 +113,26 @@ class AdminModel extends CI_Model
 
     }
 
+    /**
+     * Insert Method
+     * @param tableName
+     * @param whereParam1
+     * @param whereParam2
+     * @param dataObject
+     */
+    public function update( $tableName, $whereParam1, $whereParam2 ,$data ){
+
+        $this->db->where( $whereParam1, $whereParam2 );
+        $result = $this->db->update( $tableName ,$data);
+        if ( $result ) {
+
+            return true;
+
+        } 
+
+        return false;
+
+    }
 
     /*
         SELECT duty.name, duty.duty_id 

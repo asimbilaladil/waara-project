@@ -3,7 +3,15 @@ class Admin extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model('AdminModel');
+        $id = $this->session->userdata('user_id');
+        if ($id == NULL) {
+            redirect('Login/');
+
+        } else {
+            $this->load->model('AdminModel');
+
+        }
+
     }
 
     function index()
@@ -60,10 +68,6 @@ class Admin extends CI_Controller {
         }
         
 
-    }
-
-    function login() {
-        $this->load->view('admin/login');
     }
 
     function addJK() {   
@@ -140,29 +144,6 @@ class Admin extends CI_Controller {
         $data['jkDb'] = $jamatKhanas;
 
         $this->loadView('admin/addDuty', $data);
-
-    }
-
-
-
-    //when admin login button is click
-    function admin_login_check() {
-        $admin_email = $this->input->post('email', true);
-        $admin_password = md5($this->input->post('password', true));
-        $result = $this->AdminModel->admin_login_check_info($admin_email, $admin_password);
-
-        //if query found any result i.e userfound
-        if($result) {
-            $data['user_id'] = $result->user_id;
-            $data['message'] = 'Your are successfully Login && your session has been start';
-            $this->session->set_userdata($data);
-            redirect('admin/');
-
-        }else{
-            $data['message'] = ' Your Email ID or Password is invalid  !!!!! ';
-            $this->session->set_userdata($data);
-            redirect('admin/login');
-        }
 
     }
 
@@ -283,7 +264,7 @@ class Admin extends CI_Controller {
     function deleteJK() {
 
         $id = $this->input->get('id', TRUE);
-        $this->AdminModel->deleteJamatKhana( $id );
+        $this->AdminModel->delete( 'id', $id, 'jk');
         redirect('admin/addJK');
 
     }
@@ -294,8 +275,49 @@ class Admin extends CI_Controller {
     function user() {
 
         $data['user'] = $this->AdminModel->getAllfromTable( 'user' );
+        $data['jk'] = $this->AdminModel->getAllfromTable( 'jk' );
 
         $this->loadView('admin/user', $data);
+
+    }
+
+    function addUserRole() {
+
+     if($this->input->post()) {
+
+           echo  $userId = $this->input->post('userId', true);
+           echo $type = $this->input->post('type', true);
+           echo $jk_id = $this->input->post('jk_id', true);
+
+            $data = array (
+                "type" => $type, 
+                "jk_id" => $jk_id 
+            );
+            $this->AdminModel->update( 'user', 'user_id', $userId, $data );
+            redirect('admin/user');
+
+        }
+    }
+
+    /**
+     * deleteUser
+     */
+    function deleteUser() {
+
+        $id = $this->input->get('id', TRUE);
+        $this->AdminModel->delete( 'user_id', $id, 'user');
+        redirect('admin/user');
+
+    }
+
+    /**
+     * logout
+     */
+    function logout() {
+
+        $this->session->sess_destroy();
+
+        redirect('admin/');
 
     }
 
