@@ -661,7 +661,7 @@ table.fc-border-separate {
 
 $("#users").autocomplete({
 
-    source : "getUsers",
+    source : '<?php echo site_url('admin/getUsers') ?>',
     select: function(event, ui) {
         event.preventDefault();
         $("#users").val(ui.item.label);
