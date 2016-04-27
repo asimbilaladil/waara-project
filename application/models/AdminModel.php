@@ -89,7 +89,7 @@ class AdminModel extends CI_Model
         duty_jk.jk_id = jk.id
         */
 
-    public function getJkbyId( $id ) {
+    public function getJkFromDuty( $id ) {
 
         $query = $this->db->query('SELECT jk.name, jk.id 
                         FROM duty, duty_jk, jk
@@ -167,7 +167,17 @@ class AdminModel extends CI_Model
             }
             echo json_encode($row_set); //format the array into json data
         }
-    }    
+    }
 
+    function getJkById( $id ) {
 
+        $this->db->select('*');
+        $this->db->from('jk');
+        $this->db->where('id', $id);
+        $quary_result=$this->db->get();
+        $result=$quary_result->result();
+
+        return $result;        
+    }
+   
 }

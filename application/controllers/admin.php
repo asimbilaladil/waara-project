@@ -25,19 +25,29 @@ class Admin extends CI_Controller {
                 "start_date" => $this->input->post('date')
             );
 
-            if ($this->AdminModel->insert('assign_duty', $assign) ) {
+        $this->AdminModel->insert('assign_duty', $assign);
 
-            }
-        } 
+        }
+
+        $jkId = $this->session->userdata('jk_id');
+
+        //if jk id is set in session. if jkid = 0 it call see all jks
+        if( isset( $jkId ) && $jkId != 0 )  {
+
+            $jk = $this->AdminModel->getJkById( $jkId );
+
+        } else {
+
+            $jk = $this->AdminModel->getAllfromTable('jk');
+        }
 
 
-        $duties = $this->AdminModel->getAllfromTable('jk');
 
         $users = $this->AdminModel->getAllfromTable('user');
 
         $data['users'] = $users;
 
-        $data['jk'] = $duties;
+        $data['jk'] = $jk;
 
         $this->loadView('admin/index', $data);
 
@@ -227,7 +237,7 @@ class Admin extends CI_Controller {
 
         $state=$this->input->post('state');
 
-        $jk = $this->AdminModel->getJkbyId( $state );
+        $jk = $this->AdminModel->getJkFromDuty( $state );
 
         echo '<option value="">Select Jamatkhana </option>';
             foreach($jk as $row) { 
