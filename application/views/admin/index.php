@@ -601,7 +601,6 @@ table.fc-border-separate {
                                 <div class="box-body">
                                 <form id="defaultForm" action="<?php echo site_url('Admin/index') ?>" method="post" >
                                     <div>
-                                        <div class="col-sm-12">
                                             <div class="form-group">
                                                 <div class="col-sm-9">
                                                     <select required name="jk" id="jk" onchange="ajaxCallDuty()"  id="jk" class="form-control">
@@ -614,11 +613,14 @@ table.fc-border-separate {
                                                     </select>
                                                 </div>
                                             </div>
+                                        <div class="col-sm-12">
+                                     </br>
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-6">
-                                                <input type="text" name="users"  id="users" required 
-                                                    placeholder="Search User.." required>
+                                        <input type="text" name="users" id="users" class="form-control" id="" placeholder="Search User.." required>
+
+                                                
                                                 <input type="hidden" name="selectedUser" id="selectedUser"/>
                                             </div>
                                         </div>
@@ -630,9 +632,10 @@ table.fc-border-separate {
                                             </div>
                                         </div>
                                     </div>
-                                    </br></br></br></br>
+                                   
                                     <div class="col-sm-9">
-                                        <select required id="duty" name="duty"   class="form-control">
+                                     </br>
+                                        <select size="17" required id="duty" name="duty"   class="form-control">
                                             <option value="0"> Select Duty </option>
                                         </select>
                                     </div>
