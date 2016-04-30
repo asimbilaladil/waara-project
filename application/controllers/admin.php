@@ -18,11 +18,16 @@ class Admin extends CI_Controller {
     {   
         if($this->input->post()) {
 
+            $date = date_parse($this->input->post('date')) ;
+
+            $formatedDate = $date['year'] . '-' .  $date['month'] . '-' . $date['year'];
+
             $assign = array( 
                 "user_id" => $this->input->post('selectedUser'),
                 "duty_id" => $this->input->post('duty'),
                 "jk_id" => $this->input->post('jk'),
-                "start_date" => $this->input->post('date')
+                "start_date" => $formatedDate,
+                "end_date" => $formatedDate
             );
 
         $this->AdminModel->insert('assign_duty', $assign);
@@ -39,9 +44,11 @@ class Admin extends CI_Controller {
         } else {
 
             $jk = $this->AdminModel->getAllfromTable('jk');
+
+
+            $data['duty'] = $this->AdminModel->getAllfromTable( 'duty' );
+
         }
-
-
 
         $users = $this->AdminModel->getAllfromTable('user');
 
@@ -50,10 +57,6 @@ class Admin extends CI_Controller {
         $data['jk'] = $jk;
 
         $this->loadView('admin/index', $data);
-
-        
-
-
 
     }
 
