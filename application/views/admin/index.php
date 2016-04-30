@@ -637,6 +637,17 @@ table.fc-border-separate {
                                      </br>
                                         <select size="17" required id="duty" name="duty"   class="form-control">
                                             <option value="0"> Select Duty </option>
+                                            <?php 
+
+                                                if(isset($data['duty'])) {
+
+                                                    foreach($data['duty'] as $row) {
+                                                        echo '<option value="' . $row->duty_id .'"> ' . $row->name . ' </option>';
+                                                    }
+
+                                                }
+
+                                            ?>
                                         </select>
                                     </div>
 
@@ -662,6 +673,10 @@ table.fc-border-separate {
 <script>
 
 
+$(function(){
+   ajaxCallDuty();
+});
+
 $("#users").autocomplete({
 
     source : '<?php echo site_url('admin/getUsers') ?>',
@@ -676,8 +691,12 @@ $("#users").autocomplete({
     }
 });
 
+//stop executing java script further
+window.stop();
+
 function ajaxCallDuty() {
    var state=$('#jk').val();
+
 
         $.post('<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>', {
             state:state
