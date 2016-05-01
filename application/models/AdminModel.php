@@ -237,6 +237,18 @@ class AdminModel extends CI_Model
         return $query->result();
 
     }
+    /*
+    * Get record from table using single condition
+    */
+    function getrecordById( $tableName, $whereParam1, $whereParam2  ) {
 
+        $this->db->select('*');
+        $this->db->from($tableName);
+        $this->db->where($whereParam1, $whereParam2 );
+        $quary_result=$this->db->get();
+        $result=$quary_result->row();
+        
+        return $result;;
+    }
    
 }

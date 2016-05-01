@@ -97,8 +97,11 @@ var data =  <?php  echo json_encode( $data['news']); ?>
                                     '<tr>
                                         <td><a style="cursor: pointer;" onClick="getIndex(' . $key.')" data-toggle="modal" data-target="#viewModal" >  '. $item->title .' </a></td>
                                         <td> '. $item->created_date .' </td>
-                                         <td> <a href="deleteNews?id='.$item->id.'" > <span class="glyphicon glyphicon-trash"></span></a></td>
-                                        <td><a style="cursor: pointer;" onClick="updateModal(' . $key.')" data-toggle="modal" data-target="#editModal" >  <span class="glyphicon glyphicon-pencil"></span></a></td>
+                                         <td> <a href="deleteNews?id='.$item->id.'" > <span class="glyphicon glyphicon-trash"></span></a>
+                                          <span>&nbsp;&nbsp;</span>
+                                         <a style="cursor: pointer;" href = "'. site_url('Admin/editNews') .'?id='.$item->id . '">   <span class="glyphicon glyphicon-pencil"></span></a>
+                                         </td>
+                                      
 
                                     </tr>';
 
@@ -149,44 +152,4 @@ var data =  <?php  echo json_encode( $data['news']); ?>
             </div>
         </div>
     </div>
-    <div class="modal fade col-sm-12" id="editModal" role="dialog">
-        <div class="modal-dialog">
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title"> Edit Latest News </h4>
-                </div>
-                   
-                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/update') ?>" method="post" >
-
-                                <div class="form-group">
-                                    <label for="" class="col-sm-2 control-label">Title</label>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="editTitle" class="form-control" id="editTitle" placeholder="" required>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="" class="col-sm-2 control-label">Details</label>
-                                    <div class="col-sm-8">
-                                    <textarea name="editDetails" id="editDetails" ></textarea>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-2">
-
-                                        <button  type="submit" class="btn btn-primary btn-block">Save</button>
-                                         </br>
-                                    </div>
-
-                                </div>
-                        </form>
-
-
-                </div>
-                </div>
-                <div class="modal-footer">
-                </div>
-            </div>
-        </div>
-    </div>    
+    

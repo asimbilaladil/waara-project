@@ -456,5 +456,31 @@ class Admin extends CI_Controller {
 
     }
 
+    /**
+     * Edit news
+     */
+    function editNews() {
+
+        if($this->input->post()) {
+
+        echo    $title = $this->input->post('title', true);
+        echo    $details = $this->input->post('details', true);
+        echo    $id = $this->input->post('id', true);
+            $data = array (
+                "title" => $title, 
+                "details" => $details,
+            );
+            $this->AdminModel->update('news','id',$id, $data);
+            
+            redirect('admin/news');
+
+
+        } else {
+        $id = $this->input->get('id', TRUE);
+        $data = $this->AdminModel->getrecordById('news','id',$id);
+        $this->loadView('admin/editNews',  $data);
+        }
+
+    }
 }
 ?>
