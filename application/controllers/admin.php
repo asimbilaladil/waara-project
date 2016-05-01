@@ -56,6 +56,16 @@ class Admin extends CI_Controller {
 
         $data['jk'] = $jk;
 
+        $data['events'] = $this->AdminModel->get_calendar_duties(); 
+            $events = [];
+            foreach( $data['events']  as $row ) {
+                 $subevent['title'] = $row->duty_name;
+                 $subevent['start'] = $row->start_date;
+                 $subevent['end'] = $row->end_date;
+                 array_push($events, $subevent);
+        }
+        $data['events'] = $events;        
+        
         $this->loadView('admin/index', $data);
 
     }
