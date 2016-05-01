@@ -692,7 +692,7 @@ $("#users").autocomplete({
 });
 
 //stop executing java script further
-window.stop();
+//window.stop();
 
 function ajaxCallDuty() {
    var state=$('#jk').val();
