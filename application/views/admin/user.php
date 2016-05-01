@@ -64,7 +64,7 @@
                                                             <span>&nbsp;&nbsp;</span>
                                                            <a href="deleteUser?id='.$item->user_id.'" > <span class="glyphicon glyphicon-trash"></span></a>
                                                            <span>&nbsp;&nbsp;</span>
-                                                            <a jkName="getId(' . $item->user_id .')" data-toggle="modal" data-target="#myModal" > <span  class="glyphicon glyphicon-user"></span></a>
+                                                            <a onClick="getId(' . $item->user_id .')" data-toggle="modal" data-target="#myModal" > <span  class="glyphicon glyphicon-user"></span></a>
                                                          </td>
                                                     </tr>';
                                             
@@ -126,6 +126,8 @@
                                         <option value="JK Admin"> JK Admin </option>
                                         <option value="User"> User </option>
                                     </select>
+                                    </br>
+                                    <div style="display:none" id="jkdiv">
                                     <select style="display:none" id="jkList" name="jk_id"  class="form-control">
                                     <?php
                                         foreach($data['jk'] as $item) {
@@ -133,6 +135,8 @@
                                         }
                                         ?> 
                                     </select> 
+                                    </br>
+                                      </div>
                                     <input name="userId"  type="hidden" id="userId">                                         
                                     <button type="submit"  class="btn btn-primary btn-block">Save</button>
                                 </div>
@@ -147,6 +151,7 @@
     </div>
     <script type="text/javascript">
         var getId = function (id){
+            console.log("id",id);
             document.getElementById("userId").value = id;
         
         }
@@ -154,10 +159,13 @@
             var role = document.getElementById("role").value;
             if(role == "JK Admin"){
                 document.getElementById("jkList").style.display = "block";
+                document.getElementById("jkdiv").style.display = "block";
+                
         
             } else {
                 document.getElementById("jkList").style.display = "none";
-                document.getElementById("jkList").value = "";
+                document.getElementById("jkdiv").style.display = "none";
+                document.getElementById("jkList").value = "0";
             }
         
         }
