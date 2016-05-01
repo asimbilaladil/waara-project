@@ -60,7 +60,7 @@
                                                         <td> <a href="#">'. $item->email .' </a></td>
                                                         <td> <a href="#">'. $item->type .' </a></td>
                                                         <td> 
-                                                            <a href="#" ><span class="glyphicon glyphicon-pencil"></span> </a>
+                                                            <a href="'. site_url('admin/edituser?uid=' . $item->user_id ) .'" ><span class="glyphicon glyphicon-pencil"></span> </a>
                                                             <span>&nbsp;&nbsp;</span>
                                                            <a href="deleteUser?id='.$item->user_id.'" > <span class="glyphicon glyphicon-trash"></span></a>
                                                            <span>&nbsp;&nbsp;</span>
@@ -86,26 +86,6 @@
         </section><!-- /.content -->
     </div>
     </div>
-
-    <div class="modal fade" id="editModal" role="dialog">
-        <div class="modal-dialog">
-         <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">  Edit User</h4>
-        </div>
-            <form>
-                <div class="container col-sm-12 ">
-                     <div  class="col-sm-12 ">
-                        <div class="form-group col-sm-12">
-                             <label for="email">Select User Role:</label>
-                        </div>
-                     </div>
-                </div>
-            </form>
-        </div>
-    </div>
-
-
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
             <!-- Modal content-->
