@@ -20,7 +20,7 @@ class Admin extends CI_Controller {
 
             $date = date_parse($this->input->post('date')) ;
 
-            $formatedDate = $date['year'] . '-' .  $date['month'] . '-' . $date['year'];
+            $formatedDate = $date['year'] . '-' .  $date['month'] . '-' . $date['day'];
 
             $assign = array( 
                 "user_id" => $this->input->post('selectedUser'),

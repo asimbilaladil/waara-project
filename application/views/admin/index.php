@@ -10,8 +10,6 @@ var events =  <?php  echo json_encode($data); ?> ;
   var m = date.getMonth();
   var y = date.getFullYear();
   
-
-
   $('#calendar').fullCalendar({
         dayClick: function(date, allDay, jsEvent, view) {
 
