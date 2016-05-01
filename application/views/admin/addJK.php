@@ -40,7 +40,7 @@
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Name</label>
                                     <div class="col-sm-6">
-                                        <input type="text" name="name" class="form-control" id="" placeholder="" required>
+                                        <input type="text" name="jkName" class="form-control" id="" placeholder="" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -55,7 +55,7 @@
                                         <button type="submit" class="btn btn-primary btn-block">Save</button>
                                     </div>
                                 </div>
-                                                        </form>
+                        </form>
                                                         
                                 </br> </br>
                         <div class="box-header with-border">

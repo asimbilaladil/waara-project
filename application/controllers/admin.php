@@ -76,7 +76,7 @@ class Admin extends CI_Controller {
 
         $duty = $this->AdminModel->getDutyByJk( $state );
 
-        echo '<option value="">Select Duty </option>';
+        echo '';
             foreach($duty as $row) { 
                  echo "<option value='".$row->duty_id."'>".$row->name."</option>";
         }
@@ -87,10 +87,13 @@ class Admin extends CI_Controller {
 
     function addJK() {   
         if($this->input->post()) {
+
             $data = array (
-                'name' => $this->input->post('name', true),
+                'name' => $this->input->post('jkName', true),
                 'location' => $this->input->post('location', true)
             );
+
+
         if ( $this->AdminModel->addJK( $data ) ) {
 
             $data = array (
