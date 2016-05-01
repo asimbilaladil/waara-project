@@ -134,6 +134,33 @@ class AdminModel extends CI_Model
 
     }
 
+        /**
+     * Insert Method
+     * @param tableName
+     * @param whereParam1
+     * @param whereParam2
+     * @param whereParam3
+     * @param whereParam4
+     * @param dataObject
+     */
+    public function updateWhere( $tableName, $whereParam1, $whereParam2, $whereParam3, $whereParam4 ,$data ){
+
+        $this->db->where( $whereParam1, $whereParam2 );
+        $this->db->where( $whereParam1, $whereParam2 );
+        $result = $this->db->update( $tableName ,$data);
+        if ( $result ) {
+
+            return true;
+
+        } 
+
+        return false;
+
+    }
+
+
+
+
     /*
         SELECT duty.name, duty.duty_id 
         FROM duty, duty_jk, jk
@@ -179,5 +206,37 @@ class AdminModel extends CI_Model
 
         return $result;        
     }
+
+
+    function getUserById( $id ) {
+
+        $this->db->select('*');
+        $this->db->from('user');
+        $this->db->where('user_id', $id );
+        $quary_result=$this->db->get();
+        $result=$quary_result->row();
+        
+        return $result;;
+    }
+
+    /*
+    SELECT customfields.field_lable, customfields.field_name, customfields.input_type
+    FROM customfields, user_custom_data
+    WHERE user_custom_data.customField_id = customfields.customField_id
+    AND user_custom_data.user_id = 10   
+    */
+    public function getCustomFieldByUserId( $id ) {
+
+        $query = $this->db->query('SELECT customfields.field_lable, customfields.field_name, customfields.input_type, user_custom_data.value
+            FROM customfields, user_custom_data
+            WHERE user_custom_data.customField_id = customfields.customField_id
+            AND user_custom_data.user_id = ' . $id );
+
+        $query->result();
+
+        return $query->result();
+
+    }
+
    
 }

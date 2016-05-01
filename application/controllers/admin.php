@@ -338,6 +338,60 @@ class Admin extends CI_Controller {
 
     }
 
+
+    function edituser() {
+
+        if($this->input->post()) {
+
+            $id = $this->input->post('userId', true);
+
+            $customfields = $this->AdminModel->getAllfromTable('customfields');
+
+            $customData = array();
+
+            //iterate every custom field and check if the key exist in posted data. If exist insert it in user custom data
+            foreach( $customfields as $item ) {
+                if( array_key_exists( $item->field_name, $this->input->post() ) ) {
+
+                    $customData = array( "value" => $this->input->post( $item->field_name, true) );
+                                            // tablename           key      value   key    value               data   
+                    $this->AdminModel->updateWhere('user_custom_data', 'user_id', $id, 'key', $item->field_name, $customData);
+
+                }
+            }
+
+
+            $this->AdminModel->update('user_custom_data' ,'user_id' , $id, $customData);
+
+            $data = array (
+                "first_name" => $this->input->post('firstName', true),
+                "last_name" => $this->input->post('lastName', true),
+                "email" => $this->input->post('email', true),
+                "phone" => $this->input->post('phone', true)
+            );
+
+            
+
+            $this->AdminModel->update('user' ,'user_id' , $id, $data);
+
+            redirect('admin/edituser?uid=' . $id );
+
+        }
+
+        if( $this->input->get('uid', TRUE) ) {
+
+            $id = $this->input->get('uid', TRUE);
+   
+            $data['customFields'] = $this->AdminModel->getCustomFieldByUserId( $id );
+
+            $data['user'] = $this->AdminModel->getUserById( $id );
+
+            $this->loadView('admin/edituser', $data);
+
+        }
+  
+    }
+
     /**
      * logout
      */
