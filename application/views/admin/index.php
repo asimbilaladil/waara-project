@@ -560,10 +560,22 @@ table.fc-border-separate {
                     Dashboard
                     <small >Control panel</small>
                 </h1>
+
                 <ol class="breadcrumb">
+
+                                                  <li>  <select required name="jkselect" id="jk" onchange="ajaxCallDuty()"  id="jk" class="form-control">
+                                                    <?php
+                                                        foreach($data['jk'] as $jk) {
+                                                            echo '<option value="'. $jk->id .'"> '. $jk->name .' </option>';
+                                                        }
+                                                        
+                                                    ?>   
+                                                    </select>
+                                                    </li>
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                     <li class="active">Dashboard</li>
                 </ol>
+                </br>
             </section>
             <!-- Main content -->
             <section class="content">
@@ -596,20 +608,9 @@ table.fc-border-separate {
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">
-                                <form id="defaultForm" action="<?php echo site_url('Admin/index') ?>" method="post" >
                                     <div>
-                                            <div class="form-group">
-                                                <div class="col-sm-9">
-                                                    <select required name="jk" id="jk" onchange="ajaxCallDuty()"  id="jk" class="form-control">
-                                                    <?php
-                                                        foreach($data['jk'] as $jk) {
-                                                            echo '<option value="'. $jk->id .'"> '. $jk->name .' </option>';
-                                                        }
-                                                        
-                                                    ?>   
-                                                    </select>
-                                                </div>
-                                            </div>
+                                                            <form id="defaultForm" action="<?php echo site_url('Admin/index') ?>" method="post" >
+
                                         <div class="col-sm-12">
                                      </br>
                                         </div>
@@ -646,8 +647,9 @@ table.fc-border-separate {
 
                                             ?>
                                         </select>
+                                        </br></br></br> </br></br>
                                     </div>
-
+                                    <input type="hidden" id="jkHidden" name="jk">
                                     <input type="hidden" id="date" name="date" />
                                 </form>
                                 </div>
@@ -668,7 +670,13 @@ table.fc-border-separate {
 
 
 <script>
+var getJK = function getJK (){
+        var jk = document.getElementById("jk").value;
+        var jkHidden = document.getElementById("jkHidden");
+        jkHidden.value = jk;
 
+
+}
 
 $(function(){
    ajaxCallDuty();
@@ -702,7 +710,7 @@ function ajaxCallDuty() {
             $('#duty').html(data);
 
         }); 
-
+getJK();
 }
 
 </script>

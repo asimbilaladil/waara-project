@@ -321,7 +321,9 @@ class Admin extends CI_Controller {
                 "type" => $type, 
                 "jk_id" => $jk_id 
             );
+
             $this->AdminModel->update( 'user', 'user_id', $userId, $data );
+           
             redirect('admin/user');
 
         }
