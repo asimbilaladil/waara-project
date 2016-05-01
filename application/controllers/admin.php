@@ -405,5 +405,56 @@ class Admin extends CI_Controller {
 
     }
 
+    function news() {
+
+         if($this->input->post()) {
+
+           
+            $title = $this->input->post('title', true);
+            $details = $this->input->post('details', true);
+            $created_date = date("d-m-Y");
+
+
+            $data = array (
+                "title" => $title, 
+                "details" => $details,
+                "created_date" => $created_date
+            );
+
+             
+            if ( $this->AdminModel->insert( 'news',$data ) ) {
+
+                $data = array (
+                    'message' => 'Successfully News Created'
+                    );
+                
+            }  
+            $data["news"] = $this->AdminModel->getAllfromTable( 'news' );
+
+            $this->loadView('admin/news',  $data);
+
+
+        } else{
+                     $data["news"] = $this->AdminModel->getAllfromTable( 'news' );
+
+            $this->loadView('admin/news',  $data);
+        }
+        
+
+           
+
+    }
+
+    /**
+     * delete news
+     */
+    function deleteNews() {
+
+        $id = $this->input->get('id', TRUE);
+        $this->AdminModel->delete( 'id', $id, 'news');
+        redirect('admin/news');
+
+    }
+
 }
 ?>
