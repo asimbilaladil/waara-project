@@ -22,13 +22,19 @@ class Login extends CI_Controller {
             //if query found any result i.e userfound
             if($result) {
 
+                $data['type'] = $result->type;
+                if( $data['type'] != 'User' ){
 
-                $data['user_id'] = $result->user_id;
-                $data['message'] = 'Your are successfully Login && your session has been start';
-                $data['jk_id'] = $result->jk_id;
-                $this->session->set_userdata($data);
-                redirect('admin/');
+                    $data['user_id'] = $result->user_id;
+                    $data['message'] = 'Your are successfully Login && your session has been start';
+                    $data['jk_id'] = $result->jk_id;
+                    $this->session->set_userdata($data);
+                    redirect('admin/');
 
+                } else{ 
+                    $data['message'] = ' Your Email ID or Password is invalid  !!!!! ';
+                    redirect('login/');                    
+                }
             }else{
                 $data['message'] = ' Your Email ID or Password is invalid  !!!!! ';
                 redirect('login/');
