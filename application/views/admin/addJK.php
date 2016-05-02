@@ -82,7 +82,7 @@
                                         <td> <a href="#">'. $item->name .' </a></td>
                                         <td> <a href="#">'. $item->location .' </a></td>
                                         <td> 
-                                            <span class="glyphicon glyphicon-pencil"></span>
+                                            <a href="'. site_url('admin/editJK?id=' . $item->id ) .'" ><span class="glyphicon glyphicon-pencil"></span> </a>
                                             <span>&nbsp;&nbsp;</span>
                                            <a href="deleteJK?id='.$item->id.'" > <span class="glyphicon glyphicon-trash"></span></a>
                                          </td>

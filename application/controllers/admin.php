@@ -482,5 +482,30 @@ class Admin extends CI_Controller {
         }
 
     }
+    /**
+     * Edit JK
+     */
+    function editJK() {
+
+        if($this->input->post()) {
+            $name = $this->input->post('jkName', true);
+            $location = $this->input->post('location', true);
+            $id = $this->input->post('id', true);
+            $data = array (
+                "name" => $name, 
+                "location" => $location
+            );
+            $this->AdminModel->update('jk','id',$id, $data);
+            
+           redirect('admin/addJK');
+
+
+        } else {
+        $id = $this->input->get('id', TRUE);
+        $data = $this->AdminModel->getrecordById('jk','id',$id);
+        $this->loadView('admin/editJK',  $data);
+        }
+
+    }    
 }
 ?>
