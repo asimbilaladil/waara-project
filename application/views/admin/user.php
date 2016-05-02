@@ -131,7 +131,6 @@
     </div>
     <script type="text/javascript">
         var getId = function (id){
-            console.log("id",id);
             document.getElementById("userId").value = id;
         
         }

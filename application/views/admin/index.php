@@ -563,7 +563,7 @@ table.fc-border-separate {
 
                 <ol class="breadcrumb">
 
-                                                  <li>  <select required name="jkselect" id="jk" onchange="ajaxCallDuty()"  id="jk" class="form-control">
+                                                  <li id="selectJKList">  <select required name="jkselect" id="jk" onchange="ajaxCallDuty()"  id="jk" class="form-control">
                                                     <?php
                                                         foreach($data['jk'] as $jk) {
                                                             echo '<option value="'. $jk->id .'"> '. $jk->name .' </option>';
@@ -670,6 +670,10 @@ table.fc-border-separate {
 
 
 <script>
+var type =  <?php echo json_encode($data['users'][0]->type); ?>;
+if(type == 'JK Admin'){
+    var selectJKList = document.getElementById("selectJKList").style.display= "none";
+}
 var getJK = function getJK (){
         var jk = document.getElementById("jk").value;
         var jkHidden = document.getElementById("jkHidden");
