@@ -585,7 +585,7 @@ table.fc-border-separate {
                         <div class="col-md-6">
                             <div class="box box-success">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Assigned Duties</h3>
+                                    <h3 class="box-title">Assigned Waara</h3>
                                 </div>
                                 <!-- /.box-header -->
                                 <!-- form start -->
@@ -604,7 +604,7 @@ table.fc-border-separate {
                         <div class="col-md-6">
                             <div class="box box-success">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">List of Duties</h3>
+                                    <h3 class="box-title">list of Waara</h3>
                                 </div>
                                 <!-- /.box-header -->
                                 <div class="box-body">
@@ -634,7 +634,7 @@ table.fc-border-separate {
                                     <div class="col-sm-9">
                                      </br>
                                         <select size="17" required id="duty" name="duty"   class="form-control">
-                                            <option value="0"> Select Duty </option>
+                                            <option value="0"> Select Waara </option>
                                             <?php 
 
                                                 if(isset($data['duty'])) {
