@@ -547,5 +547,42 @@ class Admin extends CI_Controller {
         $this->loadView('admin/editDuty',  $data);
     }
 
+
+
+    function ajaxUserHistory() {
+
+        $userId=$this->input->post('state');
+
+        $userHistory = $this->AdminModel->getUserHistory( $userId );
+
+        
+        $html = '<table class="table table-striped">
+        <thead>
+        <tr>
+            <th> Name </th>
+            <th> Duty </th>
+            <th> Date </th>
+        </tr>
+        </thead>
+        <tbody>';
+        
+
+        foreach($userHistory as $row) { 
+
+
+            $html = $html . '<tr>
+                                <td> '. $row->first_name .' </td>
+                                <td> '. $row->name .' </td>
+                                <td> '. $row->start_date .' </td>
+                            </tr>';
+
+        }
+
+        $html = $html . '<tbody></table>';
+
+        echo $html;
+
+    }    
+
 }
 ?>
