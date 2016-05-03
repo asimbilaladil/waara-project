@@ -609,7 +609,7 @@ table.fc-border-separate {
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <div>
-                                                            <form id="defaultForm" action="<?php echo site_url('Admin/index') ?>" method="post" >
+                                    <form id="defaultForm" action="<?php echo site_url('Admin/index') ?>" method="post" >
 
                                         <div class="col-sm-12">
                                      </br>
@@ -624,7 +624,7 @@ table.fc-border-separate {
                                         </div>
                                         <div class="form-group">
                                             <div class="col-sm-3">
-                                                <button type="submit" class="btn btn-primary btn-block">Save</button>
+                                                <button type="button" class="btn btn-primary btn-block"  data-toggle="modal" data-target="#myModal" onclick="ajaxCallUserHistory()">Save</button>
                                             </div>
                                             <div class="col-sm-2">
                                             </div>
@@ -651,6 +651,52 @@ table.fc-border-separate {
                                     </div>
                                     <input type="hidden" id="jkHidden" name="jk">
                                     <input type="hidden" id="date" name="date" />
+
+
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">User History</h4>
+                                              </div>
+                                              <div class="modal-body">
+                                                <div id="userHistory">
+
+                                                </div>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#confirmModal" >Save</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">How do you want to notify user?</h4>
+                                              </div>
+                                              <div class="modal-body">
+
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="submit" class="btn btn-default" data-dismiss="modal">Through SMS</button>
+                                                <button type="submit" class="btn btn-default" data-dismiss="modal">Through EMAIL</button>
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>                                        
+
                                 </form>
                                 </div>
                                 <!-- /.box-body -->
@@ -667,6 +713,13 @@ table.fc-border-separate {
             <!-- /.content -->
         </div>
     </div>
+
+
+
+
+
+
+ 
 
 
 <script>
@@ -706,7 +759,6 @@ $("#users").autocomplete({
 function ajaxCallDuty() {
    var state=$('#jk').val();
 
-
         $.post('<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>', {
             state:state
         }, function(data) {
@@ -715,6 +767,21 @@ function ajaxCallDuty() {
 
         }); 
 getJK();
+}
+
+
+function ajaxCallUserHistory() {
+   var state=$('#selectedUser').val();
+
+   
+    $.post('<?php echo site_url('Admin/ajaxUserHistory') ?>', {
+        state:state
+    }, function(data) {
+
+        $('#userHistory').show().html(data);
+
+    }); 
+
 }
 
 </script>

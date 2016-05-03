@@ -251,4 +251,26 @@ class AdminModel extends CI_Model
         return $result;;
     }
    
+
+    /*
+    SELECT user.first_name, duty.name, assign_duty.start_date
+    FROM user, duty, assign_duty
+    WHERE user.user_id = assign_duty.user_id 
+    AND assign_duty.duty_id = duty.duty_id
+    ANd user.user_id = 10 limit 10
+    */
+   function getUserHistory( $userId ) {
+
+        $query = $this->db->query(
+            'SELECT user.first_name, duty.name, assign_duty.start_date
+            FROM user, duty, assign_duty
+            WHERE user.user_id = assign_duty.user_id 
+            AND assign_duty.duty_id = duty.duty_id
+            ANd user.user_id =' . $userId . ' limit 10');
+
+        $query->result();
+
+        return $query->result();
+
+   }
 }
