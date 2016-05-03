@@ -75,6 +75,50 @@
                             </div><!-- /.box-body -->
                             <div class="box-footer">
 
+
+
+
+                                </br> </br>
+                        <div class="box-header with-border">
+                                <h3 class="box-title">List Of DUTY:</h3>
+                            </div>
+                                <div class="form-group">
+                                    <div class="col-sm-4">
+                                        <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
+
+                                    </div>
+                                </div>
+                            <table class="table table-striped" id="table" width="80%">
+                                <thead>
+                                    <tr>
+                                        <th> Name</th>
+                                        <th> Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        <?php
+                            foreach($data['duty'] as $item) {
+                                echo 
+                                    '<tr>
+                                        <td> <a href="#">'. $item->name .' </a></td>
+                                        <td> <a href="#">'. $item->description .' </a></td>
+                                        <td> 
+                                            <a href="'. site_url('admin/editDuty?id=' . $item->duty_id ) .'" ><span class="glyphicon glyphicon-pencil"></span> </a>
+                                            <span>&nbsp;&nbsp;</span>
+                                           <a href="deleteDuty?id='.$item->duty_id.'" > <span class="glyphicon glyphicon-trash"></span></a>
+                                         </td>
+                                    </tr>';
+
+                            }
+                        ?>                                
+                                </tbody>
+                            </table>                                    
+                            </div><!-- /.box-body -->
+                            <div class="box-footer">
+                                
+                            </div><!-- /.box-footer -->
+                    </div><!-- /.box -->
+
                             </div><!-- /.box-footer -->
                         </form>
                     </div><!-- /.box -->

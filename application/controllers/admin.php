@@ -168,6 +168,8 @@ class Admin extends CI_Controller {
             $jkArray[$value->id] = $value->name;
         }
 
+
+        $data['duty'] = $this->AdminModel->getAllfromTable('duty');
         $data['jkArray'] = $jkArray;
         $data['jkDb'] = $jamatKhanas;
 
@@ -506,6 +508,44 @@ class Admin extends CI_Controller {
         $this->loadView('admin/editJK',  $data);
         }
 
-    }    
+    }
+
+
+    /**
+     * deleteDuty
+     * @param 1 : DutyId
+     */
+    function deleteDuty() {
+
+        $id = $this->input->get('id', TRUE);
+        $this->AdminModel->delete( 'duty_id', $id, 'duty');
+        redirect('admin/addDuty');
+
+    }
+
+    function editDuty() {
+
+        if($this->input->post()) {
+            $name = $this->input->post('name', true);
+            $description = $this->input->post('description', true);
+            $id = $this->input->post('id', true);
+
+            $data = array (
+                "name" => $name, 
+                "description" => $description
+            );
+
+            $this->AdminModel->update('duty','duty_id',$id, $data);
+            
+            redirect('admin/addDuty');
+
+
+        }
+
+        $id = $this->input->get('id', TRUE);
+        $data['duty'] = $this->AdminModel->getrecordById('duty','duty_id',$id);
+        $this->loadView('admin/editDuty',  $data);
+    }
+
 }
 ?>
