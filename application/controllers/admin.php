@@ -7,12 +7,12 @@ class Admin extends CI_Controller {
         $id = $this->session->userdata('user_id');
         $type = $this->session->userdata('type');
 
-        if ($id == NULL ) {
+        if( $id != NULL  && $type != 'User' ) {
+            $this->load->model('AdminModel');
+
+        } else {
 
             redirect('Login/');
-
-        } else if( $id != NULL  && $type != 'User' ) {
-            $this->load->model('AdminModel');
 
         }
 
