@@ -6,7 +6,10 @@ class Welcome extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model('UserModel');
+
+            $this->load->model('UserModel');
+               
+        
     }
 
     public function index()
@@ -35,11 +38,11 @@ class Welcome extends CI_Controller {
                 'email' => $this->input->post('email', true),
                 'password' => md5($this->input->post('password', true)),
                 'phone' => $this->input->post('phone', true),
-                'type' => "USER",
+                'type' => "User",
                 'verified' => "false",
                 'token' => $token
                 );
-            $emailMessage = "Please verify your account using this link \n".base_url()."/Welcome/verify?token=".$token;
+            $emailMessage = "Please verify your account using this link \n".base_url()."index.php/Welcome/verify?token=".$token;
 
             //get inserted id of the user
             $userInsertedId = $this->UserModel->insert('user', $data);
@@ -62,7 +65,7 @@ class Welcome extends CI_Controller {
 
             }
 
-            mail($data["email"],"User verification",$msg);
+            mail($data["email"],"User verification",$emailMessage);
 
             redirect('Welcome/login');
 
@@ -86,14 +89,15 @@ class Welcome extends CI_Controller {
         //if query found any result i.e userfound
         if($result) {
             $data['user_id'] = $result->user_id;
+            $data['type'] = $result->type;
             $data['message'] = 'Your are successfully Login && your session has been start';
             $this->session->set_userdata($data);
-            redirect('Welcome/');
+            redirect('Welcome/home');
 
         }else{
             $data['message'] = ' Your Email ID or Password is invalid  !!!!! ';
             $this->session->set_userdata($data);
-            redirect('Welcome/home');
+            redirect('Welcome/login');
         }
 
     }
@@ -122,4 +126,23 @@ class Welcome extends CI_Controller {
         $this->load->view('common/footer');
 
     }
+
+
+    public function verify(){
+
+         if( $this->input->get() ) {
+
+            $token = $this->input->get('token', TRUE);
+
+
+            $data = array (
+                "verified" => 'true'
+            );
+
+            $this->UserModel->update( 'user', 'token', $token, $data );
+           
+            redirect('Welcome/login');
+
+        }
+    } 
 }

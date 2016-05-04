@@ -13,6 +13,8 @@ class UserModel extends CI_Model
         $this->db->from('user');
         $this->db->where('email', $user_email);
         $this->db->where('password', $user_password);
+        $this->db->where('verified', 'true');
+        $this->db->where('type', 'User');
         $quary_result=$this->db->get();
         $result=$quary_result->row();
         
@@ -46,6 +48,26 @@ class UserModel extends CI_Model
 
         return -1 ;
 
-    }    
+    }   
 
+    /**
+     * Insert Method
+     * @param tableName
+     * @param whereParam1
+     * @param whereParam2
+     * @param dataObject
+     */
+    public function update( $tableName, $whereParam1, $whereParam2 ,$data ){
+
+        $this->db->where( $whereParam1, $whereParam2 );
+        $result = $this->db->update( $tableName ,$data);
+        if ( $result ) {
+
+            return true;
+
+        } 
+
+        return false;
+
+    }
 }

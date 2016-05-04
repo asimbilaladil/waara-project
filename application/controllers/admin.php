@@ -3,11 +3,15 @@ class Admin extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
+
         $id = $this->session->userdata('user_id');
-        if ($id == NULL) {
+        $type = $this->session->userdata('type');
+
+        if ($id == NULL ) {
+
             redirect('Login/');
 
-        } else {
+        } else if( $id != NULL  && $type != 'User' ) {
             $this->load->model('AdminModel');
 
         }
