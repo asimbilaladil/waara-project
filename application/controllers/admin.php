@@ -66,6 +66,7 @@ class Admin extends CI_Controller {
                  $subevent['title'] = $row->duty_name;
                  $subevent['start'] = $row->start_date;
                  $subevent['end'] = $row->end_date;
+                 $subevent['url'] = 'Welcome/waara?id='.$row->id;
                  array_push($events, $subevent);
         }
         $data['events'] = $events;        

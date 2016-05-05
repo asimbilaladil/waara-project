@@ -145,4 +145,21 @@ class Welcome extends CI_Controller {
 
         }
     } 
+
+
+    public function waara(){
+
+
+        if( $this->input->get() ) {
+
+            $id = $this->input->get('id', TRUE);
+
+
+            $data['result'] = $this->UserModel->getWaara($id);
+
+            $this->load->view('common/header');
+            $this->load->view('website/waara', array('data' => $data));
+            $this->load->view('common/footer');
+        }
+    }
 }

@@ -70,4 +70,16 @@ class UserModel extends CI_Model
         return false;
 
     }
+
+    /**
+     * Get Custom fields Method
+     */
+
+    public function getWaara ($id){
+        
+        $query = $this->db->query('CALL get_waara('.$id.')');
+        $query->result();
+
+        return $query->result();
+    }    
 }

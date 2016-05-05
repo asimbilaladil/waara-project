@@ -604,8 +604,13 @@ table.fc-border-separate {
                         <div class="col-md-6">
                             <div class="box box-success">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">list of Waara</h3>
+                                    
+                                    <div for="" class="col-sm-4 "><h3 class="box-title">list of Waara</h3></div>
+                                    <div for="" class="col-sm-6 "><h3 class="box-title">Selected Date: 03-05-2016</h3></div>
+
                                 </div>
+
+                 
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <div>
