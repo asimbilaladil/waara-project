@@ -71,7 +71,7 @@
                                         <a href="#">Username</a>
                                         <ul>
                                           
-                                            <li><a href="#"><i class="icon-log-out"></i> Logout</a></li>
+                                            <li><a href="<?php echo base_url("/index.php/Welcome/logout") ?>"><i class="icon-log-out"></i> Logout</a></li>
                                         </ul>
                                     </div>
                                 </li>
