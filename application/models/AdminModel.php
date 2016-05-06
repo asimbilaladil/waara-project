@@ -272,4 +272,30 @@ class AdminModel extends CI_Model
         return $query->result();
 
    }
+    /*
+    SELECT duty.name as dutyname, user.first_name, jk.name as jkname, assign_duty.start_date
+    FROM duty, user, jk, assign_duty
+    WHERE assign_duty.duty_id = duty.duty_id AND 
+    assign_duty.jk_id = jk.id AND 
+    assign_duty.user_id = user.user_id AND 
+    assign_duty.start_date = '05-01-2016'
+    */
+
+   function getAssignDutyDetailByStartDate( $date ) {
+
+        $query = $this->db->query(
+        'SELECT duty.name as dutyname, user.first_name, jk.name as jkname, assign_duty.start_date
+        FROM duty, user, jk, assign_duty
+        WHERE assign_duty.duty_id = duty.duty_id AND 
+        assign_duty.jk_id = jk.id AND 
+        assign_duty.user_id = user.user_id AND 
+        assign_duty.start_date =' . $date );
+
+        $query->result();
+
+        return $query->result();
+
+   }
+
+
 }
