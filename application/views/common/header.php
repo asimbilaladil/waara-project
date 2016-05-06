@@ -1,4 +1,6 @@
-
+<?php   $type = $this->session->userdata('type');
+        $fullName = $this->session->userdata('fullName');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,18 +65,27 @@
                     <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
                         <div class="cs-user">
                             <ul>
-                                <li><a href="<?php echo base_url("/index.php/Welcome/login") ?> " ><i class="icon-login"></i>Login</a></li>
-                                <li><a href="<?php echo base_url("/index.php/Welcome/signup") ?>"><i class="icon-user2"></i>Signup</a></li>
+                                       <?php if($type == 'User') { ?>
+        
+                     
                                 <li>
                                     <div class="cs-user-login">
                                         
-                                        <a href="#">Username</a>
+                                        <a href="#"><?php echo  $fullName; ?> </a>
                                         <ul>
                                           
                                             <li><a href="<?php echo base_url("/index.php/Welcome/logout") ?>"><i class="icon-log-out"></i> Logout</a></li>
                                         </ul>
+                                    
                                     </div>
                                 </li>
+                                    <?php } else if ($type == 'Super Admin' || $type == 'JK Admin') {?>
+                                <li><a href="<?php echo base_url("/index.php/Admin") ?>"><i class="icon-user2"></i>Admin</a></li>
+
+                                       <?php  } else { ?>
+                        <li><a href="<?php echo base_url("/index.php/Welcome/login") ?> " ><i class="icon-login"></i>Login</a></li>
+                                <li><a href="<?php echo base_url("/index.php/Welcome/signup") ?>"><i class="icon-user2"></i>Signup</a></li>
+                                       <?php } ?>
                             </ul>
                         </div>
                   

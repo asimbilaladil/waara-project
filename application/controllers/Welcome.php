@@ -90,6 +90,7 @@ class Welcome extends CI_Controller {
         if($result) {
             $data['user_id'] = $result->user_id;
             $data['type'] = $result->type;
+            $data['fullName'] = $result->first_name . " " . $result->last_name;
             $data['message'] = 'Your are successfully Login && your session has been start';
             $this->session->set_userdata($data);
             redirect('Welcome/home');
