@@ -4,15 +4,35 @@
 
 var events =  <?php  echo json_encode( $data['events']); ?> ;
     $.getScript('http://arshaw.com/js/fullcalendar-1.6.4/fullcalendar/fullcalendar.min.js',function(){
-  
+
   var date = new Date();
   var d = date.getDate();
   var m = date.getMonth();
   var y = date.getFullYear();
+
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+  document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatDate(new Date());        
+
   $('#calendar').fullCalendar({
         dayClick: function(date, allDay, jsEvent, view) {
 
-        $('#date').val( date.toISOString() );
+        var formatedDate = formatDate(date);
+
+        document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatedDate;
+
+        $('#date').val( formatedDate );
 
     },
     header: {
@@ -606,7 +626,8 @@ table.fc-border-separate {
                                 <div class="box-header with-border">
                                     
                                     <div for="" class="col-sm-4 "><h3 class="box-title">list of Waara</h3></div>
-                                    <div for="" class="col-sm-6 "><h3 class="box-title">Selected Date: 03-05-2016</h3></div>
+                                    <div for="" class="col-sm-6 "><h3 id="selectedDate" class="box-title"></h3></div>
+
 
                                 </div>
 
@@ -620,44 +641,23 @@ table.fc-border-separate {
                                      </br>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-sm-6">
-                                        <input type="text" name="users" id="users" class="form-control" id="" placeholder="Search User.." required>
-
-                                                
+                                            <div class="col-sm-6">        
                                                 <input type="hidden" name="selectedUser" id="selectedUser"/>
+                                                <input type="hidden" name="selectedDuty" id="selectedDuty"/>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-3">
-                                                <button type="button" class="btn btn-primary btn-block"  data-toggle="modal" data-target="#myModal" onclick="ajaxCallUserHistory()">Save</button>
-                                            </div>
-                                            <div class="col-sm-2">
-                                            </div>
-                                        </div>
+
                                     </div>
                                    
                                     <div class="col-sm-9">
                                      </br>
-                                        <select size="17" required id="duty" name="duty"   class="form-control">
-                                            <option value="0"> Select Waara </option>
-                                            <?php 
+                                        <!--Dynamicly duty table added  -->
+                                        <div id="duty" name="duty" >
 
-                                                if(isset($data['duty'])) {
-
-                                                    foreach($data['duty'] as $row) {
-                                                        echo '<option value="' . $row->duty_id .'"> ' . $row->name . ' </option>';
-                                                    }
-
-                                                }
-
-                                            ?>
-                                        </select>
-                                        </br></br></br> </br></br>
+                                        </div>
                                     </div>
                                     <input type="hidden" id="jkHidden" name="jk">
                                     <input type="hidden" id="date" name="date" />
-
-
 
                                         <!-- Modal -->
                                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -692,10 +692,12 @@ table.fc-border-separate {
                                               </div>
                                               <div class="modal-body">
 
+                                                <label class="checkbox-inline"><input id="byEmail" name="byEmail" value="email" type="checkbox" value="">By Email</label>
+                                                <label class="checkbox-inline"><input id="bySms" name="bySms" value="sms" type="checkbox" value="">By Message</label>
+                                                
+
                                               </div>
                                               <div class="modal-footer">
-                                                <button type="submit" class="btn btn-default" data-dismiss="modal">Through SMS</button>
-                                                <button type="submit" class="btn btn-default" data-dismiss="modal">Through EMAIL</button>
                                                 <button type="submit" class="btn btn-primary">Save</button>
                                               </div>
                                             </div>
@@ -744,7 +746,7 @@ $(function(){
    ajaxCallDuty();
 });
 
-$("#users").autocomplete({
+/*$("[name=users]").autocomplete({
 
     source : '<?php echo site_url('admin/getUsers') ?>',
     select: function(event, ui) {
@@ -756,7 +758,7 @@ $("#users").autocomplete({
         event.preventDefault();
         $("#users").val(ui.item.label);
     }
-});
+});*/
 
 //stop executing java script further
 //window.stop();
@@ -764,20 +766,54 @@ $("#users").autocomplete({
 function ajaxCallDuty() {
    var state=$('#jk').val();
 
-        $.post('<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>', {
-            state:state
-        }, function(data) {
-        
-            $('#duty').html(data);
+    $.ajax({
+        url: "<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>",
+        type: "POST",
+        data: {
+            'state' : state
+        },
+        success: function(response){
 
-        }); 
+            $('#duty').html(response);
+
+            $("[name=users]").autocomplete({
+
+                source : '<?php echo site_url('admin/getUsers') ?>',
+                select: function(event, ui) {
+                    event.preventDefault();
+                    $('#' + this.id).val(ui.item.label);
+                    $("#selectedUser").val(ui.item.value);
+                },
+                focus: function(event, ui) {
+                    event.preventDefault();
+                    $('#' + this.id).val(ui.item.label);
+                }
+            });
+
+
+        },
+        error: function(){
+            
+        }
+    });
+
+    // $.post('<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>', {
+    //     state:state
+    // }, function(data) {
+    
+    //     $('#duty').html(data);
+
+    // }); 
 getJK();
 }
 
 
-function ajaxCallUserHistory() {
+function ajaxCallUserHistory(dutyId) {
+
+
    var state=$('#selectedUser').val();
 
+   $('#selectedDuty').val(dutyId);
    
     $.post('<?php echo site_url('Admin/ajaxUserHistory') ?>', {
         state:state
@@ -790,3 +826,4 @@ function ajaxCallUserHistory() {
 }
 
 </script>
+

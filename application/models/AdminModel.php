@@ -251,7 +251,6 @@ class AdminModel extends CI_Model
         return $result;;
     }
    
-
     /*
     SELECT user.first_name, duty.name, assign_duty.start_date
     FROM user, duty, assign_duty
