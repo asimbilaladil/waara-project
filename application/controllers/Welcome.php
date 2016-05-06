@@ -162,4 +162,31 @@ class Welcome extends CI_Controller {
             $this->load->view('common/footer');
         }
     }
+
+    public function news(){
+
+
+        $data['result'] = $this->UserModel->getNews();
+
+        $this->load->view('common/header');
+        $this->load->view('website/news', array('data' => $data));
+        $this->load->view('common/footer');
+
+    }
+
+    public function viewNews(){
+    
+    if( $this->input->get() ) {
+
+            $id = $this->input->get('id', TRUE);
+
+            $data['result'] = $this->UserModel->getNewsdetails($id);
+
+            $this->load->view('common/header');
+            $this->load->view('website/viewNews', array('data' => $data));
+            $this->load->view('common/footer');
+
+        }    
+
+    }
 }
