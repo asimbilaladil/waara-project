@@ -28,10 +28,11 @@ class Admin extends CI_Controller {
                 
                 $user = $this->AdminModel->getrecordById('user', 'user_id', $this->input->post('selectedUser'));
 
-                mail($user->email, "");
+                //mail($user->email, "");
+
             }
 
-            $date = date_parse($this->input->post('date')) ;
+            $date = $this->input->post('date');
 
             $assign = array( 
                 "user_id" => $this->input->post('selectedUser'),
