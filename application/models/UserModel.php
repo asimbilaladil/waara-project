@@ -70,4 +70,35 @@ class UserModel extends CI_Model
         return false;
 
     }
+
+    /**
+     * Get Custom fields Method
+     */
+
+    public function getWaara ($id){
+        
+        $query = $this->db->query('CALL get_waara('.$id.')');
+        $query->result();
+
+        return $query->result();
+    }  
+
+    public function getNews (){
+        
+        $this->db->select('*');
+        $this->db->from('news');
+        $quary_result=$this->db->get();
+        $result = $quary_result->result();
+        return $result;
+    }  
+
+    public function getNewsdetails ($id){
+        
+        $this->db->select('*');
+        $this->db->from('news');
+        $this->db->where('id',$id);
+        $quary_result=$this->db->get();
+        $result = $quary_result->result();
+        return $result;
+    }     
 }

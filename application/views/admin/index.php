@@ -4,18 +4,35 @@
 
 var events =  <?php  echo json_encode( $data['events']); ?> ;
     $.getScript('http://arshaw.com/js/fullcalendar-1.6.4/fullcalendar/fullcalendar.min.js',function(){
-  
-
-
 
   var date = new Date();
   var d = date.getDate();
   var m = date.getMonth();
   var y = date.getFullYear();
+
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+  document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatDate(new Date());        
+
   $('#calendar').fullCalendar({
         dayClick: function(date, allDay, jsEvent, view) {
 
-        $('#date').val( date.toISOString() );
+        var formatedDate = formatDate(date);
+
+        document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatedDate;
+
+        $('#date').val( formatedDate );
 
     },
     header: {
@@ -607,8 +624,13 @@ table.fc-border-separate {
                         <div class="col-md-6">
                             <div class="box box-success">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">list of Waara</h3>
+                                    
+                                    <div for="" class="col-sm-4 "><h3 class="box-title">list of Waara</h3></div>
+                                    <div for="" class="col-sm-6 "><h3 id="selectedDate" class="box-title"></h3></div>
+
                                 </div>
+
+                 
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <div>
@@ -620,30 +642,21 @@ table.fc-border-separate {
                                         <div class="form-group">
                                             <div class="col-sm-6">        
                                                 <input type="hidden" name="selectedUser" id="selectedUser"/>
-                                                <input type="text" name="selectedDuty" id="selectedDuty"/>
+                                                <input type="hidden" name="selectedDuty" id="selectedDuty"/>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-3">
-                                                <button type="button" class="btn btn-primary btn-block"  data-toggle="modal" data-target="#myModal" onclick="ajaxCallUserHistory()">Save</button>
-                                            </div>
-                                            <div class="col-sm-2">
-                                            </div>
-                                        </div>
+
                                     </div>
                                    
                                     <div class="col-sm-9">
                                      </br>
+                                        <!--Dynamicly duty table added  -->
                                         <div id="duty" name="duty" >
 
                                         </div>
-
-                                        </br></br></br> </br></br>
                                     </div>
                                     <input type="hidden" id="jkHidden" name="jk">
                                     <input type="hidden" id="date" name="date" />
-
-
 
                                         <!-- Modal -->
                                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -678,10 +691,12 @@ table.fc-border-separate {
                                               </div>
                                               <div class="modal-body">
 
+                                                <label class="checkbox-inline"><input id="byEmail" name="byEmail" value="email" type="checkbox" value="">By Email</label>
+                                                <label class="checkbox-inline"><input id="bySms" name="bySms" value="sms" type="checkbox" value="">By Message</label>
+                                                
+
                                               </div>
                                               <div class="modal-footer">
-                                                <button type="submit" class="btn btn-default" data-dismiss="modal">Through SMS</button>
-                                                <button type="submit" class="btn btn-default" data-dismiss="modal">Through EMAIL</button>
                                                 <button type="submit" class="btn btn-primary">Save</button>
                                               </div>
                                             </div>
@@ -810,3 +825,4 @@ function ajaxCallUserHistory(dutyId) {
 }
 
 </script>
+

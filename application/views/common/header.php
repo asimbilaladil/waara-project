@@ -46,8 +46,8 @@
                     </form>
                 </div>
             </li>
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#">Latest News</a></li>
+            <li class="active"><a href="<?php echo site_url('Welcome/home'); ?>">Home</a></li>
+            <li><a href="<?php echo site_url('Welcome/news'); ?>">Latest News</a></li>
           
         </ul>
     </div>
@@ -101,8 +101,8 @@
                         <div class="cs-main-nav pull-right">
                             <nav class="main-navigation">
                                 <ul>
-                                    <li><a href="#">Home</a></li>
-                                   <li><a href="#">Latest News</a></li>
+                                    <li><a href="<?php echo site_url('Welcome/home'); ?>">Home</a></li>
+                                   <li><a href="<?php echo site_url('Welcome/news'); ?>">Latest News</a></li>
                                                                       
                                 </ul>
                             </nav>

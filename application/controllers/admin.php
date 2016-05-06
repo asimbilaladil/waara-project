@@ -20,18 +20,25 @@ class Admin extends CI_Controller {
 
     function index()
     {   
+        //ASSIGN DUTY
         if($this->input->post()) {
 
-            $date = date_parse($this->input->post('date')) ;
+            //if email is checked send email to the assigned user
+            if( $this->input->post('byEmail') ) {
+                
+                $user = $this->AdminModel->getrecordById('user', 'user_id', $this->input->post('selectedUser'));
 
-            $formatedDate = $date['year'] . '-' .  $date['month'] . '-' . $date['day'];
+                mail($user->email, "");
+            }
+
+            $date = date_parse($this->input->post('date')) ;
 
             $assign = array( 
                 "user_id" => $this->input->post('selectedUser'),
                 "duty_id" => $this->input->post('selectedDuty'),
                 "jk_id" => $this->input->post('jk'),
-                "start_date" => $formatedDate,
-                "end_date" => $formatedDate
+                "start_date" => $date,
+                "end_date" => $date
             );
 
         $this->AdminModel->insert('assign_duty', $assign);
@@ -66,6 +73,7 @@ class Admin extends CI_Controller {
                  $subevent['title'] = $row->duty_name;
                  $subevent['start'] = $row->start_date;
                  $subevent['end'] = $row->end_date;
+                 $subevent['url'] = 'Welcome/waara?id='.$row->id;
                  array_push($events, $subevent);
         }
         $data['events'] = $events;        
