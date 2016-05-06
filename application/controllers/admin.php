@@ -28,7 +28,7 @@ class Admin extends CI_Controller {
 
             $assign = array( 
                 "user_id" => $this->input->post('selectedUser'),
-                "duty_id" => $this->input->post('duty'),
+                "duty_id" => $this->input->post('selectedDuty'),
                 "jk_id" => $this->input->post('jk'),
                 "start_date" => $formatedDate,
                 "end_date" => $formatedDate
@@ -90,11 +90,33 @@ class Admin extends CI_Controller {
 
         $duty = $this->AdminModel->getDutyByJk( $state );
 
-        echo '';
-            foreach($duty as $row) { 
-                 echo "<option value='".$row->duty_id."'>".$row->name."</option>";
-        }
+        $html = '<table class="table table-striped" id="dutyTable">
+        <thead>
+        <tr>
+            <th> Name </th>
+            <th> Duty </th>
+            <th> Date </th>
+        </tr>
+        </thead>
+        <tbody>';
         
+        $count = 0;
+
+        foreach($duty as $row) { 
+
+            $count++;
+
+            $html = $html . '<tr>
+                                <td> '. $row->name .' </td>
+                                <td> <input type="text" name="users" id="users_'. $count .'" class="form-control" placeholder="Search User.." required> </td>
+                                <td> <button type="button" class="btn btn-primary btn-block"  data-toggle="modal" data-target="#myModal" onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
+                            </tr>';
+
+        }
+
+        $html = $html . '<tbody></table>';
+
+        echo $html;
 
     }
 

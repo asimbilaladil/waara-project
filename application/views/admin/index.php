@@ -5,6 +5,9 @@
 var events =  <?php  echo json_encode( $data['events']); ?> ;
     $.getScript('http://arshaw.com/js/fullcalendar-1.6.4/fullcalendar/fullcalendar.min.js',function(){
   
+
+
+
   var date = new Date();
   var d = date.getDate();
   var m = date.getMonth();
@@ -615,11 +618,9 @@ table.fc-border-separate {
                                      </br>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-sm-6">
-                                        <input type="text" name="users" id="users" class="form-control" id="" placeholder="Search User.." required>
-
-                                                
+                                            <div class="col-sm-6">        
                                                 <input type="hidden" name="selectedUser" id="selectedUser"/>
+                                                <input type="text" name="selectedDuty" id="selectedDuty"/>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -633,20 +634,10 @@ table.fc-border-separate {
                                    
                                     <div class="col-sm-9">
                                      </br>
-                                        <select size="17" required id="duty" name="duty"   class="form-control">
-                                            <option value="0"> Select Waara </option>
-                                            <?php 
+                                        <div id="duty" name="duty" >
 
-                                                if(isset($data['duty'])) {
+                                        </div>
 
-                                                    foreach($data['duty'] as $row) {
-                                                        echo '<option value="' . $row->duty_id .'"> ' . $row->name . ' </option>';
-                                                    }
-
-                                                }
-
-                                            ?>
-                                        </select>
                                         </br></br></br> </br></br>
                                     </div>
                                     <input type="hidden" id="jkHidden" name="jk">
@@ -739,7 +730,7 @@ $(function(){
    ajaxCallDuty();
 });
 
-$("#users").autocomplete({
+/*$("[name=users]").autocomplete({
 
     source : '<?php echo site_url('admin/getUsers') ?>',
     select: function(event, ui) {
@@ -751,7 +742,7 @@ $("#users").autocomplete({
         event.preventDefault();
         $("#users").val(ui.item.label);
     }
-});
+});*/
 
 //stop executing java script further
 //window.stop();
@@ -759,20 +750,54 @@ $("#users").autocomplete({
 function ajaxCallDuty() {
    var state=$('#jk').val();
 
-        $.post('<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>', {
-            state:state
-        }, function(data) {
-        
-            $('#duty').html(data);
+    $.ajax({
+        url: "<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>",
+        type: "POST",
+        data: {
+            'state' : state
+        },
+        success: function(response){
 
-        }); 
+            $('#duty').html(response);
+
+            $("[name=users]").autocomplete({
+
+                source : '<?php echo site_url('admin/getUsers') ?>',
+                select: function(event, ui) {
+                    event.preventDefault();
+                    $('#' + this.id).val(ui.item.label);
+                    $("#selectedUser").val(ui.item.value);
+                },
+                focus: function(event, ui) {
+                    event.preventDefault();
+                    $('#' + this.id).val(ui.item.label);
+                }
+            });
+
+
+        },
+        error: function(){
+            
+        }
+    });
+
+    // $.post('<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>', {
+    //     state:state
+    // }, function(data) {
+    
+    //     $('#duty').html(data);
+
+    // }); 
 getJK();
 }
 
 
-function ajaxCallUserHistory() {
+function ajaxCallUserHistory(dutyId) {
+
+
    var state=$('#selectedUser').val();
 
+   $('#selectedDuty').val(dutyId);
    
     $.post('<?php echo site_url('Admin/ajaxUserHistory') ?>', {
         state:state
