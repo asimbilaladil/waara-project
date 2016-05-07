@@ -590,12 +590,22 @@ table.fc-border-separate {
                                                         }
                                                         
                                                     ?>   
-                                                    </select>
+                                                    </select >
                                                     </li>
+                           
+                  <li id="selectJKList">  <select name="shift" class="form-control">
+                <option value="Morning">Evening</option>
+                <option value="Morning">Morning</option>
+                <option value="Morning">Both</option>
+
+                    </select >
+
+                    </li> 
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                     <li class="active">Dashboard</li>
                 </ol>
                 </br>
+                 </br>
             </section>
             <!-- Main content -->
             <section class="content">
