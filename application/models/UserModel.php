@@ -100,5 +100,12 @@ class UserModel extends CI_Model
         $quary_result=$this->db->get();
         $result = $quary_result->result();
         return $result;
-    }     
+    } 
+    public function getUserWaaraCalendar ($id) {
+        
+        $query = $this->db->query('CALL get_user_waara_calendar('.$id.')');
+        $query->result();
+
+        return $query->result();
+    }    
 }

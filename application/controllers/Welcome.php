@@ -90,6 +90,7 @@ class Welcome extends CI_Controller {
         if($result) {
             $data['user_id'] = $result->user_id;
             $data['type'] = $result->type;
+            $data['fullName'] = $result->first_name . " " . $result->last_name;
             $data['message'] = 'Your are successfully Login && your session has been start';
             $this->session->set_userdata($data);
             redirect('Welcome/home');
@@ -121,9 +122,38 @@ class Welcome extends CI_Controller {
     //Home controller
     public function home() {
 
-        $this->load->view('common/header');
-        $this->load->view('website/home');
-        $this->load->view('common/footer');
+        $id = $this->session->userdata('user_id');
+        $type = $this->session->userdata('type');
+
+        if( $id != NULL  && $type == 'User' ) {
+
+
+        $data['events'] = $this->UserModel->getUserWaaraCalendar($id); 
+        $events = [];
+        foreach( $data['events']  as $row ) {
+             $subevent['title'] = $row->duty_name;
+             $subevent['start'] = $row->start_date;
+             $subevent['end'] = $row->end_date;
+             $subevent['url'] = 'waara?id='.$row->id;
+             array_push($events, $subevent);
+        }
+        $data['events'] = $events;  
+
+            $this->load->view('common/header');
+            $this->load->view('website/home',array('data' => $data));
+            $this->load->view('common/footer');
+
+
+        } else if ( $type == 'Super Admin' || $type == 'JK Admin') {
+
+            redirect('Admin/');
+
+        } else {
+
+            redirect('Welcome/login');
+
+        }
+
 
     }
 
@@ -189,4 +219,16 @@ class Welcome extends CI_Controller {
         }    
 
     }
+    /**
+     * logout
+     */
+  
+    public function logout() {
+
+        $this->session->sess_destroy();
+
+        redirect('welcome/login');
+
+    }  
+    
 }

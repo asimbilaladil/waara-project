@@ -47,7 +47,7 @@ class AdminModel extends CI_Model
      */
     public function addJK( $data ){
 
-        if ($this->db->insert('JK', $data) ) {
+        if ($this->db->insert('jk', $data) ) {
 
             return true;
 

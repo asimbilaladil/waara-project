@@ -161,11 +161,10 @@ class Admin extends CI_Controller {
     function addDuty() {   
     
         if($this->input->post()) {
-
             $selectJkIds = $this->input->post('jk', true);
 
             $dutyItem = array (
-                "name" => $this->input->post('name', true),
+                "name" => $this->input->post('duty_name', true),
                 "description" => $this->input->post('description', true)
             );
 
@@ -208,7 +207,7 @@ class Admin extends CI_Controller {
         $data['jkArray'] = $jkArray;
         $data['jkDb'] = $jamatKhanas;
 
-        $this->loadView('admin/addDuty', $data);
+       $this->loadView('admin/addDuty', $data);
 
     }
 
@@ -353,10 +352,12 @@ class Admin extends CI_Controller {
            echo  $userId = $this->input->post('userId', true);
            echo $type = $this->input->post('type', true);
            echo $jk_id = $this->input->post('jk_id', true);
+           $shift_id = $this->input->post('shift_id', true);
 
             $data = array (
                 "type" => $type, 
-                "jk_id" => $jk_id 
+                "jk_id" => $jk_id,
+                "shift"  => $shift_id
             );
 
             $this->AdminModel->update( 'user', 'user_id', $userId, $data );
@@ -596,7 +597,7 @@ class Admin extends CI_Controller {
         <tr>
             <th> Name </th>
             <th> Duty </th>
-            <th> Date </th>
+            <th> Action </th>
         </tr>
         </thead>
         <tbody>';
