@@ -161,11 +161,10 @@ class Admin extends CI_Controller {
     function addDuty() {   
     
         if($this->input->post()) {
-
             $selectJkIds = $this->input->post('jk', true);
 
             $dutyItem = array (
-                "name" => $this->input->post('name', true),
+                "name" => $this->input->post('duty_name', true),
                 "description" => $this->input->post('description', true)
             );
 
@@ -208,7 +207,7 @@ class Admin extends CI_Controller {
         $data['jkArray'] = $jkArray;
         $data['jkDb'] = $jamatKhanas;
 
-        $this->loadView('admin/addDuty', $data);
+       $this->loadView('admin/addDuty', $data);
 
     }
 

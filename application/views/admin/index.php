@@ -626,7 +626,7 @@ table.fc-border-separate {
                                 <div class="box-header with-border">
                                     
                                     <div for="" class="col-sm-4 "><h3 class="box-title">list of Waara</h3></div>
-                                    <div for="" class="col-sm-6 "><h3 id="selectedDate" class="box-title"></h3></div>
+                                    <div for="" class="col-sm-8 "><h3 id="selectedDate" class="box-title"></h3></div>
 
 
                                 </div>
