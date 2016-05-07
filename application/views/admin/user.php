@@ -116,6 +116,13 @@
                                         ?> 
                                     </select> 
                                     </br>
+                                 <select style="display:none" id="shiftList" name="shift_id"  class="form-control">
+                                        
+                                        <option value="1">Evening</option>
+                                        <option value="2">Morning</option>
+                            
+                                    </select> 
+                                    </br>                                    
                                       </div>
                                     <input name="userId"  type="hidden" id="userId">                                         
                                     <button type="submit"  class="btn btn-primary btn-block">Save</button>
@@ -139,12 +146,16 @@
             if(role == "JK Admin"){
                 document.getElementById("jkList").style.display = "block";
                 document.getElementById("jkdiv").style.display = "block";
+                document.getElementById("shiftList").style.display = "block";
                 
         
             } else {
                 document.getElementById("jkList").style.display = "none";
                 document.getElementById("jkdiv").style.display = "none";
+                document.getElementById("shiftList").style.display = "none";
                 document.getElementById("jkList").value = "0";
+                document.getElementById("shiftList").value = "0";
+
             }
         
         }
