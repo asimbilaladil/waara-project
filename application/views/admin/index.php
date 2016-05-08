@@ -24,6 +24,7 @@ function formatDate(date) {
 }
 
   document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatDate(new Date());        
+  document.getElementById('date').value = formatDate(new Date());
 
   $('#calendar').fullCalendar({
         dayClick: function(date, allDay, jsEvent, view) {
@@ -751,6 +752,20 @@ var getJK = function getJK (){
 }
 
 $(function(){
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+  document.getElementById('date').value = formatDate(new Date());
    ajaxCallDuty();
 });
 
