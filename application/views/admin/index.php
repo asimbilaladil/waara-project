@@ -37,14 +37,7 @@ function formatDate(date) {
         ajaxCallDuty();
 
 
-    },
-    header: {
-      right: 'prev,next today',
-      center: 'title',
-      left: 'month,agendaWeek,agendaDay'
-    },
-    editable: true,
-    events: events
+    }
   });
 
 })
@@ -649,12 +642,13 @@ table.fc-border-separate {
                                 <div class="box-body">
                                     <div>
                                     <form id="defaultForm" action="<?php echo site_url('Admin/index') ?>" method="post" >
-                                        <input type="text" name="selectedShift" id="selectedShift">
+                                        
                                         <div class="col-sm-12">
                                      </br>
                                         </div>
                                         <div class="form-group">
-                                            <div class="col-sm-6">        
+                                            <div class="col-sm-6">
+                                                <input type="hidden" name="selectedShift" id="selectedShift">
                                                 <input type="hidden" name="selectedUser" id="selectedUser"/>
                                                 <input type="hidden" name="selectedDuty" id="selectedDuty"/>
                                                 <input type="hidden" id="jkHidden" name="jk">

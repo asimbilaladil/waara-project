@@ -124,12 +124,13 @@ class Admin extends CI_Controller {
 
             if( count($result) > 0) {
 
-                $user =  $result[0]->first_name;  
+                $user =  $result[0]->first_name;
+                $assignId =  $result[0]->assign_id;  
 
                 $html = $html . '<tr>
                                 <td> '. $row->name .' </td>
                                 <td> Assigned to '. $user . '</td>     
-                                <td> <button type="button" class="btn btn-primary btn-block" >View</button> </td>
+                                <td> <a href= " ' . site_url("Welcome/waara?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >View</button> </td>
                                 </tr>';
 
 
