@@ -285,7 +285,7 @@ class AdminModel extends CI_Model
    function getUserOfDutyByDate( $startDate, $dutyId ) {
 
         $query = $this->db->query(
-            "SELECT user.first_name 
+            "SELECT user.first_name, assign_duty.assign_id
             FROM user, assign_duty
             WHERE assign_duty.start_date= '" . $startDate .  "' 
             AND assign_duty.user_id = user.user_id
