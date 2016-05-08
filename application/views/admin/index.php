@@ -34,6 +34,9 @@ function formatDate(date) {
 
         $('#date').val( formatedDate );
 
+        ajaxCallDuty();
+
+
     },
     header: {
       right: 'prev,next today',
@@ -593,10 +596,10 @@ table.fc-border-separate {
                                                     </select >
                                                     </li>
                            
-                  <li id="selectJKList">  <select name="shift" class="form-control">
-                <option value="Morning">Evening</option>
-                <option value="Morning">Morning</option>
-                <option value="Morning">Both</option>
+                  <li id="selectJKList">  <select name="shift" id="shift" class="form-control">
+                <option value="EVENING">Evening</option>
+                <option value="MORNING">Morning</option>
+                <option value="BOTH">Both</option>
 
                     </select >
 
@@ -636,7 +639,7 @@ table.fc-border-separate {
                                 <div class="box-header with-border">
                                     
                                     <div for="" class="col-sm-4 "><h3 class="box-title">list of Waara</h3></div>
-                                    <div for="" class="col-sm-8 "><h3 id="selectedDate" class="box-title"></h3></div>
+                                    <div for="" class="col-sm-8 "><h3 id="selectedDate" class="box-title"> Selected Date is : </h3></div>
 
 
                                 </div>
@@ -646,7 +649,7 @@ table.fc-border-separate {
                                 <div class="box-body">
                                     <div>
                                     <form id="defaultForm" action="<?php echo site_url('Admin/index') ?>" method="post" >
-
+                                        <input type="text" name="selectedShift" id="selectedShift">
                                         <div class="col-sm-12">
                                      </br>
                                         </div>
@@ -654,6 +657,8 @@ table.fc-border-separate {
                                             <div class="col-sm-6">        
                                                 <input type="hidden" name="selectedUser" id="selectedUser"/>
                                                 <input type="hidden" name="selectedDuty" id="selectedDuty"/>
+                                                <input type="hidden" id="jkHidden" name="jk">
+                                                <input type="hidden" id="date" name="date" />                                                
                                             </div>
                                         </div>
 
@@ -666,8 +671,7 @@ table.fc-border-separate {
 
                                         </div>
                                     </div>
-                                    <input type="hidden" id="jkHidden" name="jk">
-                                    <input type="hidden" id="date" name="date" />
+
 
                                         <!-- Modal -->
                                         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -756,31 +760,21 @@ $(function(){
    ajaxCallDuty();
 });
 
-/*$("[name=users]").autocomplete({
-
-    source : '<?php echo site_url('admin/getUsers') ?>',
-    select: function(event, ui) {
-        event.preventDefault();
-        $("#users").val(ui.item.label);
-        $("#selectedUser").val(ui.item.value);
-    },
-    focus: function(event, ui) {
-        event.preventDefault();
-        $("#users").val(ui.item.label);
-    }
-});*/
-
-//stop executing java script further
-//window.stop();
 
 function ajaxCallDuty() {
+
+    
+
    var state=$('#jk').val();
+
+   var date = $('#date').val(); 
 
     $.ajax({
         url: "<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>",
         type: "POST",
         data: {
-            'state' : state
+            'state' : state,
+            'date' : date
         },
         success: function(response){
 
@@ -807,19 +801,11 @@ function ajaxCallDuty() {
         }
     });
 
-    // $.post('<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>', {
-    //     state:state
-    // }, function(data) {
-    
-    //     $('#duty').html(data);
-
-    // }); 
 getJK();
 }
 
 
 function ajaxCallUserHistory(dutyId) {
-
 
    var state=$('#selectedUser').val();
 
@@ -835,5 +821,13 @@ function ajaxCallUserHistory(dutyId) {
 
 }
 
-</script>
+var shift = $('#shift').val();
+
+$('#selectedShift').val(shift);
+
+$('#shift').on('change', function() {
+    $('#selectedShift').val(this.value);  
+});
+
+</script>   
 

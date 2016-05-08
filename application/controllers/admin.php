@@ -39,7 +39,8 @@ class Admin extends CI_Controller {
                 "duty_id" => $this->input->post('selectedDuty'),
                 "jk_id" => $this->input->post('jk'),
                 "start_date" => $date,
-                "end_date" => $date
+                "end_date" => $date,
+                "shift" => $this->input->post('selectedShift')
             );
 
         $this->AdminModel->insert('assign_duty', $assign);
@@ -97,6 +98,8 @@ class Admin extends CI_Controller {
 
         $state=$this->input->post('state');
 
+        $date=$this->input->post('date');
+
         $duty = $this->AdminModel->getDutyByJk( $state );
 
         $html = '<table class="table table-striped" id="dutyTable">
@@ -115,15 +118,35 @@ class Admin extends CI_Controller {
 
             $count++;
 
-            $html = $html . '<tr>
+            $result = $this->AdminModel->getUserOfDutyByDate( $date, $row->duty_id );
+
+            
+
+            if( count($result) > 0) {
+
+                $user =  $result[0]->first_name;  
+
+                $html = $html . '<tr>
                                 <td> '. $row->name .' </td>
-                                <td> <input type="text" name="users" id="users_'. $count .'" class="form-control" placeholder="Search User.." required> </td>
+                                <td> Assigned to '. $user . '</td>     
+                                <td> <button type="button" class="btn btn-primary btn-block" >View</button> </td>
+                                </tr>';
+
+
+            } else {
+
+                $html = $html . '<tr>
+                                <td> '. $row->name .' </td>
+                                <td> <input type="text" name="users" id="users_'. $count .'" class="form-control" placeholder="Search User.." required> </td>     
                                 <td> <button type="button" class="btn btn-primary btn-block"  data-toggle="modal" data-target="#myModal" onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
-                            </tr>';
+                                </tr>';
+            }
 
         }
 
         $html = $html . '<tbody></table>';
+
+
 
         echo $html;
 
