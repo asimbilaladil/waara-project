@@ -175,7 +175,8 @@ class AdminModel extends CI_Model
                         FROM duty, duty_jk, jk
                         WHERE jk.id = ' . $id . ' AND 
                         duty.duty_id = duty_jk.duty_id AND
-                        duty_jk.jk_id = jk.id');
+                        duty_jk.jk_id = jk.id
+                        order by duty.priority asc');
 
         $query->result();
 
