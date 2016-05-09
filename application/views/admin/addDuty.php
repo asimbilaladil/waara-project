@@ -44,6 +44,34 @@
                                     </div>
                                 </div>
 
+
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Add Before</label>
+                                    <div class="col-sm-6">
+                                        
+                                        <select id="beforeDuty" name="beforeDuty" class="form-control">
+                                            
+                                            <?php
+                                                $lastPriority = end($data['duty'])->priority + 1 ;
+
+                                                //$lastPriority = array_pop($data['duty'])->priority + 1;
+
+                                                echo '<option value="'. $lastPriority  .'" selected> </option>'; 
+
+                                                foreach( $data['duty'] as $row ) {
+                                                    echo '<option value="'. $row->priority .'" > '. $row->name .' </option>';
+                                                }
+
+
+
+                                            ?>
+
+                                        </select>
+
+                                    </div>
+                                </div>
+
+
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Description</label>
                                     <div class="col-sm-6">
