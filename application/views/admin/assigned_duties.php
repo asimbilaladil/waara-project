@@ -98,9 +98,6 @@ $("#selectDate").datepicker({
 
     var formatedDate = formatDate(date);
 
-    console.log(formatedDate);
-
-
     $.ajax({
         url: "<?php echo site_url('Admin/ajaxDutyByDate') ?>",
         type: "POST",
