@@ -646,6 +646,42 @@ class Admin extends CI_Controller {
 
 
 
+    function ajaxDutyByDate() {
+
+        $date = $this->input->get('date');
+
+        $duty = $this->AdminModel->getAssignDutyDetailByStartDate( $date );
+
+        $html = '<table class="table table-striped" id="dutyTable">
+        <thead>
+        <tr>
+            <th> User Name </th>
+            <th> Duty Name  </th>
+            <th> Jamat Khana </th>
+            <th> Date </th>
+        </tr>
+        </thead>
+        <tbody>';
+
+        foreach($duty as $row) { 
+
+            $html = $html . '<tr>
+                                <td>' . $row->first_name . ' </td>
+                                <td>' . $row->dutyname . '</td>
+                                <td>' . $row->jkname . '</td>
+                                <td>' . $row->start_date . '</td>
+                                <td>  abc </td>
+                            </tr>';
+        }
+
+        $html = $html . '<tbody></table>';
+
+        echo $html;
+
+    }
+
+
+
     function editAssignDuty() {
         $this->loadView('admin/editAssignDuty', null);
     }
