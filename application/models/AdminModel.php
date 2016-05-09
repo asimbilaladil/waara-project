@@ -76,6 +76,7 @@ class AdminModel extends CI_Model
         $result = $quary_result->result();
         return $result;        
     }
+
     public function delete ( $whereParam1, $whereParam2, $tableName ){
 
         $this->db->delete( $tableName , array( $whereParam1 => $whereParam2) ); 
@@ -344,6 +345,25 @@ class AdminModel extends CI_Model
 
 
    }
+
+   //http://stackoverflow.com/questions/6333623/mysql-syntax-for-inserting-a-new-row-in-middle-rows
+   function updateDutyByOrder( $priority, $name, $description ) {
+
+        $query = $this->db->query('UPDATE duty SET priority = priority + 1 WHERE priority >= ' . $priority . ' order by priority DESC;');
+
+        $query = $this->db->query("INSERT INTO duty ( priority, name, description) VALUES ( ". $priority .", '". $name ."', '". $description ."' )");
+
+   }
+
+    public function getAllfromTableOrderBy( $tableName, $field, $orderBy ) {
+
+        $this->db->select('*');
+        $this->db->from( $tableName );
+        $this->db->order_by($field, $orderBy );
+        $quary_result=$this->db->get();
+        $result = $quary_result->result();
+        return $result;        
+    }
 
 
 }

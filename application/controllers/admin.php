@@ -185,15 +185,15 @@ class Admin extends CI_Controller {
     function addDuty() {   
     
         if($this->input->post()) {
+
+            $beforeDuty = $this->input->post('beforeDuty', true);
+
+
+            //insert and update priority
+            $this->AdminModel->updateDutyByOrder(
+            $beforeDuty, $this->input->post('duty_name', true), $this->input->post('description', true) );
+
             $selectJkIds = $this->input->post('jk', true);
-
-            $dutyItem = array (
-                "name" => $this->input->post('duty_name', true),
-                "description" => $this->input->post('description', true)
-            );
-
-            //insert in duty table
-            $this->AdminModel->insert('duty', $dutyItem);
 
             //get inserted id of duty
             $dutyInsertedId = $this->db->insert_id();
@@ -227,7 +227,11 @@ class Admin extends CI_Controller {
         }
 
 
-        $data['duty'] = $this->AdminModel->getAllfromTable('duty');
+
+        $data['duty'] = $this->AdminModel->getAllfromTableOrderBy('duty', 'priority', 'asc');
+
+
+
         $data['jkArray'] = $jkArray;
         $data['jkDb'] = $jamatKhanas;
 
@@ -604,6 +608,10 @@ class Admin extends CI_Controller {
 
         $id = $this->input->get('id', TRUE);
         $data['duty'] = $this->AdminModel->getrecordById('duty','duty_id',$id);
+
+        $data['duties'] = $this->AdminModel->getAllfromTable('duty');
+
+
         $this->loadView('admin/editDuty',  $data);
     }
 
