@@ -612,7 +612,7 @@ class Admin extends CI_Controller {
         $data['duties'] = $this->AdminModel->getAllfromTable('duty');
 
 
-        $this->loadView('admin/editDuty',  $data);
+        $this->loadView('admin/editduty',  $data);
     }
 
 
