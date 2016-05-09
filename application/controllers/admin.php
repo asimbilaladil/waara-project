@@ -642,7 +642,14 @@ class Admin extends CI_Controller {
 
         echo $html;
 
-    }    
+    }
+
+
+
+    function editAssignDuty() {
+        $this->loadView('admin/editAssignDuty', null);
+    }
+    
 
 }
 ?>
