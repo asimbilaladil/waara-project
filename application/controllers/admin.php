@@ -673,13 +673,16 @@ class Admin extends CI_Controller {
         </thead>
         <tbody>';
 
+
+
+
         foreach($duty as $row) { 
 
             $html = $html . '<tr>
                                 <td>' . $row->first_name . ' </td>
                                 <td>' . $row->dutyname . '</td>
                                 <td>' . $row->jkname . '</td>
-                                <td>' . $row->shift . '</td>
+                                <td>' .  ($row->shift == 1? "Evening": ($row->shift == 2? "Morning" :"both"))   . '</td>
                                 <td>' . $row->start_date . '</td>
                                 <td>
                                     <a href="'. site_url('admin/editAssignDuty?id=' . $row->assign_id ) .'" ><span class="glyphicon glyphicon-pencil">
