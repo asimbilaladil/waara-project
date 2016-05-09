@@ -105,9 +105,9 @@ class Admin extends CI_Controller {
         $html = '<table class="table table-striped" id="dutyTable">
         <thead>
         <tr>
-            <th> Name </th>
-            <th> Duty </th>
-            <th> Date </th>
+            <th> Waara </th>
+            <th> Username </th>
+            <th> Action </th>
         </tr>
         </thead>
         <tbody>';
@@ -129,7 +129,7 @@ class Admin extends CI_Controller {
 
                 $html = $html . '<tr>
                                 <td> '. $row->name .' </td>
-                                <td> Assigned to '. $user . '</td>     
+                                <td> '. $user . '</td>     
                                 <td> <a href= " ' . site_url("Welcome/waara?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >View</button> </td>
                                 </tr>';
 

@@ -593,7 +593,6 @@ table.fc-border-separate {
                   <li id="selectJKList">  <select name="shift" id="shift" class="form-control">
                 <option value="1">Evening</option>
                 <option value="2">Morning</option>
-                <option value="0">Both</option>
 
                     </select >
 
