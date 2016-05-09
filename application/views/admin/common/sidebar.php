@@ -26,9 +26,16 @@
         <li class="treeview">
                 <a href="<?php echo site_url('admin/news'); ?>"><i class="fa fa-desktop"></i> <span>Latest News</span></a>                
             </li>
+
+            <li class="treeview">
+                <a href="<?php echo site_url('admin/assignedDuties'); ?>"><i class="fa fa-user"></i> <span>Assigned Duties</span></a>                
+            </li>
+
             <li class="treeview">
                 <a href="<?php echo site_url('admin/logout'); ?>"><i class="fa fa-user"></i> <span>Logout</span></a>                
             </li>
+
+
 
         </ul>
     </section>

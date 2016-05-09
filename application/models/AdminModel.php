@@ -296,4 +296,54 @@ class AdminModel extends CI_Model
         return $query->result();
 
    }
+
+
+    /*
+    SELECT duty.name as dutyname, user.first_name, jk.name as jkname, assign_duty.start_date
+    FROM duty, user, jk, assign_duty
+    WHERE assign_duty.duty_id = duty.duty_id AND 
+    assign_duty.jk_id = jk.id AND 
+    assign_duty.user_id = user.user_id AND 
+    assign_duty.start_date = '05-01-2016'
+    */
+
+   function getAssignDutyDetailByStartDate( $date ) {
+
+        $query = $this->db->query(
+        "SELECT duty.name as dutyname, user.first_name, jk.name as jkname, assign_duty.start_date, assign_duty.assign_id, assign_duty.shift
+        FROM duty, user, jk, assign_duty
+        WHERE assign_duty.duty_id = duty.duty_id AND 
+        assign_duty.jk_id = jk.id AND 
+        assign_duty.user_id = user.user_id AND 
+        assign_duty.start_date = '" . $date . "' ");
+
+        $query->result();
+
+        return $query->result();
+
+   }
+
+   /*
+    SELECT user.first_name 
+    FROM user, assign_duty
+    WHERE assign_duty.user_id = user.user_id 
+    AND assign_duty.assign_id = '1'
+   */
+
+   function getUserByAssignedDuty( $id ) {
+
+        $query = $this->db->query(
+            "SELECT user.first_name, user.user_id
+            FROM user, assign_duty
+            WHERE assign_duty.user_id = user.user_id 
+            AND assign_duty.assign_id = " . $id);
+
+        $query->result();
+
+        return $query->row();
+
+
+   }
+
+
 }
