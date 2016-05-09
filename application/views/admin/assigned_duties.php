@@ -31,27 +31,28 @@
 
                     <div class="box box-success">
                         <div class="box-header with-border">
-                            <h3 class="box-title">Edit Assign Duty</h3>
+                            <h3 class="box-title">Assigned Duties</h3>
                         </div><!-- /.box-header -->
                         <!-- form start -->
-                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('admin/editAssignDuty') ?>" method="post" >
+                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('admin/addDuty') ?>" method="post" >
                             <div class="box-body">
 
-                                <div class="form-group">
-                                    <label for="" class="col-sm-2 control-label">Name</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" value="<?php echo $data['user']->first_name ?>" name="user" class="form-control" id="user" placeholder="" required>
-                                        <input type="hidden" id="selectedUser" name="selectedUser" value="<?php echo $data['user']->user_id?>" /> 
-                                        <input type="hidden" id="assignId" name="assignId" value="<?php echo $data['assignId']?>" /> 
-                                    </div>
-                                </div>       
-
-                                <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-2">
-
-                                        <button type="submit" class="btn btn-primary btn-block">Save</button>
-                                    </div>
+                                <div class="col-sm-3">
+                                    <label> Duty: </label>
+                                    <input type='text' class="form-control" id='selectDate' name="selectDate" />
                                 </div>
+                            </div><!-- /.box-body -->
+                            <div class="box-footer">
+
+
+
+
+                            
+                                <div id="editassign" name="editassign">
+
+                                </div>
+
+
                             </div><!-- /.box-body -->
                             <div class="box-footer">
                                 
@@ -69,20 +70,52 @@
     </div>
 </div>
 
-<script type="text/javascript">
-    
-    $("#user").autocomplete({
+<script>
 
-    source : '<?php echo site_url('admin/getUsers') ?>',
-    select: function(event, ui) {
-        event.preventDefault();
-        $('#' + this.id).val(ui.item.label);
-        $("#selectedUser").val(ui.item.value);
-    },
-    focus: function(event, ui) {
-        event.preventDefault();
-        $('#' + this.id).val(ui.item.label);
-    }
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+
+$(function() {
+    $("#selectDate").val( formatDate(new Date()) );
+    $( "#selectDate" ).datepicker({dateFormat : 'yy-mm-dd'}, {  minDate: new Date() });
+    
+
+  });
+
+$("#selectDate").datepicker({
+
+    onSelect: function(date, instance) {
+
+    var formatedDate = formatDate(date);
+
+    console.log(formatedDate);
+
+
+    $.ajax({
+        url: "<?php echo site_url('Admin/ajaxDutyByDate') ?>",
+        type: "POST",
+        data: {
+            'date' : formatedDate
+        },
+        success: function(response){
+
+            $('#editassign').html(response);
+        },
+        error: function(){
+            
+        }
+    });
+     }
 });
 
 

@@ -648,7 +648,7 @@ class Admin extends CI_Controller {
 
     function ajaxDutyByDate() {
 
-        $date = $this->input->get('date');
+        $date = $this->input->post('date');
 
         $duty = $this->AdminModel->getAssignDutyDetailByStartDate( $date );
 
@@ -658,7 +658,9 @@ class Admin extends CI_Controller {
             <th> User Name </th>
             <th> Duty Name  </th>
             <th> Jamat Khana </th>
+            <th> Shift </th>
             <th> Date </th>
+
         </tr>
         </thead>
         <tbody>';
@@ -669,8 +671,13 @@ class Admin extends CI_Controller {
                                 <td>' . $row->first_name . ' </td>
                                 <td>' . $row->dutyname . '</td>
                                 <td>' . $row->jkname . '</td>
+                                <td>' . $row->shift . '</td>
                                 <td>' . $row->start_date . '</td>
-                                <td>  abc </td>
+                                <td>
+                                    <a href="'. site_url('admin/editAssignDuty?id=' . $row->assign_id ) .'" ><span class="glyphicon glyphicon-pencil">
+                                    </span> 
+                                    </a>
+                                </td>
                             </tr>';
         }
 
@@ -682,10 +689,49 @@ class Admin extends CI_Controller {
 
 
 
-    function editAssignDuty() {
-        $this->loadView('admin/editAssignDuty', null);
+    function assignedDuties() {
+        $this->loadView('admin/assigned_duties', null);
     }
+
     
+    function editAssignDuty() {
+
+        if($this->input->post()) {
+
+            $selectedUser = $this->input->post('selectedUser', true);
+
+            $assignId = $this->input->post('assignId', true);
+
+            $data = array (
+                "user_id" => $selectedUser
+            );
+
+            $this->AdminModel->update( 'assign_duty', 'assign_id', $assignId, $data );
+
+            redirect('admin/assignedDuties');
+
+        } else {
+
+            $assignId = $this->input->get('id', TRUE);
+
+            $user = $this->AdminModel->getUserByAssignedDuty( $assignId );
+
+            if(count($user) <= 0 ) {
+            redirect('admin/');
+            }
+
+            $data['assignId'] = $assignId;
+            $data['user'] = $user;
+
+
+            $this->loadView('admin/editAssignDuty', $data);
+
+        }
+
+
+
+    }
+
 
 }
 ?>
