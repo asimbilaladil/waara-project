@@ -74,11 +74,14 @@
                                         <a href="#"><?php echo  $fullName; ?> </a>
                                         <ul>
                                             <li><a href="<?php echo base_url("/index.php/Welcome/editPassword") ?>"><i class="icon-user"></i> Change Password</a></li>
+                                            <li><a href="<?php echo base_url("/index.php/Welcome/request") ?>"><i class="icon-message"></i> Request</a></li>
+
                                             <li><a href="<?php echo base_url("/index.php/Welcome/logout") ?>"><i class="icon-log-out"></i> Logout</a></li>
                                         </ul>
                                     
                                     </div>
                                 </li>
+                                <li></li>
                                     <?php } else if ($type == 'Super Admin' || $type == 'JK Admin') {?>
                                 <li><a href="<?php echo base_url("/index.php/Admin") ?>"><i class="icon-user2"></i>Admin</a></li>
 

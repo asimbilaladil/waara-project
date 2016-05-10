@@ -3,7 +3,7 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="cs-page-title center">
-                        <h1>Edit Password</h1>
+                        <h1>Create Request</h1>
     
                     </div>
                 </div>
@@ -16,7 +16,7 @@
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <ul class="cs-breadcrumb">
                         <li><a href="#">Home</a></li>
-                        <li><a href="#">Edit Password</a></li>
+                        <li><a href="#">Request</a></li>
                     </ul>
                 </div>
             </div>
@@ -27,18 +27,18 @@
         <div class="page-section">
           <div class="container">
                               <?php
-            if ( $data['result'] == 1) {
+            if ( $data['result'] ) {
 
                 echo "<div style='text-align: center;' class='alert alert-success alert-dismissable'>
                                                          <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
-                                                               Your password changed successfully!
+                                                               Your request has been created successfully!
                                                         </div>";
             } 
-                  else if ( $data['result'] == 2) {
+                  else if ( $data['result'] == -1) {
 
                 echo "<div style='text-align: center;' class='alert alert-danger alert-dismissable'>
                                                          <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>
-                                                               Invalid Password!
+                                                               Something went wrong try again!
                                                         </div>";
             } 
         ?>
@@ -51,24 +51,22 @@
                 <!--Element Section Start-->
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="cs-signup-form">
-                        <h6>Change Password</h6>
-                        <form action="<?php echo site_url('Welcome/editPassword') ?>" method="post">
+                        <h6>Create Request</h6>
+                        <form action="<?php echo site_url('Welcome/request') ?>" method="post">
                             <div class="row">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="cs-field-holder">
-                                    <i class="icon-lock2"></i>
-                                    <input name="oldPassword" type="password" placeholder="Current Password *" required>
+                                    <input name="title" type="text" placeholder="Title *" required>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="cs-field-holder">
-                                    <i class="icon-lock2"></i>
-                                    <input name="newPassword" type="password" placeholder="New Password *" required>
+                                    <textarea name="request" placeholder="Your request *"></textarea>
                                 </div>
                             </div>
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <div class="cs-btn-submit">
-                                    <input type="submit" value="Change">
+                                    <input type="submit" value="Request">
                                 </div>
                                 
                             </div>

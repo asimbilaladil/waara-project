@@ -233,24 +233,70 @@ class Welcome extends CI_Controller {
 
     public function editPassword()
     {
-        if( $this->input->post()  ){
+        if(  $this->userLoginStatus() ){
+            if( $this->input->post()  ){
 
-            $oldPassword =  md5($this->input->post('oldPassword', TRUE));
-            $newPassword =  md5($this->input->post('newPassword', TRUE));
-            $id = $this->session->userdata('user_id');
-            
-            $data['result'] = $this->UserModel->changePassword($id, $oldPassword, $newPassword);
+                $oldPassword =  md5($this->input->post('oldPassword', TRUE));
+                $newPassword =  md5($this->input->post('newPassword', TRUE));
+                $id = $this->session->userdata('user_id');
+                
+                $data['result'] = $this->UserModel->changePassword($id, $oldPassword, $newPassword);
 
-            $this->load->view('common/header');
-            $this->load->view('website/editPassword', array('data' => $data));
-            $this->load->view('common/footer');
+                $this->load->view('common/header');
+                $this->load->view('website/editPassword', array('data' => $data));
+                $this->load->view('common/footer');
 
-        } else {
-            $this->load->view('common/header');
-            $this->load->view('website/editPassword', array('data' => null));
-            $this->load->view('common/footer');
+            } else {
+                $this->load->view('common/header');
+                $this->load->view('website/editPassword', array('data' => null));
+                $this->load->view('common/footer');
+            }
+
         }
+       
 
     }    
-    
+    public function userLoginStatus()
+    {
+        
+        $id = $this->session->userdata('user_id');
+        $type = $this->session->userdata('type');
+
+        if( $id != NULL  && $type == 'User' ) {
+            return true;
+        }
+        redirect('Welcome/login');
+            
+    }
+
+    public function request()
+    {
+        if(  $this->userLoginStatus() ){
+            if( $this->input->post()  ){
+
+                $title =  $this->input->post('title', TRUE);
+                $request = $this->input->post('request', TRUE);
+                $user_id = $this->session->userdata('user_id');
+                
+                $data = array(
+                    'title' => $title,
+                    'request' => $request,
+                    'user_id' => $user_id
+                    );
+                $data['result'] = $this->UserModel->insert('request', $data);
+
+                $this->load->view('common/header');
+                $this->load->view('website/request', array('data' => $data));
+                $this->load->view('common/footer');
+
+            } else {
+                $this->load->view('common/header');
+                $this->load->view('website/request', array('data' => null));
+                $this->load->view('common/footer');
+            }
+
+        }
+       
+
+    }        
 }
