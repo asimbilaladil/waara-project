@@ -32,6 +32,9 @@
             </li>
 
             <li class="treeview">
+                <a href="<?php echo site_url('admin/request'); ?>"><i class="fa fa-user"></i> <span>User Requests</span></a>                
+            </li>
+            <li class="treeview">
                 <a href="<?php echo site_url('admin/logout'); ?>"><i class="fa fa-user"></i> <span>Logout</span></a>                
             </li>
 
