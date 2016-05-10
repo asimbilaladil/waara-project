@@ -743,6 +743,21 @@ class Admin extends CI_Controller {
 
     }
 
+   public function request() {   
+
+    $data['result'] = $this->AdminModel->getRequest();
+    $this->loadView('admin/request', $data);
+
+       
+    }
+
+    public function deleteRequest() {
+
+        $id = $this->input->get('id', TRUE);
+        $this->AdminModel->delete( 'id', $id, 'request');
+        redirect('admin/request');
+
+    }
 
 }
 ?>

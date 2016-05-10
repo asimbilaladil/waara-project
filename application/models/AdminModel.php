@@ -367,4 +367,15 @@ class AdminModel extends CI_Model
     }
 
 
+    public function getRequest (){
+
+        $query = $this->db->query('CALL get_request()');
+        $query->result();
+
+        return $query->result();
+
+
+     }
+
+
 }
