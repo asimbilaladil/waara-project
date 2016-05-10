@@ -107,5 +107,33 @@ class UserModel extends CI_Model
         $query->result();
 
         return $query->result();
-    }    
+    }   
+
+    public function changePassword ($id, $oldPassword, $newPassword){
+        
+        $this->db->select('*');
+        $this->db->from('user');
+        $this->db->where( 'password', $oldPassword );
+        $this->db->where( 'user_id', $id );
+        $quary_result=$this->db->get();
+        $result = $quary_result->result();
+        if( $result ){
+            $data = array ( 'password' => $newPassword);
+            $this->db->where( 'password', $oldPassword );
+            $this->db->where( 'user_id', $id );
+            $result = $this->db->update( 'user' ,$data);
+            if ( $result ) {
+
+                return true;
+
+            } else {
+                return false;
+            }
+        } else  {
+            return 2;
+        }
+
+
+
+    }   
 }

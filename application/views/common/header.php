@@ -73,7 +73,7 @@
                                         
                                         <a href="#"><?php echo  $fullName; ?> </a>
                                         <ul>
-                                          
+                                            <li><a href="<?php echo base_url("/index.php/Welcome/editPassword") ?>"><i class="icon-user"></i> Change Password</a></li>
                                             <li><a href="<?php echo base_url("/index.php/Welcome/logout") ?>"><i class="icon-log-out"></i> Logout</a></li>
                                         </ul>
                                     

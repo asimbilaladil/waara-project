@@ -230,5 +230,27 @@ class Welcome extends CI_Controller {
         redirect('welcome/login');
 
     }  
+
+    public function editPassword()
+    {
+        if( $this->input->post()  ){
+
+            $oldPassword =  md5($this->input->post('oldPassword', TRUE));
+            $newPassword =  md5($this->input->post('newPassword', TRUE));
+            $id = $this->session->userdata('user_id');
+            
+            $data['result'] = $this->UserModel->changePassword($id, $oldPassword, $newPassword);
+
+            $this->load->view('common/header');
+            $this->load->view('website/editPassword', array('data' => $data));
+            $this->load->view('common/footer');
+
+        } else {
+            $this->load->view('common/header');
+            $this->load->view('website/editPassword', array('data' => null));
+            $this->load->view('common/footer');
+        }
+
+    }    
     
 }
