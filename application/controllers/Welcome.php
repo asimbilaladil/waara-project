@@ -166,7 +166,8 @@ class Welcome extends CI_Controller {
 
 
             $data = array (
-                "verified" => 'true'
+                "verified" => 'true',
+                "status" => 'true'
             );
 
             $this->UserModel->update( 'user', 'token', $token, $data );

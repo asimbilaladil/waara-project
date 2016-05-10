@@ -759,5 +759,17 @@ class Admin extends CI_Controller {
 
     }
 
+
+    public function updateStatus() {
+
+        $id = $this->input->get('id', TRUE);
+        $status = $this->input->get('status', TRUE);
+        $status = ($status == 'true' ? 'false' : 'true' ); 
+        $data =  array('status' =>   $status );
+        $this->AdminModel->update( 'user', 'user_id', $id,  $data );
+        redirect('admin/user');
+
+    }    
+
 }
 ?>
