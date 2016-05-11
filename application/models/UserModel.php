@@ -135,5 +135,15 @@ class UserModel extends CI_Model
 
 
 
-    }   
+    }  
+    public function getAllAdmin (){
+        
+        $this->db->select('*');
+        $this->db->from('user');
+        $this->db->where('type','JK Admin');
+        $this->db->where('type','Super Admin');
+        $quary_result=$this->db->get();
+        $result = $quary_result->result();
+        return $result;
+    }     
 }

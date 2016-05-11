@@ -285,7 +285,13 @@ class Welcome extends CI_Controller {
                     'user_id' => $user_id
                     );
                 $data['result'] = $this->UserModel->insert('request', $data);
+                $data['admin'] = $this->UserModel->getAllAdmin();
+                foreach ($data['admin'] as  $item) {
 
+                    $email = $item->email;
+                    mail( $email, 'New request has been created', $request);
+                    # code...
+                }
                 $this->load->view('common/header');
                 $this->load->view('website/request', array('data' => $data));
                 $this->load->view('common/footer');
