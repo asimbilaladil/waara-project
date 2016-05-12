@@ -270,8 +270,7 @@ class Welcome extends CI_Controller {
             
     }
 
-    public function request()
-    {
+    public function request(){
         if(  $this->userLoginStatus() ){
             if( $this->input->post()  ){
 
@@ -305,5 +304,71 @@ class Welcome extends CI_Controller {
         }
        
 
-    }        
+    }  
+
+    function editUser() {
+        if(  $this->userLoginStatus() ){
+            if($this->input->post()) {
+
+                $id = $this->input->post('userId', true);
+
+                $customfields = $this->UserModel->getAllfromTable('customfields');
+
+                $customData = array();
+
+                //iterate every custom field and check if the key exist in posted data. If exist insert it in user custom data
+                foreach( $customfields as $item ) {
+                    if( array_key_exists( $item->field_name, $this->input->post() ) ) {
+
+                        $customData = array( "value" => $this->input->post( $item->field_name, true) );
+                                                // tablename           key      value   key    value               data   
+                        $this->UserModel->updateWhere('user_custom_data', 'user_id', $id, 'key', $item->field_name, $customData);
+
+                    }
+                }
+
+
+                $this->UserModel->update('user_custom_data' ,'user_id' , $id, $customData);
+
+                $data = array (
+                    "first_name" => $this->input->post('firstName', true),
+                    "last_name" => $this->input->post('lastName', true),
+                    "email" => $this->input->post('email', true),
+                    "phone" => $this->input->post('phone', true)
+                );
+
+                
+
+                $this->UserModel->update('user' ,'user_id' , $id, $data);
+
+                redirect('Welcome/editUser');
+
+            }
+
+            
+
+                $id = $this->session->userdata('user_id');
+       
+                $data['customFields'] = $this->UserModel->getCustomFieldByUserId( $id );
+
+                $data['user'] = $this->UserModel->getUserById( $id );
+
+                $this->loadView('website/editUser', $data);
+
+        }
+  
+    }  
+
+    /**
+     * Load view 
+     * @param 1 : view name
+     * @param 2 : data to be render on view. If no data pass null
+     */
+    function loadView($view, $data) {
+        //error_reporting(0);
+        $this->load->view('common/header');
+        $this->load->view($view, array('data' => $data));
+        $this->load->view('common/footer');
+
+    }            
 }
