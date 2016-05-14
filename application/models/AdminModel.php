@@ -185,15 +185,23 @@ class AdminModel extends CI_Model
     }
 
     function getUsers($q){
+
         $this->db->select('*');
         $this->db->like('first_name', $q);
         $query = $this->db->get('user');
+        
         if($query->num_rows() > 0){
             foreach ($query->result_array() as $row){
-                $new_row['label']=htmlentities(stripslashes($row['first_name']));
+                $name = $row['first_name'] . " " . $row['last_name'];
+                $new_row['label']= $name;
                 $new_row['value']=htmlentities(stripslashes($row['user_id']));
                 $row_set[] = $new_row; //build an array
             }
+            echo json_encode($row_set); //format the array into json data
+        } else {
+            $new_row['label']= 'No user found. Add it';
+            $new_row['value']=htmlentities(stripslashes('NOUSER'));
+            $row_set[] = $new_row; //build an array
             echo json_encode($row_set); //format the array into json data
         }
     }
@@ -383,6 +391,18 @@ class AdminModel extends CI_Model
 
 
      }
+
+    //genrate token for user verification
+    public function generateToken($length = 15) {
+
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }     
 
 
 }

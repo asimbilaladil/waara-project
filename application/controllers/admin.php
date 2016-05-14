@@ -734,8 +734,45 @@ class Admin extends CI_Controller {
 
         }
 
+    }
 
 
+    public function addNewUser() {
+
+        if($this->input->post()) {
+
+            print_r($this->input->post());
+
+            $firstName = $this->input->post('firstName', TRUE);
+            $lastName = $this->input->post('lastName', TRUE);
+            $email = $this->input->post('email', TRUE);
+            $phone = $this->input->post('phone', TRUE);
+            $password = md5($this->input->post('password', TRUE));
+            $token = $this->AdminModel->generateToken();
+
+            $data = array(
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $email,
+                'phone' => $phone,
+                'password' => $password,
+                'status' => 'false',
+                'verified' => 'false',
+                'type' => 'User',
+                'token' => $token
+            );
+
+            $this->AdminModel->insert('user', $data);
+
+            $emailMessage = "Please verify your account using this link \n".base_url()."index.php/Welcome/verify?token=".$token. " and your temporary password is " . $password ;
+
+            mail($email,"User verification",$emailMessage);
+
+            redirect('admin/');
+                   
+        }
+
+        $this->loadView('admin/addNewUser', null);
     }
 
    public function request() {   

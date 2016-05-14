@@ -719,9 +719,11 @@ table.fc-border-separate {
                                               </div>
                                             </div>
                                           </div>
-                                        </div>                                        
+                                        </div>
 
-                                </form>
+
+
+                                       
                                 </div>
                                 <!-- /.box-body -->
                                 <div class="box-footer">
@@ -801,6 +803,13 @@ function ajaxCallDuty() {
 
                 source : '<?php echo site_url('admin/getUsers') ?>',
                 select: function(event, ui) {
+
+                    if(ui.item.value == 'NOUSER') {
+
+                        $('#addNewUser').modal('toggle');
+                        window.location.href = '<?php echo site_url('admin/addNewUser') ?>';
+                    }
+
                     event.preventDefault();
                     $('#' + this.id).val(ui.item.label);
                     $("#selectedUser").val(ui.item.value);
