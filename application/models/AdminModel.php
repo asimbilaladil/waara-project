@@ -356,6 +356,13 @@ class AdminModel extends CI_Model
 
    }
 
+   function updatePriority( $priority, $name, $description, $id ) {
+
+        $query = $this->db->query('UPDATE duty SET priority = priority + 1 WHERE priority >= ' . $priority . ' order by priority DESC;');    
+
+        $query = $this->db->query("UPDATE duty SET priority=". $priority ." ,name='". $name ."' ,description='". $description . "' WHERE duty_id=". $id );
+   }
+
     public function getAllfromTableOrderBy( $tableName, $field, $orderBy ) {
 
         $this->db->select('*');

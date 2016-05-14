@@ -188,7 +188,6 @@ class Admin extends CI_Controller {
 
             $beforeDuty = $this->input->post('beforeDuty', true);
 
-
             //insert and update priority
             $this->AdminModel->updateDutyByOrder(
             $beforeDuty, $this->input->post('duty_name', true), $this->input->post('description', true) );
@@ -226,11 +225,7 @@ class Admin extends CI_Controller {
             $jkArray[$value->id] = $value->name;
         }
 
-
-
         $data['duty'] = $this->AdminModel->getAllfromTableOrderBy('duty', 'priority', 'asc');
-
-
 
         $data['jkArray'] = $jkArray;
         $data['jkDb'] = $jamatKhanas;
@@ -590,16 +585,13 @@ class Admin extends CI_Controller {
     function editDuty() {
 
         if($this->input->post()) {
+
             $name = $this->input->post('name', true);
             $description = $this->input->post('description', true);
             $id = $this->input->post('id', true);
+            $beforeDuty = $this->input->post('beforeDuty', true);
 
-            $data = array (
-                "name" => $name, 
-                "description" => $description
-            );
-
-            $this->AdminModel->update('duty','duty_id',$id, $data);
+            $this->AdminModel->updatePriority( $beforeDuty, $name, $description, $id );
             
             redirect('admin/addDuty');
 
@@ -609,7 +601,7 @@ class Admin extends CI_Controller {
         $id = $this->input->get('id', TRUE);
         $data['duty'] = $this->AdminModel->getrecordById('duty','duty_id',$id);
 
-        $data['duties'] = $this->AdminModel->getAllfromTable('duty');
+        $data['duties'] = $this->AdminModel->getAllfromTableOrderBy('duty', 'priority', 'asc');
 
 
         $this->loadView('admin/editduty',  $data);
