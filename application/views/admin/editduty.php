@@ -55,6 +55,26 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Add Before</label>
+                                    <div class="col-sm-6">
+                                        
+                                        <select id="beforeDuty" name="beforeDuty" class="form-control">
+                                            
+                                            <?php
+                                                $lastPriority = end($data['duties'])->priority + 1 ;
+
+                                                foreach( $data['duties'] as $row ) {
+                                                    echo '<option value="'. $row->priority .'"> '. $row->name .' </option>';
+                                                }
+
+                                            ?>
+
+                                        </select>
+
+                                    </div>
+                                </div>                                
+
                                 <input type="hidden" name="id" value="<?php echo $data['duty']->duty_id ?>" />
 
                                 <div class="form-group">
