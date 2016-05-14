@@ -423,9 +423,11 @@ class Admin extends CI_Controller {
 
                 }
             }
+            if (!empty($customData)){
+                $this->AdminModel->update('user_custom_data' ,'user_id' , $id, $customData);
 
+            }
 
-            $this->AdminModel->update('user_custom_data' ,'user_id' , $id, $customData);
 
             $data = array (
                 "first_name" => $this->input->post('firstName', true),
