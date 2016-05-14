@@ -48,6 +48,7 @@ class Admin extends CI_Controller {
         }
 
         $jkId = $this->session->userdata('jk_id');
+        $type = $this->session->userdata('type');
 
         //if jk id is set in session. if jkid = 0 it call see all jks
         if( isset( $jkId ) && $jkId != 0 )  {
@@ -57,7 +58,6 @@ class Admin extends CI_Controller {
         } else {
 
             $jk = $this->AdminModel->getAllfromTable('jk');
-
 
             $data['duty'] = $this->AdminModel->getAllfromTable( 'duty' );
 
@@ -78,7 +78,8 @@ class Admin extends CI_Controller {
                  $subevent['url'] = 'Welcome/waara?id='.$row->id;
                  array_push($events, $subevent);
         }
-        $data['events'] = $events;        
+        $data['events'] = $events;
+        $data['type'] = $type;
         
         $this->loadView('admin/index', $data);
 

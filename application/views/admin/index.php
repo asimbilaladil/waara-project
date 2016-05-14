@@ -590,11 +590,20 @@ table.fc-border-separate {
                                                     </select >
                                                     </li>
                            
-                  <li id="selectJKList">  <select name="shift" id="shift" class="form-control">
-                <option value="1">Evening</option>
-                <option value="2">Morning</option>
+                  <li id="selectJKList">  
+                  <?php
+                    if(isset($data['type']) && $data['type'] == 'Super Admin' ) {
+                        echo '
+                          <select name="shift" id="shift" class="form-control">
+                                <option value="1">Evening</option>
+                                <option value="2">Morning</option>
 
-                    </select >
+                          </select >
+                        ';
+
+                    }
+                  ?>
+
 
                     </li> 
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
