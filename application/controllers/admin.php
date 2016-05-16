@@ -386,8 +386,7 @@ class Admin extends CI_Controller {
 
             $this->AdminModel->update( 'user', 'user_id', $userId, $data );
            
-            redirect('admin/user');
-
+            header('Location:http://waaranet.ca/index.php/Admin/user');
         }
     }
 
@@ -769,6 +768,7 @@ class Admin extends CI_Controller {
             mail($email,"User verification",$emailMessage);
 
             redirect('admin/');
+            header('Location:http://waaranet.ca/index.php/Admin/index');
                    
         }
 
