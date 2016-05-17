@@ -801,7 +801,26 @@ class Admin extends CI_Controller {
         $this->AdminModel->update( 'user', 'user_id', $id,  $data );
         redirect('admin/user');
 
-    }    
+    } 
+    public function waaraNotification (){
+        
+        $currentDate = date ("d-m-Y");
+        $day_after = date( 'Y-m-d', strtotime( $currentDate . ' +1 day' ) );
+        $data['result'] = $this->AdminModel->getWaaraFromdate($day_after);
+        $date=date_create($day_after);
+        $date =  date_format( $date, "F j, Y");
+
+        foreach ($data['result'] as $key => $value) {
+            $name =  $value->first_name . " " .  $value->last_name; 
+            $duty_name =  $value->duty_name; 
+            $jk_name = $value->jk_name;
+            $duty_description = $value->duty_description;
+            $shift = $value->shift;
+            $message = 'Dear \n'. $name . ', \n This is to remind you that you have a ' . $duty_name . ' Waara at '.$jk_name.' on: \n'.$date.'\n Please contact Waara Coordinator @ 403-999-9999 or email @ waara@franklinjk.ca  as soon as possible if you need to re-schedule \n Thank you, \n'. $jk_name .' WAARA Team' ;
+            $email  = $value->email;
+            mail( $email, "Waara Notification", $message);
+        }
+    }         
 
 }
 ?>

@@ -402,7 +402,16 @@ class AdminModel extends CI_Model
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
-    }     
+    }   
+
+    public function getWaaraFromdate ($date){
+        
+        $query = $this->db->query('CALL get_waara_info("'.$date.'")');
+        $query->result();
+
+        return $query->result();
+
+    }
 
 
 }
