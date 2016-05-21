@@ -19,6 +19,8 @@
     <!-- Footer End --> 
 </div>
 </div>
+<script type="text/javascript" src="<?php echo base_url(); ?>includes/search.js"></script>   
+
 <script src="<?php echo base_url("includes/website/assets/scripts/responsive.menu.js") ?> "></script> <!-- Slick Nav js --> 
 <script src="<?php echo base_url("includes/website/assets/scripts/chosen.select.js") ?> "></script> <!-- Chosen js --> 
 <script src="<?php echo base_url("includes/website/assets/scripts/slick.js") ?> "></script> <!-- Slick Slider js --> 
