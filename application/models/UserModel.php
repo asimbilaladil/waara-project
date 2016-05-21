@@ -205,5 +205,31 @@ class UserModel extends CI_Model
         $result=$quary_result->row();
         
         return $result;;
-    }       
+    } 
+
+    function getUserByEmail( $email ) {
+
+        $this->db->select('*');
+        $this->db->from('user');
+        $this->db->where('email', $email );
+        $quary_result=$this->db->get();
+        $result=$quary_result->row();
+        
+        return $result;;
+    }
+
+    public function updatePassword( $token ,$data ){
+
+        $this->db->where( "token", $token );
+        $result = $this->db->update( "user" ,$data);
+        if ( $result ) {
+
+            return true;
+
+        } 
+
+        return false;
+
+    }
+
 }

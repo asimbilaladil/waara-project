@@ -370,5 +370,37 @@ class Welcome extends CI_Controller {
         $this->load->view($view, array('data' => $data));
         $this->load->view('common/footer');
 
-    }            
+    }
+
+    public function sendPasswordLink () {
+        if($this->input->post()){
+             $email = $this->input->post('email', true); 
+             $result = $this->UserModel->getUserByEmail($email);
+             if( $result ){
+                $message = "Please click on the url to reset your password \n" . base_url() . "index.php/Welcome/resetPassword?".$result->token;
+                mail($result->email, "Reset your password", $message);
+                redirect('Welcome/login');
+             } else {
+                redirect('Welcome/login');
+
+             }
+        }
+    } 
+
+    public function resetPassword () {
+        if($this->input->post()){
+            $token = $this->input->post('token', true);  
+            $password = $this->input->post('newPassword', true); 
+
+            $data = array (
+                "password" => md5($password)
+            );
+            $this->UserModel->updatePassword( $token, $data);
+            redirect('Welcome/login');
+
+        } else {
+            $this->loadView("website/resetPassword", null);
+        }
+
+    }                  
 }

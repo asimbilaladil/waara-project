@@ -64,7 +64,7 @@
                                 <div class="cs-btn-submit">
                                     <input type="submit" value="Login">
                                 </div>
-                                <a data-dismiss="modal" data-target="#user-forgot-pass" data-toggle="modal" class="cs-forgot-password" href="#">
+                                <a data-toggle="modal" data-target="#myModal" class="cs-forgot-password" href="#">
                                     <i class="cs-color icon-help-with-circle"></i>Forgot password?
                                 </a>
                             </div>
@@ -87,3 +87,32 @@
     </div>
 
     </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Forgot password</h4>
+        </div>
+        <div class="modal-body">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <form action="<?php echo site_url('Welcome/sendPasswordLink') ?>" method="POST">
+                <div class="cs-field-holder">
+                 <p>Enter the email you used to register. An email will be sent to you.</p>
+                    <input name="email" type="email" placeholder="email address *">
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-default" >Reset</button>
+        </div>
+        </form>
+      </div>
+      
+    </div>
+  </div>    
