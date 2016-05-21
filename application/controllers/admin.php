@@ -821,6 +821,24 @@ class Admin extends CI_Controller {
             mail( $email, "Waara Notification", $message);
         }
     }         
+public function exportPDF (){
 
+     $dbData = $this->AdminModel->get_calendar_duties();
+     $temp = [];
+     $data['result'] = [['Fullname', 'JK Name', 'Waara Name', 'Date'],[' ', ' ', ' ', ' ']];
+
+     foreach ($dbData as $key => $value) {
+        $name = $value->first_name . " " . $value->last_name;
+        array_push($temp,  $name);
+        array_push($temp,  $value->jk_name);
+        array_push($temp,  $value->duty_name);
+        array_push($temp,  $value->start_date);
+        array_push($data['result'],  $temp);
+
+     }
+    
+    $this->loadView('admin/exportPDF', $data );
+
+}
 }
 ?>
