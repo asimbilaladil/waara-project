@@ -826,24 +826,35 @@ class Admin extends CI_Controller {
             mail( $email, "Waara Notification", $message);
         }
     }         
-public function exportPDF (){
+    public function exportPDF (){
 
-     $dbData = $this->AdminModel->get_calendar_duties();
-     $temp = [];
-     $data['result'] = [['Fullname', 'JK Name', 'Waara Name', 'Date'],[' ', ' ', ' ', ' ']];
+         $dbData = $this->AdminModel->get_calendar_duties();
+         $temp = [];
+         $data['result'] = [['Fullname', 'JK Name', 'Waara Name', 'Date'],[' ', ' ', ' ', ' ']];
 
-     foreach ($dbData as $key => $value) {
-        $name = $value->first_name . " " . $value->last_name;
-        array_push($temp,  $name);
-        array_push($temp,  $value->jk_name);
-        array_push($temp,  $value->duty_name);
-        array_push($temp,  $value->start_date);
-        array_push($data['result'],  $temp);
+         foreach ($dbData as $key => $value) {
+            $name = $value->first_name . " " . $value->last_name;
+            array_push($temp,  $name);
+            array_push($temp,  $value->jk_name);
+            array_push($temp,  $value->duty_name);
+            array_push($temp,  $value->start_date);
+            array_push($data['result'],  $temp);
 
-     }
-    
-    $this->loadView('admin/exportPDF', $data );
+         }
+        
+        $this->loadView('admin/exportPDF', $data );
 
-}
+    }
+
+    public function updateVerify() {
+
+        $id = $this->input->get('id', TRUE);
+        $verified = $this->input->get('verified', TRUE);
+        $verified = ($verified == 'true' ? 'false' : 'true' ); 
+        $data =  array('verified' =>   $verified );
+        $this->AdminModel->update( 'user', 'user_id', $id,  $data );
+        redirect('admin/user');
+
+    } 
 }
 ?>

@@ -49,10 +49,12 @@
                                             <th> Email</th>
                                             <th> Type</th>
                                             <th> Status</th>
+                                            <th> Approval</th>
                                             <th> Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                    
                                         <?php
                                             foreach($data['user'] as $item) {
                                                 echo 
@@ -61,6 +63,9 @@
                                                         <td> <a href="#">'. $item->email .' </a></td>
                                                         <td> <a href="#">'. $item->type .' </a></td>
                                                         <td> <a href="updateStatus?id='.$item->user_id.'&status='.$item->status.'" >'. ( $item->status == 'true' ? 'Active' : 'Inactive')   .' </a></td>
+                                                        <td> <a href="updateVerify?id='.$item->user_id.'&verified='.$item->verified.'" >'. ( $item->verified == 'true' ? 'Approved' : 'Pending')   .' </a></td>
+
+
                                                         <td> 
                                                             <a href="'. site_url('admin/edituser?uid=' . $item->user_id ) .'" ><span class="glyphicon glyphicon-pencil"></span> </a>
                                                             <span>&nbsp;&nbsp;</span>
