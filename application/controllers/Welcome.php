@@ -9,14 +9,12 @@ class Welcome extends CI_Controller {
 
             $this->load->model('UserModel');
                
-        
+        error_reporting(0);
     }
 
     public function index()
 	{
-		$this->load->view('common/header');
-		$this->load->view('website/index');
-        $this->load->view('common/footer');
+		$this->news();
 	}
 	public function login()
 	{
