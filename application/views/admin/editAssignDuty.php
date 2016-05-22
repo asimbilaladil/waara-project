@@ -44,7 +44,16 @@
                                         <input type="hidden" id="selectedUser" name="selectedUser" value="<?php echo $data['user']->user_id?>" /> 
                                         <input type="hidden" id="assignId" name="assignId" value="<?php echo $data['assignId']?>" /> 
                                     </div>
-                                </div>       
+                                </div>    
+
+
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Reason</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" name="reason" class="form-control" id="reason" placeholder="" required>
+                                    </div>
+                                </div>
+
 
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-2">
