@@ -42,7 +42,7 @@ class Welcome extends CI_Controller {
                 'verified' => "false",
                 'token' => $token
                 );
-            $emailMessage = "Please verify your account using this link \n".base_url()."index.php/Welcome/verify?token=".$token;
+            $emailMessage = "Please verify your waaranet user" . $data['first_name'] . " " . $data['last_name'] . " by using this link \n".base_url()."index.php/Welcome/verify?token=".$token;
 
             //get inserted id of the user
             $userInsertedId = $this->UserModel->insert('user', $data);
@@ -64,8 +64,13 @@ class Welcome extends CI_Controller {
                 }     
 
             }
+            $adminEmails = $this->UserModel->getSuperAdmin();
+            foreach ($adminEmails  as $key => $value) {
 
-            mail($data["email"],"User verification",$emailMessage);
+                mail($value->email,"User Approval",$emailMessage);
+
+            }
+            
 
             redirect('Welcome/login');
 

@@ -231,5 +231,16 @@ class UserModel extends CI_Model
         return false;
 
     }
+    function getSuperAdmin() {
+
+        $this->db->select('*');
+        $this->db->from('user');
+        $this->db->where('type', 'Super Admin' );
+        $quary_result=$this->db->get();
+        $result=$quary_result->row();
+        
+        return $result;;
+    }
+
 
 }
