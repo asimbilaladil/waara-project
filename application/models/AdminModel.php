@@ -262,7 +262,7 @@ class AdminModel extends CI_Model
     }
    
     /*
-    SELECT user.first_name, duty.name, assign_duty.start_date
+    SELECT user.first_name, duty.name, assign_duty.start_date, assign_duty.reason
     FROM user, duty, assign_duty
     WHERE user.user_id = assign_duty.user_id 
     AND assign_duty.duty_id = duty.duty_id
@@ -271,11 +271,11 @@ class AdminModel extends CI_Model
    function getUserHistory( $userId ) {
 
         $query = $this->db->query(
-            'SELECT user.first_name, duty.name, assign_duty.start_date
+            'SELECT user.first_name, duty.name, assign_duty.start_date, assign_duty.reason
             FROM user, duty, assign_duty
             WHERE user.user_id = assign_duty.user_id 
             AND assign_duty.duty_id = duty.duty_id
-            ANd user.user_id =' . $userId . ' limit 10');
+            AND user.user_id =' . $userId . ' limit 10');
 
         $query->result();
 

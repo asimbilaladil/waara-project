@@ -623,7 +623,8 @@ class Admin extends CI_Controller {
         <tr>
             <th> Name </th>
             <th> Duty </th>
-            <th> Action </th>
+            <th> Reason </th>
+            <th> Date </th>
         </tr>
         </thead>
         <tbody>';
@@ -635,6 +636,7 @@ class Admin extends CI_Controller {
             $html = $html . '<tr>
                                 <td> '. $row->first_name .' </td>
                                 <td> '. $row->name .' </td>
+                                <td> '. $row->reason .' </td>
                                 <td> '. $row->start_date .' </td>
                             </tr>';
 
@@ -705,10 +707,13 @@ class Admin extends CI_Controller {
 
             $selectedUser = $this->input->post('selectedUser', true);
 
+            $reason = $this->input->post('reason', true);
+
             $assignId = $this->input->post('assignId', true);
 
             $data = array (
-                "user_id" => $selectedUser
+                "user_id" => $selectedUser,
+                "reason" => $reason
             );
 
             $this->AdminModel->update( 'assign_duty', 'assign_id', $assignId, $data );
