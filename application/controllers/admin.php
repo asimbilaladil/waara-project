@@ -432,7 +432,8 @@ class Admin extends CI_Controller {
                 "first_name" => $this->input->post('firstName', true),
                 "last_name" => $this->input->post('lastName', true),
                 "email" => $this->input->post('email', true),
-                "phone" => $this->input->post('phone', true)
+                "phone" => $this->input->post('phone', true),
+                "password" => md5( $this->input->post('password', true) )
             );
 
             

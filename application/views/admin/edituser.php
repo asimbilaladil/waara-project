@@ -64,7 +64,14 @@
                                     <div class="col-sm-6">
                                         <input type="text" name="email" class="form-control" id="" value="<?php echo $data['user']->email; ?>" placeholder="" required>
                                     </div>
-                                </div>                                
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Password</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" name="password" class="form-control" id="" placeholder="" required>
+                                    </div>
+                                </div>
 
                                 <input type="hidden" name="userId" value="<?php echo $data['user']->user_id; ?>"/>
                                 <?php
