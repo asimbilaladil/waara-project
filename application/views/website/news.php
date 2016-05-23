@@ -80,13 +80,13 @@
                   
                     <div class="cs-text">
                         <div class="cs-post-title">
-                          <h2><a href="viewNews?id=<?php echo $item->id; ?>" ><?php echo  $item->title; ?></a></h2>
+                          <h2><a href="/index.php/welcome/viewNews?id=<?php echo $item->id; ?>" ><?php echo  $item->title; ?></a></h2>
                         </div>
                         <div class="cs-price-sec">
                         
                         </div>
                         
-                        <p><?php echo  substr($item->details,0 , 250 ); ?> <a style="color: blue;" href="viewNews?id=<?php echo $item->id; ?>" >readmore</a></p>
+                        <p><?php echo  substr($item->details,0 , 250 ); ?> <a style="color: blue;" href="/index.php/welcome/viewNews?id=<?php echo $item->id; ?>" >readmore</a></p>
                         <div class="cs-post-options">
                           <span><i class="icon-user"></i>Super Admin</span>
                           <span><i class="icon-calendar"></i><?php echo  $item->created_date; ?></span>

@@ -373,17 +373,20 @@ class Admin extends CI_Controller {
 
      if($this->input->post()) {
 
-           echo  $userId = $this->input->post('userId', true);
-           echo $type = $this->input->post('type', true);
-           echo $jk_id = $this->input->post('jk_id', true);
-           $shift_id = $this->input->post('shift_id', true);
+            $userId = $this->input->post('userId', true);
+            $type = $this->input->post('type', true);
+            $jk_id = $this->input->post('jk_id', true);
+            $shift_id = $this->input->post('shift_id', true);
 
             $data = array (
                 "type" => $type, 
                 "jk_id" => $jk_id,
                 "shift"  => $shift_id
             );
+            if( $data["type"] == "Super Admin" ){
 
+                $data["jk_id"] = 0;
+            }
             $this->AdminModel->update( 'user', 'user_id', $userId, $data );
            
             header('Location:http://waaranet.ca/index.php/Admin/user');
