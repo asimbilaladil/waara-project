@@ -380,7 +380,7 @@ class Welcome extends CI_Controller {
              $email = $this->input->post('email', true); 
              $result = $this->UserModel->getUserByEmail($email);
              if( $result ){
-                $message = "Please click on the url to reset your password \n" . base_url() . "index.php/Welcome/resetPassword?".$result->token;
+                $message = "Please click on the url to reset your password \n" . base_url() . "index.php/Welcome/resetPassword?token=".$result->token;
                 mail($result->email, "Reset your password", $message);
                 redirect('Welcome/login');
              } else {
@@ -399,6 +399,7 @@ class Welcome extends CI_Controller {
                 "password" => md5($password)
             );
             $this->UserModel->updatePassword( $token, $data);
+           
             redirect('Welcome/login');
 
         } else {
