@@ -132,6 +132,7 @@ class Admin extends CI_Controller {
                                 <td> '. $row->name .' </td>
                                 <td> '. $user . '</td>     
                                 <td> <a href= " ' . site_url("Welcome/waara?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >View</button> </td>
+                                <td> <a href= " ' . site_url("admin/editAssignDuty?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >Edit</button></a></td>
                                 </tr>';
 
 
