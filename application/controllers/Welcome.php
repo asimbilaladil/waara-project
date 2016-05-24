@@ -26,6 +26,23 @@ class Welcome extends CI_Controller {
 
 		if($this->input->post()) {
 
+            $duties = $this->input->post('duties', true);
+            $jks = $this->input->post('jks', true);
+
+            $dutiesStr = "";
+            $jksStr = "";
+
+            foreach( $duties as $value ) {
+                $dutiesStr = $dutiesStr . $value . "," ;
+            }
+            $dutiesStr = rtrim($dutiesStr, ',');  //remove last comma 
+
+
+            foreach( $jks as $value ) {
+                $jksStr = $jksStr . $value . "," ;
+            }
+            $jksStr = rtrim($jksStr, ',');  //remove last comma 
+
             $customFields = array();
             $customFields['result'] = $this->UserModel->getCustomFields();
 
@@ -38,8 +55,11 @@ class Welcome extends CI_Controller {
                 'phone' => $this->input->post('phone', true),
                 'type' => "User",
                 'verified' => "false",
-                'token' => $token
+                'token' => $token,
+                'pref_duty' => $dutiesStr,
+                'pref_jk'=> $jksStr
                 );
+
             $emailMessage = "Please verify your waaranet user" . $data['first_name'] . " " . $data['last_name'] . " by using this link \n".base_url()."index.php/Welcome/verify?token=".$token;
 
             //get inserted id of the user
@@ -73,8 +93,28 @@ class Welcome extends CI_Controller {
             redirect('Welcome/login');
 
 		} else {
-			$data   = array();
-	        $data['result'] = $this->UserModel->getCustomFields();
+
+            $dutyArray = $this->UserModel->getAllfromTable('duty');
+            $duties = array();
+
+            foreach($dutyArray as $item => $value) {
+                $duties[$value->duty_id] = $value->name;
+            }
+
+
+            $jkArray = $this->UserModel->getAllfromTable('jk');
+            $jks = array();
+
+            foreach($jkArray as $item => $value) {
+                $jks[$value->id] = $value->name;
+            }            
+
+
+            $data['duties'] = $duties;
+            $data['jks'] = $jks;
+            $data['result'] = $this->UserModel->getCustomFields();
+
+
 			$this->load->view('common/header');
 			$this->load->view('website/signup',$data);
 	        $this->load->view('common/footer');
