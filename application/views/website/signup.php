@@ -67,6 +67,24 @@
                                        <input style="width: 100%" name="phone" type="phone" placeholder="Phone" required >
                                     </div>
                                 </div>
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                                    <div class="cs-field-holder cs-success" >
+
+                                        <?php  echo form_multiselect('duties[]', $duties, '', ''); ?>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                                    <div class="cs-field-holder cs-success" >
+
+                                        <?php  echo form_multiselect('jks[]', $jks, '', ''); ?>
+
+                                    </div>
+                                </div>
+
                                 <?php  foreach($result  as $data) { ?>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="cs-field-holder cs-success">
