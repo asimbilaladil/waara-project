@@ -446,5 +446,31 @@ class Welcome extends CI_Controller {
             $this->loadView("website/resetPassword", null);
         }
 
-    }                  
+    }
+
+    public function getDuties() {
+
+        $jks=$this->input->post('state');
+
+        $jksStr = '';
+
+        foreach($jks as $item) {
+            $jksStr = $jksStr . $item . ',';            
+        }
+
+        $jksStr = rtrim($jksStr, ',');
+
+        $duties = $this->UserModel->getDuties( $jksStr );
+        
+        $html = '<select name="duties[]" id="duties" multiple="multiple">';
+
+        foreach($duties as $value){
+            $html = $html . '<option value="'. $value->duty_id .'"> '. $value->name .'</option>';
+        }
+
+        $html = $html . '</select>';
+
+        echo $html ;
+
+    }                
 }
