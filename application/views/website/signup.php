@@ -71,19 +71,25 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
                                     <div class="cs-field-holder cs-success" >
 
-                                        <?php  echo form_multiselect('duties[]', $duties, '', ''); ?>
+                                        <select name="jks[]" id="jks" multiple="multiple">
+                                            <?php
+                                                foreach ($jks as $key => $value) {
+                                                    echo '<option value="'. $key .'"> '. $value .' </option>';
+                                                }
+                                            ?>
+                                        </select>                                        
 
+                                        <input type="button" value="Get JamatKhanas" id="getjk" onclick="getDuties();" />        
                                     </div>
-                                </div>
-
+                                </div>                                
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
-                                    <div class="cs-field-holder cs-success" >
+                                    <div id="duties" class="cs-field-holder cs-success" >
 
-                                        <?php  echo form_multiselect('jks[]', $jks, '', ''); ?>
-
+                                        
                                     </div>
-                                </div>
+                                </div>                                 
+
 
                                 <?php  foreach($result  as $data) { ?>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -173,4 +179,18 @@ function verify (){
     }
 
 }
+
+function getDuties() {
+    var jks = $('#jks').val();
+
+
+    $.post('<?php echo site_url('Welcome/getDuties') ?>', {
+        state: jks
+    }, function(data) {
+
+        $('#duties').show().html(data);
+
+    });     
+}
+
     </script>

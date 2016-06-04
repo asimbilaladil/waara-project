@@ -243,4 +243,25 @@ class UserModel extends CI_Model
     }
 
 
+    /*
+    SELECT duty.name, duty.duty_id, jk.name, jk.id
+    FROM duty, jk, duty_jk
+    WHERE duty.duty_id = duty_jk.duty_id
+    AND duty_jk.jk_id = jk.id
+    AND jk.id in (10,11,12,13)
+    */
+    public function getDuties( $jk ) {
+
+        $query = $this->db->query('SELECT distinct duty.name, duty.duty_id
+            FROM duty, jk, duty_jk
+            WHERE duty.duty_id = duty_jk.duty_id
+            AND duty_jk.jk_id = jk.id
+            AND jk.id in (' . $jk . ')' );
+
+        $query->result();
+
+        return $query->result();
+
+    } 
+
 }
