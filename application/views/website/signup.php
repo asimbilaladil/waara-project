@@ -71,23 +71,34 @@
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
                                     <div class="cs-field-holder cs-success" >
 
-                                        <select name="jks[]" id="jks" multiple="multiple">
+                                        <select name="jks[]" id="jks" multiple="multiple" class="form-control">
                                             <?php
                                                 foreach ($jks as $key => $value) {
                                                     echo '<option value="'. $key .'"> '. $value .' </option>';
                                                 }
                                             ?>
-                                        </select>                                        
+                                        </select>   
 
-                                        <input type="button" value="Get JamatKhanas" id="getjk" onclick="getDuties();" />        
+                                    
+
+                                   
                                     </div>
-                                </div>                                
-
+                                </div>   
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                                    <div class="cs-field-holder cs-success" >
+                                    </br>
+                                    
+                                        <input class="btn btn-primary" type="button" value="Get JamatKhanas" id="getjk" onclick="getDuties();" />        
+                                    </div>
+                                </div>                                                             
+   </br>
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                                 </br>
                                     <div id="duties" class="cs-field-holder cs-success" >
 
                                         
                                     </div>
+                                     </br>
                                 </div>                                 
 
 
@@ -98,7 +109,8 @@
                                         <input name="<?php echo $data->field_name; ?>" type="<?php echo $data->input_type; ?>" placeholder="<?php echo $data->field_lable; ?>" required >
                                     </div>
                                 </div>
-                                <?php } ?>                                
+                                <?php } ?>    
+                                   </br>                            
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="cs-field-holder">
                                         <div class="cs-radio">

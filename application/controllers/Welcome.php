@@ -462,7 +462,7 @@ class Welcome extends CI_Controller {
 
         $duties = $this->UserModel->getDuties( $jksStr );
         
-        $html = '<select name="duties[]" id="duties" multiple="multiple">';
+        $html = '<select name="duties[]" id="duties" multiple="multiple"  class="form-control">';
 
         foreach($duties as $value){
             $html = $html . '<option value="'. $value->duty_id .'"> '. $value->name .'</option>';
