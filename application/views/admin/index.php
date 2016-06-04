@@ -661,7 +661,7 @@ table.fc-border-separate {
                                                 <input type="hidden" name="selectedUser" id="selectedUser"/>
                                                 <input type="hidden" name="selectedDuty" id="selectedDuty"/>
                                                 <input type="hidden" id="jkHidden" name="jk">
-                                                <input type="hidden" id="date" name="date" />                                                
+                                                <input type="hidden" id="date" name="date"  />                                                
                                             </div>
                                         </div>
 
@@ -805,7 +805,6 @@ function ajaxCallDuty() {
                 select: function(event, ui) {
 
                     if(ui.item.value == 'NOUSER') {
-
                         $('#addNewUser').modal('toggle');
                         window.location.href = '<?php echo site_url('admin/addNewUser') ?>';
                     }
@@ -830,6 +829,17 @@ function ajaxCallDuty() {
 getJK();
 }
 
+function getUserName(arg) {
+
+var id = arg.getAttribute('id');
+var value = $('#' + id).val();
+var name = value.split(" ");
+document.cookie =   "first_uname=" + name[0]; 
+document.cookie =   "last_uname=" + name[1]; 
+
+
+
+}
 
 function ajaxCallUserHistory(dutyId) {
 

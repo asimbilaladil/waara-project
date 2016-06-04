@@ -40,13 +40,13 @@
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">First Name</label>
                                     <div class="col-sm-6">
-                                        <input type="text" name="firstName" class="form-control" id="" placeholder="" required>
+                                        <input type="text" name="firstName" class="form-control" id="" placeholder="" value="<?php echo $_COOKIE['first_uname']; ?>" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Last Name</label>
                                     <div class="col-sm-6">
-                                        <input type="text" name="lastName" class="form-control" id="" placeholder="" required>
+                                        <input type="text" name="lastName" class="form-control" id="" placeholder="" value="<?php echo $_COOKIE['last_uname']; ?>" required>
                                     </div>
                                 </div>
 

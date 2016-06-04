@@ -141,7 +141,7 @@ class Admin extends CI_Controller {
 
                 $html = $html . '<tr>
                                 <td> '. $row->name .' </td>
-                                <td> <input type="text" name="users" id="users_'. $count .'" class="form-control" placeholder="Search User.." required> </td>     
+                                <td> <input onkeyup="getUserName(this)" type="text" name="users" id="users_'. $count .'" class="form-control" placeholder="Search User.." required> </td>     
                                 <td> <button type="button" class="btn btn-primary btn-block"  data-toggle="modal" data-target="#myModal" onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
                                 </tr>';
             }
