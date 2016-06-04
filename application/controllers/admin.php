@@ -3,6 +3,7 @@ class Admin extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
+        error_reporting(0);
 
         $id = $this->session->userdata('user_id');
         $type = $this->session->userdata('type');
