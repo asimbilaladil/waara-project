@@ -660,7 +660,7 @@ table.fc-border-separate {
                                                 <input type="hidden" name="selectedShift" id="selectedShift">
                                                 <input type="hidden" name="selectedUser" id="selectedUser"/>
                                                 <input type="hidden" name="selectedDuty" id="selectedDuty"/>
-                                                <input type="hidden" id="jkHidden" name="jk">
+                                                <input type="hidden" id="jkId" name="jk">
                                                 <input type="hidden" id="date" name="date"  />                                                
                                             </div>
                                         </div>
@@ -723,6 +723,24 @@ table.fc-border-separate {
 
 
 
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="preferences" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Alert</h4>
+                                              </div>
+                                              <div class="modal-body">
+
+                                              <p> Preferences does not match </p>
+
+                                              </div>
+                                              
+                                            </div>
+                                          </div>
+                                        </div>
+
                                        
                                 </div>
                                 <!-- /.box-body -->
@@ -740,14 +758,6 @@ table.fc-border-separate {
         </div>
     </div>
 
-
-
-
-
-
- 
-
-
 <script>
 var type =  <?php echo json_encode($data['users'][0]->type); ?>;
 if(type == 'JK Admin'){
@@ -755,7 +765,7 @@ if(type == 'JK Admin'){
 }
 var getJK = function getJK (){
         var jk = document.getElementById("jk").value;
-        var jkHidden = document.getElementById("jkHidden");
+        var jkHidden = document.getElementById("jkId");
         jkHidden.value = jk;
 
 
@@ -779,10 +789,7 @@ function formatDate(date) {
    ajaxCallDuty();
 });
 
-
 function ajaxCallDuty() {
-
-    
 
    var state=$('#jk').val();
 
@@ -837,11 +844,11 @@ var name = value.split(" ");
 document.cookie =   "first_uname=" + name[0]; 
 document.cookie =   "last_uname=" + name[1]; 
 
-
-
 }
 
 function ajaxCallUserHistory(dutyId) {
+
+   preferenceAjaxCall(dutyId);
 
    var state=$('#selectedUser').val();
 
@@ -856,6 +863,40 @@ function ajaxCallUserHistory(dutyId) {
     }); 
 
 }
+
+
+function preferenceAjaxCall(dutyId) {
+
+    var userId = $('#selectedUser').val();
+    var jkId = $('#jkId').val();
+    var duty = dutyId
+
+    var state = {
+        'userId': userId,
+        'jkId': jkId,
+        'duty': dutyId
+    }
+   
+    $.post('<?php echo site_url('Admin/getUser') ?>', {
+        state: state
+    }, function(data) {
+        /*
+         *   0 = NO PREFERENCES SET
+         *  -1 = PREFERENCES NOT MATCH
+         *   1 = PREFERENCES MATCHED
+         */
+
+        if(data == "0") {
+            $('#myModal').modal('toggle');
+        } else if( data == "-1") {
+            $('#preferences').modal('toggle');
+        } else if( data == "1" ) {
+            $('#myModal').modal('toggle');
+        }
+    });     
+
+}
+
 
 var shift = $('#shift').val();
 
