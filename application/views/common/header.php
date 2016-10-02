@@ -87,8 +87,7 @@
                                 <li><a href="<?php echo base_url("/index.php/Admin") ?>"><i class="icon-user2"></i>Admin</a></li>
 
                                        <?php  } else { ?>
-                        <li><a href="<?php echo base_url("/index.php/Welcome/login") ?> " ><i class="icon-login"></i>Login</a></li>
-                                <li><a href="<?php echo base_url("/index.php/Welcome/signup") ?>"><i class="icon-user2"></i>Signup</a></li>
+                       
                                        <?php } ?>
                             </ul>
                         </div>

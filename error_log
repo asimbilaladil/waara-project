@@ -1,0 +1,2 @@
+[03-May-2016 16:31:46 America/Chicago] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO), expecting ',' or ';' in /home/waaranet/public_html/info.php on line 3
+[04-May-2016 02:34:30 America/Chicago] PHP Fatal error:  Call to a member function update() on a non-object in /home/waaranet/public_html/application/controllers/Welcome.php on line 141
