@@ -35,7 +35,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="cs-signup-form">
                         <h6>register</h6>
-                        <form method="POST" action="<?php echo site_url('Welcome/signup') ?>" onsubmit=" return verify()">
+                        <form method="POST" action="<?php echo site_url('Signup/save') ?>" onsubmit=" return verify()">
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="cs-field-holder cs-success">
@@ -196,7 +196,7 @@ function getDuties() {
     var jks = $('#jks').val();
 
 
-    $.post('<?php echo site_url('Welcome/getDuties') ?>', {
+    $.post('<?php echo site_url('Signup/getDuties') ?>', {
         state: jks
     }, function(data) {
 
