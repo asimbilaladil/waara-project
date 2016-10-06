@@ -16,4 +16,14 @@ class PreferenceModel extends CI_Model
         return -1 ;
     }
 
+    public function updateShift( $userId, $dutyId ,$data ){
+        $this->db->where( 'user_id', $userId );
+        $this->db->where( 'duty_Id', $dutyId );
+        $result = $this->db->update( $this->tableName, $data);
+        if ( $result ) {
+            return true;
+        } 
+        return false;
+    }
+
 }

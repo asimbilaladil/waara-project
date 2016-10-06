@@ -37,6 +37,15 @@ class Signup extends CI_Controller {
 
     public function save() {
 
+        $email = $this->input->post('email', true);
+
+        $exist = $this->UserModel->checkIfUserExist($email);
+
+        if ( count($exist) > 0) {
+            $this->session->set_flashdata('fail', 'Email already exist.');
+            redirect('Signup/index');
+        }
+
         $duties = $this->input->post('duties', true);
         $jks = $this->input->post('jks', true);
 
@@ -69,6 +78,7 @@ class Signup extends CI_Controller {
         //get inserted id of the user
         $userInsertedId = $this->UserModel->insert('user', $data);
 
+        $insertedArray = array();
 
         //add duty id in preference with inserted user id
         foreach( $duties as $item ) {
@@ -76,13 +86,25 @@ class Signup extends CI_Controller {
             $shift = explode('_', $item)[0];
             $dutyId = explode('_', $item)[1];
 
-            $data = array(
-                'user_id' => $userInsertedId,
-                'duty_id' => $dutyId,
-                'shift' => $shift
-            );
+            //check if duty id and user inserted id is already present in array. Then update the shift to both
+            if (in_array($dutyId, $insertedArray)) {
 
-            $this->PreferenceModel->insert($data);
+                $this->PreferenceModel->updateShift($userInsertedId, $dutyId, array('shift' => 'both'));
+
+            } else {
+
+                $data = array(
+                    'user_id' => $userInsertedId,
+                    'duty_id' => $dutyId,
+                    'shift' => $shift
+                );
+
+                $insertedPreference = $this->PreferenceModel->insert($data);
+
+            }
+
+            array_push($insertedArray, $dutyId);
+
         }
 
         //iterate every custom field and check if the key exist in posted data. If exist insert it in user custom data
@@ -130,12 +152,10 @@ class Signup extends CI_Controller {
 
         $duties = $this->UserModel->getDuties( $jksStr );
         
-        //$html = '<select name="duties[]" id="duties" multiple="multiple"  class="form-control">';
         $html = '<table>';
 
         foreach($duties as $value){
 
-            //$html = $html . '<option value="'. $value->duty_id .'"> '. $value->name .'</option>';
             $html = $html . '<tr>';
             $html = $html . '<td>' . $value->name . '</td>';
             $html = $html . '<td> <input name="duties[]" type="checkbox" value="monrning_'.$value->duty_id.'"> Morning </input>';

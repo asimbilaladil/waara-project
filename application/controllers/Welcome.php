@@ -128,7 +128,6 @@ class Welcome extends CI_Controller {
         $password = md5($this->input->post('password', true));
 
         $result = $this->UserModel->user_login_check_info($email, $password);
-
         //if query found any result i.e userfound
         if($result) {
             $data['user_id'] = $result->user_id;
@@ -171,7 +170,7 @@ class Welcome extends CI_Controller {
         if( $id != NULL  && $type == 'User' ) {
 
 
-        $data['events'] = $this->UserModel->getUserWaaraCalendar($id); 
+        //$data['events'] = $this->UserModel->getUserWaaraCalendar($id); 
         $events = [];
         foreach( $data['events']  as $row ) {
              $subevent['title'] = $row->duty_name;
