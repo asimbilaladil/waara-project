@@ -107,10 +107,10 @@ class AdminModel extends CI_Model
 
     public function get_calendar_duties() {
 
-        $query = $this->db->query('CALL get_calendar_duties()');
+/*        $query = $this->db->query('CALL get_calendar_duties()');
         $query->result();
 
-        return $query->result();
+        return $query->result();*/
 
     }
 

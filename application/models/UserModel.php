@@ -22,6 +22,19 @@ class UserModel extends CI_Model
     }
     
     /**
+     * Check if user exist in DB.
+     */
+    public function checkIfUserExist($email) {
+        
+        $this->db->select('*');
+        $this->db->from('user');
+        $this->db->where('email', $email);
+        $quary_result=$this->db->get();
+        $result = $quary_result->result();
+        return $result;
+    }  
+
+    /**
      * Get Custom fields Method
      */
 
@@ -103,7 +116,7 @@ class UserModel extends CI_Model
     } 
     public function getUserWaaraCalendar ($id) {
         
-        $query = $this->db->query('CALL get_user_waara_calendar('.$id.')');
+        //$query = $this->db->query('CALL get_user_waara_calendar('.$id.')');
         $query->result();
 
         return $query->result();
