@@ -1,5 +1,6 @@
 <?php   $type = $this->session->userdata('type');
         $fullName = $this->session->userdata('fullName');
+        $id = $this->session->userdata('user_id');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,6 +77,7 @@
                                             <li><a href="<?php echo base_url("/index.php/Welcome/editPassword") ?>"><i class="icon-user"></i> Change Password</a></li>
                                             <li><a href="<?php echo base_url("/index.php/Welcome/request") ?>"><i class="icon-message"></i> Request</a></li>
                                             <li><a href="<?php echo base_url("/index.php/Welcome/editUser") ?>"><i class="icon-user"></i> Edit User</a></li>
+                                            <li><a href="<?php echo base_url("/index.php/editProfile/?id="); echo  $id; ?>"><i class="icon-edit"></i> Edit Profile</a></li>
 
                                             <li><a href="<?php echo base_url("/index.php/Welcome/logout") ?>"><i class="icon-log-out"></i> Logout</a></li>
                                         </ul>

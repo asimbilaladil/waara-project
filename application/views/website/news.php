@@ -53,7 +53,7 @@
                             </div>
                            
                         </div>
-<a href="http://waaranet.ca/index.php/Welcome/signup" ><label style="
+<a href="<?php echo site_url('signup');?>" ><label style="
     color: white;
     margin-top: 5px;
     margin-left: 17px;
