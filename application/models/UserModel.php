@@ -46,6 +46,16 @@ class UserModel extends CI_Model
         return $result;
     }
 
+    public function updateCustomFieldsByUserId($user, $data){
+        $result = $this->db->query('UPDATE user_custom_data SET value=\'' . $data['value'] . '\' WHERE user_id='. $data['user_id'] . ' and customField_id='. $data['customField_id']);
+        if($result){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     /**
      * Insert Method
      * @param tableName
@@ -275,6 +285,22 @@ class UserModel extends CI_Model
 
         return $query->result();
 
-    } 
+    }
 
+    
+    public function getDutiesByUserId( $user ) {
+
+        // $quary_result = $this->db->query('SELECT distinct pr.duty_id, pr.user_id, pr.shift FROM preference pr  WHERE pr.user_id = ' . $user);
+
+        $this->db->select('DISTINCT(duty_id)');
+        $this->db->select('user_id');
+        $this->db->select('shift');
+        $this->db->from('preference');
+        $this->db->where('user_id', $user);
+        $quary_result=$this->db->get();
+        $result = $quary_result->result();
+        return $result;
+
+    } 
+    
 }
