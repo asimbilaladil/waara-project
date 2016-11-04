@@ -26,4 +26,13 @@ class PreferenceModel extends CI_Model
         return false;
     }
 
+    public function deletePreferenceByUserId( $userId ){
+        $this->db->where( 'user_id', $userId );
+        $result = $this->db->delete($this->tableName);
+        if ( $result ) {
+            return true;
+        } 
+        return false;
+    }
+
 }

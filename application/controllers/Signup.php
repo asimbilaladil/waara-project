@@ -158,7 +158,7 @@ class Signup extends CI_Controller {
 
             $html = $html . '<tr>';
             $html = $html . '<td>' . $value->name . '</td>';
-            $html = $html . '<td> <input name="duties[]" type="checkbox" value="monrning_'.$value->duty_id.'"> Morning </input>';
+            $html = $html . '<td> <input name="duties[]" type="checkbox" value="morning_'.$value->duty_id.'"> Morning </input>';
             $html = $html . '<input name="duties[]" type="checkbox" value="evening_'. $value->duty_id .'"> Evening </input> </td>';
             $html = $html . '<tr>';
         }
