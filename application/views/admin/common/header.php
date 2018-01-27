@@ -8,6 +8,7 @@
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
         <!-- Bootstrap 3.3.5 -->
         <!-- Font Awesome -->
+
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
@@ -30,6 +31,7 @@
         <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
         <!-- jQuery 2.1.4 -->
         <script src="<?php echo base_url(); ?>includes/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+        <script src="https://rawgit.com/padolsey/jQuery-Plugins/master/sortElements/jquery.sortElements.js"></script>
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -37,10 +39,16 @@
             <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
         <!-- jQuery UI -->
+
+<script type="text/javascript" src="<?php echo base_url(); ?>includes/jquery.js"></script> 
+
+<script type="text/javascript" src="<?php echo base_url(); ?>includes/jquery-ui.js"></script>   
+      
         <script src="<?php echo base_url(); ?>includes/plugins/jQueryUI/jquery-ui.min.js"></script>
 
         <script type="text/javascript" src="<?php echo base_url(); ?>includes/plugins/formValidation/js/formValidation.js"></script>
         <script type="text/javascript" src="<?php echo base_url(); ?>includes/plugins/formValidation/js/framework/bootstrap.js"></script>
+
 
     </head>
     <header class="main-header">

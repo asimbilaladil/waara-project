@@ -5,6 +5,8 @@ class Login extends CI_Controller {
         parent::__construct();
 
             $this->load->model('AdminModel');
+        error_reporting(0);
+
     }
 
 
@@ -21,14 +23,13 @@ class Login extends CI_Controller {
 
             //if query found any result i.e userfound
             if($result) {
-                    
+
                 $data['type'] = $result->type;
                 if( $data['type'] != 'User' ){
 
                     $data['user_id'] = $result->user_id;
                     $data['message'] = 'Your are successfully Login && your session has been start';
                     $data['jk_id'] = $result->jk_id;
-                    $data['type'] = $result->type;
                     $this->session->set_userdata($data);
                     redirect('admin/');
 

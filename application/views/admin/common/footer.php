@@ -21,10 +21,6 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>includes/search.js"></script>   
 
 
-<script type="text/javascript" src="<?php echo base_url(); ?>includes/jquery.js"></script> 
-
-<script type="text/javascript" src="<?php echo base_url(); ?>includes/jquery-ui.js"></script>   
-
 
 <script type="text/javascript" src="<?php echo base_url(); ?>includes/typeahead.min.js"></script> 
 
@@ -41,17 +37,9 @@
 <script src="<?php echo base_url(); ?>includes/dist/js/app.min.js"></script>
 
 <script type="text/javascript">
-    $(function () {
-        $('#example1').dataTable({
-            "bPaginate": true,
-            "bLengthChange": true,
-            "bFilter": true,
-            "bSort": true,
-            "bInfo": true,
-            "bAutoWidth": true
-        });
-    });
+
 
 </script>
+
 </body>
 </html>

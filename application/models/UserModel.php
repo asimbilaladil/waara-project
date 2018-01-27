@@ -11,13 +11,12 @@ class UserModel extends CI_Model
     public function user_login_check_info($user_email, $user_password){
         $this->db->select('*');
         $this->db->from('user');
-        $this->db->where('email', $user_email);
+        $this->db->where('username', $user_email);
         $this->db->where('password', $user_password);
         $this->db->where('verified', 'true');
         $this->db->where('type', 'User');
         $quary_result=$this->db->get();
-        $result=$quary_result->row();
-        
+        $result=$quary_result->result();
         return $result;
     }
     

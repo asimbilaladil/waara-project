@@ -15,7 +15,6 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <ul class="cs-breadcrumb">
-                        <li><a href="#">Home</a></li>
                     </ul>
                 </div>
             </div>
@@ -38,13 +37,13 @@
 
                     <h6>Login</h6>
 
-                    <span>Login with yor email and password</span>
+                    <span>Login with your email and password</span>
                     <form action="<?php echo site_url('Welcome/user_login_check') ?>" method="post">
                        
                         <div class="cs-input-area">
                             <div class="cs-field-holder">
                            
-                            <input name="email" type="email" placeholder="Enter Your Email Address"></div>
+                            <input name="email" type="text" placeholder="Enter Your Email Address"></div>
                            
                         </br>
                 
@@ -54,7 +53,15 @@
                             </div>
                            
                         </div>
+<a href="http://waaranet.ca/index.php/Welcome/signup" ><label style="
+    color: white;
+    margin-top: 5px;
+    margin-left: 17px;
+    font-size: medium;
+"> Signup</label></a>
                         <button type="submit" style="width: 113px;"> Login</button>
+<br>
+<span style="margin-top: 20px;">For questions and support, email waara coordinator at coordinator@waaranet.ca </span>
                     </form>
                     <?php }?>
                 </div>

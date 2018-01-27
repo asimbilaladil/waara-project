@@ -10,12 +10,20 @@ class Admin extends CI_Controller {
 
         if( $id != NULL  && $type != 'User' ) {
             $this->load->model('AdminModel');
+            $this->load->model('EmailModel');
+            $this->load->model('ColorModel');
 
         } else {
 
             redirect('Login/');
 
         }
+
+    }
+    function globalSort() {   
+   		$data = array();
+			$data['jk'] = $this->AdminModel->getAllfromTable('jk');
+      $this->loadView('admin/globalSort', $data);
 
     }
 
@@ -41,10 +49,13 @@ class Admin extends CI_Controller {
                 "jk_id" => $this->input->post('jk'),
                 "start_date" => $date,
                 "end_date" => $date,
-                "shift" => $this->input->post('selectedShift')
+                "shift" => $this->input->post('selectedShift'),
+                "admin_id" => $this->session->userdata('user_id')
             );
 
         $this->AdminModel->insert('assign_duty', $assign);
+        $emailMessage = $this->EmailModel->getEmailContent();
+        $this->AdminModel->waaraNotificationEmail($assign['user_id'], $assign['jk_id'], $assign['duty_id'], $date , $emailMessage[0]->content );
 
         }
 
@@ -65,8 +76,9 @@ class Admin extends CI_Controller {
         }
 
         $users = $this->AdminModel->getAllfromTable('user');
-
+        $data['color'] =  $this->ColorModel->getAssignColors();
         $data['users'] = $users;
+        $data['user_count'] = $this->AdminModel->getDisableUserCount();
 
         $data['jk'] = $jk;
 
@@ -76,7 +88,10 @@ class Admin extends CI_Controller {
                  $subevent['title'] = $row->duty_name;
                  $subevent['start'] = $row->start_date;
                  $subevent['end'] = $row->end_date;
-                 $subevent['url'] = 'Welcome/waara?id='.$row->id;
+                 //$subevent['onclick'] = 'eventClick("2010.0.02")';
+                 //$subevent['url'] = 'Welcome/waara?id='.$row->id;
+                 $subevent['color'] = ($row->color != 'NULL' ? $row->color : '#337ab7' ) ;
+
                  array_push($events, $subevent);
         }
         $data['events'] = $events;
@@ -95,20 +110,37 @@ class Admin extends CI_Controller {
 
     }
 
+    function assignMultipleWaara(){
+      
+      $data['ageGroup'] = $this->AdminModel->getAllfromTable( 'age_group' );
+      $data['jk'] = $this->AdminModel->getAllfromTable('jk');
+      $data['events'] = $this->AdminModel->get_calendar_duties(); 
+            $events = [];
+            foreach( $data['events']  as $row ) {
+                 $subevent['title'] = $row->duty_name;
+                 $subevent['start'] = $row->start_date;
+                 $subevent['end'] = $row->end_date;
+                 //$subevent['url'] = 'Welcome/waara?id='.$row->id;
+                 array_push($events, $subevent);
+        }
+        $data['events'] = $events;
+      $this->loadView('admin/assignMultipleWaara',  $data);
+    }
 
-    function ajaxGetDutyFromJk() {
+    function assignMultipleDutyFromJk() {
 
         $state=$this->input->post('state');
 
         $date=$this->input->post('date');
-
-        $duty = $this->AdminModel->getDutyByJk( $state );
+        
+        $duty = $this->AdminModel->getDutyByJkandDate( $state, $date );
+        
 
         $html = '<table class="table table-striped" id="dutyTable">
         <thead>
         <tr>
             <th> Waara </th>
-            <th> Username </th>
+            <th> User Fullname </th>
             <th> Action </th>
         </tr>
         </thead>
@@ -126,14 +158,16 @@ class Admin extends CI_Controller {
 
             if( count($result) > 0) {
 
-                $user =  $result[0]->first_name;
+                $user =  $result[0]->first_name . " " . $result[0]->last_name ;
                 $assignId =  $result[0]->assign_id;  
-
+                $ratingHtml = ($result[0]->rating == 'not exists') ? ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .',0)" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Rating</button> </td>' : ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .','.$result[0]->rating.')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button> </td>';
                 $html = $html . '<tr>
                                 <td> '. $row->name .' </td>
-                                <td> '. $user . '</td>     
+                                <td>  <a href="'. site_url('userHistory/index?id=' .$result[0]->user_id ) .'" >'. $user . '</a></td>     
                                 <td> <a href= " ' . site_url("Welcome/waara?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >View</button> </td>
                                 <td> <a href= " ' . site_url("admin/editAssignDuty?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >Edit</button></a></td>
+                                '.$ratingHtml.'
+
                                 </tr>';
 
 
@@ -141,8 +175,8 @@ class Admin extends CI_Controller {
 
                 $html = $html . '<tr>
                                 <td> '. $row->name .' </td>
-                                <td> <input onkeyup="getUserName(this)" type="text" name="users" id="users_'. $count .'" class="form-control" placeholder="Search User.." required> </td>     
-                                <td> <button type="button" class="btn btn-primary btn-block"   onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
+                                <td> <input style="text-transform:capitalize;" onkeyup="getUserName(this)" type="text" name="users" id="users_'. $count .'" class="form-control" placeholder="Search User.." required><input type="hidden" value="" id="userid_'. $count .'" > <input type="hidden" value="'. $row->duty_id .'" id="waara_'. $count .'"></td>     
+                                
                                 </tr>';
             }
 
@@ -155,8 +189,330 @@ class Admin extends CI_Controller {
         echo $html;
 
     }
+   function getGlobalSortDutyFromJk() {
+
+        $state=$this->input->post('state');
+
+        $date=$this->input->post('date');
+        
+        $duty = $this->AdminModel->getGlobalSortDutyByJkandDate( $state, $date );
+        if(empty($duty)){
+		        $duty = $this->AdminModel->getDutyByJkandDate( $state, $date );			
+				}
+
+        $html = '<table class="table table-striped" id="dutyTable">
+        <thead>
+        <tr>
+            <th> Waara </th>
+
+        </tr>
+        </thead>
+        <tbody>';
+        
+        $count = 0;
+
+        foreach($duty as $row) { 
+
+            $count++;
+
+            $result = $this->AdminModel->getUserOfDutyByDate( $date, $row->duty_id );
+
+            
+
+            if( count($result) > 0) {
+
+                $user =  $result[0]->first_name . " " . $result[0]->last_name ;
+                $assignId =  $result[0]->assign_id;  
+                $ratingHtml = ($result[0]->rating == 'not exists') ? ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .',0)" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Rating</button> </td> <td  style="display:none;">'.$row->unionsorting.'</td>  <td style="display:none;"></td>' : ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .','.$result[0]->rating.')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button> </td><td  style="display:none;">'.$row->unionsorting.'</td> <td style="display:none;"></td>';
+								$rowCount = 7;
+                $html = $html . '<tr>
+                                <td style="display:none;"> '. $row->duty_id .' </td>
+                                <td> '. $row->name .' </td>
+                                <td style="display:none;">  <a href="'. site_url('userHistory/index?id=' .$result[0]->user_id ) .'" >'. $user . '</a></td>     
+                                <td style="display:none;"> <a href= " ' . site_url("Welcome/waara?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >View</button> </td>
+                                <td style="display:none;"> <a href= " ' . site_url("admin/editAssignDuty?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >Edit</button></a></td>
+                                '.$ratingHtml.'
+                                
+                               </tr>';
 
 
+            } else {
+							
+								$rowCount = 7;
+                $html = $html . '<tr>
+                                <td style="display:none;"> '. $row->duty_id .' </td>
+                                <td> '. $row->name .' </td>
+                                <td style="display:none;"> <input  onkeyup="getUserName(this)" type="text" name="users" id="users_'. $count .'" class="form-control " placeholder="Search User.." required> <input type="hidden" value="'. $row->duty_id .'" id="waara_'. $count .'"></td>     
+                                <td style="display:none;"> <button type="button" class="btn btn-primary btn-block"   onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
+                               	<td style="display:none;"></td>
+																<td style="display:none;"></td>
+																<td  style="display:none;">'.$row->unionsorting.'</td>
+                                <td style="display:none;"></td>
+                                </tr>';
+            }
+
+        }
+
+        $html = $html . '<tbody></table><script>$( "#dutyTable tbody" ).sortable( {
+	update: function( event, ui ) {
+    var totalRowCount = $("#dutyTable > tbody > tr:first > td").length //$("#dutyTable tbody tr").length;
+    var rowCount = '.$rowCount.' //$("#dutyTable td").closest("tr").length;
+
+    var selectedDate = $("#date").val()
+    $(this).children().each(function(index) {
+   	$(this).find("td").last().html(index + 1)
+    });
+		var priority = []; 
+		var duty_id = [];
+		var order = [];
+		$("#dutyTable tbody tr").each(function() {
+				var counter = 0;
+
+				$.each(this.cells, function(){
+						//console.log("rowCount: " + rowCount);
+					//	console.log($(this).text())
+						if(counter == (rowCount - 1) ){
+								//console.log( "priority: " + $(this).text());
+								priority.push(parseInt($.trim($(this).text())));
+						}
+						if( counter == 0){
+								//console.log( "duty id: " + $(this).text());
+								duty_id.push(parseInt($.trim($(this).text())));
+
+						}
+						//console.log(counter)
+						if( counter == rowCount){
+								//console.log( "Order Index: " + $(this).text());
+								order.push(parseInt($.trim($(this).text())));
+						}
+						counter++;
+				});
+				
+		});
+
+        sortGlobalDuties(priority, duty_id, order, selectedDate);
+  }
+});
+  var sortGlobalDuties = function sortGlobalDuties(priority, duty_id, order, selectedDate){
+
+      $.ajax({
+         url: "'.site_url('Admin/updateGlobalDutyPriority').'",
+         type: "POST",
+         data: {
+             "priority" : priority,
+             "duty_id" : duty_id,
+						 "order" : order,
+						 "selectedDate" : selectedDate
+         },
+         success: function(response){
+         },
+         error: function(){  
+         }
+     });
+  }
+
+</script>';
+
+
+
+        echo $html;
+
+    }
+    function ajaxGetDutyFromJk() {
+
+        $state=$this->input->post('state');
+
+        $date=$this->input->post('date');
+        
+        $duty = $this->AdminModel->getSpecificDayDutyByJkandDate( $state, $date );
+        if(empty($duty)){
+						$duty = $this->AdminModel->getSpecificGlobalDayDutyByJkandDate( $state, $date );
+						if(empty($duty)){
+		        		$duty = $this->AdminModel->getGlobalSortDutyByTodayDate( $state, $date );
+								if(empty($duty)){
+										$duty = $this->AdminModel->getDutyByJkandDate( $state, $date );			
+								}		
+						}
+						
+				
+				}
+
+        $html = '<table class="table table-striped" id="dutyTable">
+        <thead>
+        <tr>
+            <th> Waara </th>
+            <th> User Fullname </th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>';
+        
+        $count = 0;
+
+        foreach($duty as $row) { 
+
+            $count++;
+
+            $result = $this->AdminModel->getUserOfDutyByDate( $date, $row->duty_id );
+
+            
+
+            if( count($result) > 0) {
+
+                $user =  $result[0]->first_name . " " . $result[0]->last_name ;
+                $assignId =  $result[0]->assign_id;  
+                $ratingHtml = ($result[0]->rating == 'not exists') ? ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .',0)" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Rating</button> </td> <td  style="display:none;">'.$row->unionsorting.'</td>  <td style="display:none;"></td>' : ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .','.$result[0]->rating.')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button> </td><td  style="display:none;">'.$row->unionsorting.'</td> <td style="display:none;"></td>';
+								$rowCount = 7;
+                $html = $html . '<tr>
+                                <td style="display:none;"> '. $row->duty_id .' </td>
+                                <td> '. $row->name .' </td>
+                                <td>  <a href="'. site_url('userHistory/index?id=' .$result[0]->user_id ) .'" >'. $user . '</a></td>     
+                                <td> <a href= " ' . site_url("Welcome/waara?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >View</button> </td>
+                                <td> <a href= " ' . site_url("admin/editAssignDuty?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >Edit</button></a></td>
+                                '.$ratingHtml.'
+                                
+                               </tr>';
+
+
+            } else {
+							
+								$rowCount = 7;
+                $html = $html . '<tr>
+                                <td style="display:none;"> '. $row->duty_id .' </td>
+                                <td> '. $row->name .' </td>
+                                <td> <input  onkeyup="getUserName(this)" type="text" name="users" id="users_'. $count .'" class="form-control " placeholder="Search User.." required> <input type="hidden" value="'. $row->duty_id .'" id="waara_'. $count .'"></td>     
+                                <td> <button type="button" class="btn btn-primary btn-block"   onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
+                               	<td style="display:none;"></td>
+																<td style="display:none;"></td>
+																<td  style="display:none;">'.$row->unionsorting.'</td>
+                                <td style="display:none;"></td>
+                                </tr>';
+            }
+
+        }
+
+        $html = $html . '<tbody></table><script>$( "#dutyTable tbody" ).sortable( {
+	update: function( event, ui ) {
+    var totalRowCount = $("#dutyTable > tbody > tr:first > td").length //$("#dutyTable tbody tr").length;
+    var rowCount = '.$rowCount.' //$("#dutyTable td").closest("tr").length;
+
+    var selectedDate = $("#date").val()
+    $(this).children().each(function(index) {
+   	$(this).find("td").last().html(index + 1)
+    });
+		var priority = []; 
+		var duty_id = [];
+		var order = [];
+		$("#dutyTable tbody tr").each(function() {
+				var counter = 0;
+
+				$.each(this.cells, function(){
+						//console.log("rowCount: " + rowCount);
+					//	console.log($(this).text())
+						if(counter == (rowCount - 1) ){
+								//console.log( "priority: " + $(this).text());
+								priority.push(parseInt($.trim($(this).text())));
+						}
+						if( counter == 0){
+								//console.log( "duty id: " + $(this).text());
+								duty_id.push(parseInt($.trim($(this).text())));
+
+						}
+						//console.log(counter)
+						if( counter == rowCount){
+								//console.log( "Order Index: " + $(this).text());
+								order.push(parseInt($.trim($(this).text())));
+						}
+						counter++;
+				});
+				
+		});
+
+        sortDuties(priority, duty_id, order, selectedDate);
+  }
+});
+  var sortDuties = function sortDuties(priority, duty_id, order, selectedDate){
+
+      $.ajax({
+         url: "'.site_url('Admin/updateDutyPriority').'",
+         type: "POST",
+         data: {
+             "priority" : priority,
+             "duty_id" : duty_id,
+						 "order" : order,
+						 "selectedDate" : selectedDate
+         },
+         success: function(response){
+         },
+         error: function(){  
+         }
+     });
+  }
+
+</script>';
+
+
+
+        echo $html;
+
+    }
+
+    function updateGlobalDutyPriority(){
+				
+      if($this->input->post()) {
+
+        $priority = $this->input->post('priority', true);
+        $duty_id = $this->input->post('duty_id', true);
+				$order = $this->input->post('order', true);
+				$selectedDate = $this->input->post('selectedDate', true);
+				//echo  " Count order: ". count($order);
+
+				//echo  " Count order 1: ". count($order);
+				for( $i= 0; $i < count($order); $i++ ){
+					
+						$data = array(
+							'priority' => $priority[$i],
+							'duty_id' => $duty_id[$i],
+							'sort_number' => $order[$i],
+							'date' => $selectedDate,
+							'admin_id' => $this->session->userdata('user_id')
+						);
+					
+						//Delete all old sort data by date and if duty is enable only
+						$this->AdminModel->deleteDutyIfEnable( 'globalWaaraSort', $selectedDate, $duty_id[$i]);					
+						$this->AdminModel->insert( 'globalWaaraSort', $data );
+				}
+			
+      }
+    }	
+    function updateDutyPriority(){
+				
+      if($this->input->post()) {
+
+        $priority = $this->input->post('priority', true);
+        $duty_id = $this->input->post('duty_id', true);
+				$order = $this->input->post('order', true);
+				$selectedDate = $this->input->post('selectedDate', true);
+				//echo  " Count order: ". count($order);
+
+				//echo  " Count order 1: ". count($order);
+				for( $i= 0; $i < count($order); $i++ ){
+					
+						$data = array(
+							'priority' => $priority[$i],
+							'duty_id' => $duty_id[$i],
+							'sort_number' => $order[$i],
+							'date' => $selectedDate,
+							'admin_id' => $this->session->userdata('user_id')
+						);
+					
+						//Delete all old sort data by date and if duty is enable only
+						$this->AdminModel->deleteDutyIfEnable( 'waaraSort' , $selectedDate, $duty_id[$i]);					
+						$this->AdminModel->insert( 'waaraSort', $data );
+				}
+			
+      }
+    }
     function addJK() {   
         if($this->input->post()) {
 
@@ -190,26 +546,88 @@ class Admin extends CI_Controller {
         if($this->input->post()) {
 
             $beforeDuty = $this->input->post('beforeDuty', true);
+            
+            //Date or for_all to add duty for specific day only
+            $addDutyDate =  $this->input->post('addDutyDate', true);
+           
+            $dutyExists = $this->AdminModel->getDutyDetails( $this->input->post('duty_name', true) );
 
-            //insert and update priority
-            $this->AdminModel->updateDutyByOrder(
-            $beforeDuty, $this->input->post('duty_name', true), $this->input->post('description', true) );
+ 
+            if( count($dutyExists) > 0 ){
+              
+                $dutyOldDate = $dutyExists[0]->for_day;
+                $oldDutyID = $dutyExists[0]->duty_id;
+                $addDutyDate = $addDutyDate ."," . $dutyOldDate;
+                $data = array(
+                    'for_day' => $addDutyDate
+                );
+                $this->AdminModel->update( 'duty', 'duty_id', $oldDutyID, $data );
+            } else {
+              
+                //insert and update priority
+                $this->AdminModel->updateDutyByOrder($beforeDuty, $this->input->post('duty_name', true), $this->input->post('description', true), $addDutyDate );
 
-            $selectJkIds = $this->input->post('jk', true);
+                $selectJkIds = $this->input->post('jk', true);
 
-            //get inserted id of duty
-            $dutyInsertedId = $this->db->insert_id();
+                //get inserted id of duty
+                $dutyInsertedId = $this->db->insert_id();
 
-            if( count( $selectJkIds ) > 0 ) {
-                //iterate selected jk and add there ids 
-                foreach( $selectJkIds as $id ) {
+								//get order_number from waaraSort by date and duty_id	 
+								//Priority not empty
+							if(!empty($beforeDuty)){
+									$waara_data = $this->AdminModel->getWaaraidByPriority($beforeDuty+1);
+							
+								if(!empty($waara_data)){
+									$waara_id = $waara_data->duty_id;
+									$sort_data = $this->AdminModel->getWaaraSortNumber('waaraSort',$waara_id, $addDutyDate);
+									$global_sort_data = $this->AdminModel->getWaaraSortNumber('globalWaaraSort',$waara_id, $addDutyDate);
+									
+									//Data found in waara sort table by duty id and selected date
+									if(!empty($sort_data)){
+										$sort_number = $sort_data->sort_number;
+										$this->AdminModel->sortDutyNumbers( $sort_number, $dutyInsertedId, $addDutyDate, $this->session->userdata('user_id'));
+									}
+									//Data found in waara sort table by duty id and selected date
+									if(!empty($global_sort_data)){
+										$sort_number = $sort_data->sort_number;
+										$this->AdminModel->globalSortDutyNumbers( $sort_number, $dutyInsertedId, $addDutyDate, $this->session->userdata('user_id'));
+									}									
+								} else {
+									//Get Max sort number from waara Sort Table by date selected
+									$getMaxSortNumber = $this->AdminModel->getHighestSortNumber($addDutyDate);
+									
+									//Data found by date but no Priority found
+									if(!empty($getMaxSortNumber)){
+										$data = array(
+											'priority' => $beforeDuty,
+											'duty_id' => $dutyInsertedId,
+											'date' => $addDutyDate,
+											'admin_id' => $this->session->userdata('user_id'),
+											'sort_number' => ($getMaxSortNumber[0]->max_sort_number+1)
+										);
 
-                    $dutyJkItem = array(
-                        "jk_id" => $id,
-                        "duty_id" => $dutyInsertedId
-                    );
+										$this->AdminModel->insert('waaraSort' , $data);	
+									} 
 
-                    $this->AdminModel->insert('duty_jk', $dutyJkItem);
+								}							
+							} 
+
+
+
+								
+							//	die();
+							
+                if( count( $selectJkIds ) > 0 ) {
+                    //iterate selected jk and add there ids 
+                    foreach( $selectJkIds as $id ) {
+
+                        $dutyJkItem = array(
+                            "jk_id" => $id,
+                            "duty_id" => $dutyInsertedId
+                        );
+
+                        $this->AdminModel->insert('duty_jk', $dutyJkItem);
+                    }
                 }
             }
 
@@ -276,7 +694,27 @@ class Admin extends CI_Controller {
         }
 
     }
+    function assign_multiple_duty() {   
 
+
+
+            $assignDuty = array (
+                "user_id" => $this->input->post('userid', true),
+                "jk_id" => $this->input->post('jk', true),
+                "duty_id" => $this->input->post('duty', true),
+                "start_date" => $this->input->post('startDate', true),
+                "end_date" => $this->input->post('endDate', true),
+                "admin_id" => $this->session->userdata('user_id')
+            );
+            $rowCount = $this->AdminModel->checkForExists('assign_duty', $assignDuty);
+            if( $rowCount < 1 ){
+                //insert in assign_duty table
+                $this->AdminModel->insert('assign_duty', $assignDuty);
+               // echo "Waara Assign Successfully.";
+            }
+
+
+    }
 
     function assign_duty() {   
 
@@ -287,7 +725,8 @@ class Admin extends CI_Controller {
                 "jk_id" => $this->input->post('jk', true),
                 "duty_id" => $this->input->post('duty', true),
                 "start_date" => $this->input->post('startDate', true),
-                "end_date" => $this->input->post('endDate', true)
+                "end_date" => $this->input->post('endDate', true),
+                "admin_id" => $this->session->userdata('user_id')
             );
 
             $data = array (
@@ -404,11 +843,77 @@ class Admin extends CI_Controller {
      */
     function user() {
 
-        $data['user'] = $this->AdminModel->getAllfromTable( 'user' );
+        //$data['user'] = $this->AdminModel->getAllfromTableOrderBy( 'user', 'first_name', 'asc' );
+        $data['user'] = $this->AdminModel->getAllSortedUser();
         $data['jk'] = $this->AdminModel->getAllfromTable( 'jk' );
-
+        $data['ageGroup'] = $this->AdminModel->getAllfromTable( 'age_group' );
+        $data['color'] = $this->ColorModel->getUnassignColors();
         $this->loadView('admin/user', $data);
 
+    }
+  
+      /**
+     * User
+     */
+    function userList() {
+
+        //$data['user'] = $this->AdminModel->getAllfromTableOrderBy( 'user', 'first_name', 'asc' );
+        $data['user'] = $this->AdminModel->getUsersByWaaraDays(date('y-m-d'));
+        $data['tableData'] = $this->AdminModel->getTableData('client', 'userList');
+        $data['jk'] = $this->AdminModel->getAllfromTable( 'jk' );
+        $data['ageGroup'] = $this->AdminModel->getAllfromTable( 'age_group' );
+        $data['color'] = $this->ColorModel->getUnassignColors();
+                  $data['duties'] = $this->AdminModel->getAllfromTable('duty');
+
+           // $data['waara_details'] = $this->AdminModel->getWaarabyIds($data['duties']);
+            //$data['excluded_waara'] = $this->AdminModel->getWaaraExcludebyIds($data['duties']);      
+        $this->loadView('admin/userList', $data);
+
+    }
+      /**
+     * User
+     */
+    function userListSetting() {
+
+        $data['tableData'] = $this->AdminModel->getTableData('settings', 'userList');
+        $data['tableDataValues'] = $this->AdminModel->getTableData('client', 'userList');
+
+        $data['tableDataValues'] = explode(',' , $data['tableDataValues'][0]->values);
+
+
+      
+        $this->loadView('admin/userListSetting', $data);
+
+    }  
+  
+    function saveTableSettingsData(){
+      if($this->input->post()) {
+         $values = $this->input->post('tableData', true);
+         $controller_name = $this->input->post('controller_name', true);
+         $type = $this->input->post('type', true);
+         $scriptData = '';
+
+        for($i=0; $i< count($values); $i++ ){
+                    $scriptData = $scriptData . '  {
+                "targets": [ '.$values[$i].' ],
+                "visible": false
+           },';
+        }
+        $scriptData = substr($scriptData, 0, -1);
+        $scriptData = ',"columnDefs": [' . $scriptData . ']';
+
+         $values = implode(',',$values);
+         $data = array(
+            'values' => $values,
+            'type' => $type,
+            'controller_name' => $controller_name,
+            'script' => $scriptData,
+            'admin_id' => $this->session->userdata('user_id')
+
+         );
+        $this->AdminModel->insert( 'tableSettingsData' , $data);
+        redirect('Admin/userListSetting');
+      }
     }
 
     function addUserRole() {
@@ -431,7 +936,7 @@ class Admin extends CI_Controller {
             }
             $this->AdminModel->update( 'user', 'user_id', $userId, $data );
            
-            header('Location:http://waaranet.ca/index.php/Admin/user');
+            header('Location:http://waaranet.ca/index.php/Admin/userList');
         }
     }
 
@@ -478,7 +983,8 @@ class Admin extends CI_Controller {
                 "last_name" => $this->input->post('lastName', true),
                 "email" => $this->input->post('email', true),
                 "phone" => $this->input->post('phone', true),
-                "password" => md5( $this->input->post('password', true) )
+                "password" => md5( $this->input->post('password', true) ),
+                "age_group"=>$this->input->post('age_group', true)
             );
 
             
@@ -496,6 +1002,7 @@ class Admin extends CI_Controller {
             $data['customFields'] = $this->AdminModel->getCustomFieldByUserId( $id );
 
             $data['user'] = $this->AdminModel->getUserById( $id );
+            $data['ageGroup'] = $this->AdminModel->getAllfromTable( 'age_group' );
 
             $this->loadView('admin/edituser', $data);
 
@@ -629,6 +1136,17 @@ class Admin extends CI_Controller {
         redirect('admin/addDuty');
 
     }
+  
+     /**
+     * deleteAssignDuty
+     * @param 1 : AssignDutyId
+     */
+    function deleteAssignDuty() {
+
+        $id = $this->input->post('id', TRUE);
+        $this->AdminModel->delete( 'assign_id', $id, 'assign_duty');
+        echo "Deleted Successfully";
+    }
 
     function editDuty() {
 
@@ -661,34 +1179,41 @@ class Admin extends CI_Controller {
 
         $userId=$this->input->post('state');
 
+        //$userHistory = $this->AdminModel->getUserHistory( $userId );
         $userHistory = $this->AdminModel->getUserHistory( $userId );
-
+        $userHistoryLog = $this->AdminModel->getUserHistoryLog( $userId );
+        $result = array_merge($userHistory, $userHistoryLog);
         
-        $html = '<table class="table table-striped">
+        $html = '<table id="userHistoryt" class="table table-striped">
         <thead>
         <tr>
             <th> Name </th>
             <th> Duty </th>
             <th> Reason </th>
             <th> Date </th>
+            <th> Total Days </th>
         </tr>
         </thead>
         <tbody>';
         
 
-        foreach($userHistory as $row) { 
+        foreach($result as $row) { 
 
 
-            $html = $html . '<tr>
+            $OldDate = new DateTime($row->start_date);
+            $now = new DateTime(Date('Y-m-d'));
+            $datediff = $OldDate->diff($now);
+            $html = $html . '<tr class="historyRows">
                                 <td> '. $row->first_name .' </td>
                                 <td> '. $row->name .' </td>
                                 <td> '. $row->reason .' </td>
-                                <td> '. $row->start_date .' </td>
+                                <td>'. $row->start_date .' </td>
+                                <td> '.$datediff->days .' </td>
                             </tr>';
 
         }
 
-        $html = $html . '<tbody></table>';
+        $html = $html . '<tbody></table> <script > sortByDate()  </script>';
 
         echo $html;
 
@@ -702,7 +1227,7 @@ class Admin extends CI_Controller {
 
         $duty = $this->AdminModel->getAssignDutyDetailByStartDate( $date );
 
-        $html = '<table class="table table-striped" id="dutyTable">
+        $html = '<table  class="table table-striped" id="dutyTable">
         <thead>
         <tr>
             <th> User Name </th>
@@ -758,11 +1283,25 @@ class Admin extends CI_Controller {
             $assignId = $this->input->post('assignId', true);
 
             $data = array (
-                "user_id" => $selectedUser,
-                "reason" => $reason
+                "user_id" => $selectedUser
             );
+            $assign_user_data = $this->AdminModel->getAssignUserData( $assignId );
+            $assign_duty_log_data = array (
+                "duty_id" =>  $assign_user_data->duty_id,
+                "user_id" => $assign_user_data->user_id,
+                "jk_id" =>  $assign_user_data->jk_id,
+                "start_date" =>  $assign_user_data->start_date,
+                "date" =>  date("Y-m-d"),
+                "shift" =>  $assign_user_data->shift,
+                "reason" => $reason,
+                "admin_id" => $this->session->userdata('user_id')
+            );
+          
 
+            $this->AdminModel->insert('assign_duty_logs', $assign_duty_log_data);
             $this->AdminModel->update( 'assign_duty', 'assign_id', $assignId, $data );
+            $emailMessage = $this->EmailModel->getEmailContent();
+            $this->AdminModel->waaraNotificationEmail($selectedUser, $assign_user_data->jk_id, $assign_user_data->duty_id, $assign_user_data->start_date , $emailMessage[0]->content );
 
             redirect('admin/assignedDuties');
 
@@ -785,19 +1324,20 @@ class Admin extends CI_Controller {
         }
 
     }
-
-
-    public function addNewUser() {
+    public function saveUser() {
 
         if($this->input->post()) {
 
-            print_r($this->input->post());
-
             $firstName = $this->input->post('firstName', TRUE);
             $lastName = $this->input->post('lastName', TRUE);
+            $password = $this->input->post('password', TRUE);
             $email = $this->input->post('email', TRUE);
             $phone = $this->input->post('phone', TRUE);
-            $password = md5($this->input->post('password', TRUE));
+            $age_group = $this->input->post('age_group', TRUE);
+            if(empty($password)){
+                $password = "1234";
+            }
+            
             $token = $this->AdminModel->generateToken();
 
             $data = array(
@@ -805,25 +1345,151 @@ class Admin extends CI_Controller {
                 'last_name' => $lastName,
                 'email' => $email,
                 'phone' => $phone,
-                'password' => $password,
+                'password' => md5($password),
                 'status' => 'false',
                 'verified' => 'false',
                 'type' => 'User',
-                'token' => $token
+                'token' => $token,
+                'age_group' => $age_group
             );
 
             $this->AdminModel->insert('user', $data);
+            $user_id = $this->AdminModel->getLastInserted();
+
 
             $emailMessage = "Please verify your account using this link \n".base_url()."index.php/Welcome/verify?token=".$token. " and your temporary password is " . $password ;
 
             mail($email,"User verification",$emailMessage);
+            echo $user_id;
+                   
+        }
+        
+    }
+ public function createNewUser() {
 
+        if($this->input->post()) {
+
+            //print_r($this->input->post());
+
+            $firstName = $this->input->post('firstName', TRUE);
+            $lastName = $this->input->post('lastName', TRUE);
+            $password = $this->input->post('password', TRUE);
+            $email = $this->input->post('email', TRUE);
+            $phone = $this->input->post('phone', TRUE);
+            $waara_id = $this->input->post('waara_id', TRUE);
+            $date = $this->input->post('assign_date', TRUE);
+            $age_group = $this->input->post('age_group', TRUE);
+            if(empty($password)){
+                $password = "1234";
+            }
+            
+            $token = $this->AdminModel->generateToken();
+
+            $data = array(
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $email,
+                'phone' => $phone,
+                'password' => md5($password),
+                'status' => 'false',
+                'verified' => 'false',
+                'type' => 'User',
+                'token' => $token,
+                'age_group' => $age_group
+            );
+
+            $this->AdminModel->insert('user', $data);
+//             $user_id = $this->AdminModel->getLastInserted();
+//             $jk = $this->AdminModel->getJkFromDuty( $waara_id );
+//             $jk_id = $jk[0]->id;
+
+//             $emailMessage = "Please verify your account using this link \n".base_url()."index.php/Welcome/verify?token=".$token. " and your temporary password is " . $password ;
+
+//             mail($email,"User verification",$emailMessage);
+//             $assign = array( 
+//                 "user_id" => $user_id,
+//                 "duty_id" => $waara_id,
+//                 "jk_id" => $jk_id,
+//                 "start_date" => $date,
+//                 "end_date" => $date,
+//                 "shift" => 'both'
+//             );
+
+           // $this->AdminModel->insert('assign_duty', $assign);
+          //  $emailMessage = $this->EmailModel->getEmailContent();
+          //  $this->AdminModel->waaraNotificationEmail($user_id, $jk_id, $waara_id, $date, $emailMessage[0]->content );
+          //  redirect('admin/');
+            header('Location:http://waaranet.ca/index.php/Admin/index');
+                   
+        }
+
+        
+        $data['ageGroup'] = $this->AdminModel->getAllfromTable( 'age_group' );
+
+        $this->loadView('admin/addNewUser', $data);
+    }
+    public function addNewUser() {
+
+        if($this->input->post()) {
+
+            //print_r($this->input->post());
+
+            $firstName = $this->input->post('firstName', TRUE);
+            $lastName = $this->input->post('lastName', TRUE);
+            $password = $this->input->post('password', TRUE);
+            $email = $this->input->post('email', TRUE);
+            $phone = $this->input->post('phone', TRUE);
+            $waara_id = $this->input->post('waara_id', TRUE);
+            $date = $this->input->post('assign_date', TRUE);
+            $age_group = $this->input->post('age_group', TRUE);
+            if(empty($password)){
+                $password = "1234";
+            }
+            
+            $token = $this->AdminModel->generateToken();
+
+            $data = array(
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+                'email' => $email,
+                'phone' => $phone,
+                'password' => md5($password),
+                'status' => 'false',
+                'verified' => 'false',
+                'type' => 'User',
+                'token' => $token,
+                'age_group' => $age_group
+            );
+
+            $this->AdminModel->insert('user', $data);
+            $user_id = $this->AdminModel->getLastInserted();
+            $jk = $this->AdminModel->getJkFromDuty( $waara_id );
+            $jk_id = $jk[0]->id;
+
+            $emailMessage = "Please verify your account using this link \n".base_url()."index.php/Welcome/verify?token=".$token. " and your temporary password is " . $password ;
+
+            mail($email,"User verification",$emailMessage);
+            $assign = array( 
+                "user_id" => $user_id,
+                "duty_id" => $waara_id,
+                "jk_id" => $jk_id,
+                "start_date" => $date,
+                "end_date" => $date,
+                "shift" => 'both'
+            );
+
+            $this->AdminModel->insert('assign_duty', $assign);
+            $emailMessage = $this->EmailModel->getEmailContent();
+            $this->AdminModel->waaraNotificationEmail($user_id, $jk_id, $waara_id, $date, $emailMessage[0]->content );
             redirect('admin/');
             header('Location:http://waaranet.ca/index.php/Admin/index');
                    
         }
 
-        $this->loadView('admin/addNewUser', null);
+        
+        $data['ageGroup'] = $this->AdminModel->getAllfromTable( 'age_group' );
+
+        $this->loadView('admin/addNewUser', $data);
     }
 
    public function request() {   
@@ -850,7 +1516,7 @@ class Admin extends CI_Controller {
         $status = ($status == 'true' ? 'false' : 'true' ); 
         $data =  array('status' =>   $status );
         $this->AdminModel->update( 'user', 'user_id', $id,  $data );
-        redirect('admin/user');
+        redirect('admin/userList');
 
     } 
     public function waaraNotification (){
@@ -899,8 +1565,113 @@ class Admin extends CI_Controller {
         $verified = ($verified == 'true' ? 'false' : 'true' ); 
         $data =  array('verified' =>   $verified );
         $this->AdminModel->update( 'user', 'user_id', $id,  $data );
-        redirect('admin/user');
+        redirect('admin/userList');
 
     } 
+
+    public function enableDisableWaara() {
+
+        $id = $this->input->get('id', TRUE);
+        $status = $this->input->get('status', TRUE);
+        $status = ( $status  == 1 ? 0 : 1 );
+        $data =  array('isEnable' =>   $status );
+        $this->AdminModel->update( 'duty', 'duty_id', $id,  $data );
+        redirect('admin/addDuty');
+
+    }
+    /**
+     * Age Group
+     */
+    function ageGroup() {
+
+        if($this->input->post()) {
+          
+            $ageGroup = $this->input->post('age_group', TRUE);
+          
+            $data = array(
+                'age_group' => $ageGroup
+            );
+
+            $this->AdminModel->insert('age_group', $data);
+         }
+        $data['ageGroup'] = $this->AdminModel->getAllfromTable( 'age_group' );
+        $this->loadView('admin/ageGroup', $data);
+
+    }
+    /**
+     * Save Duty Dates
+     */
+    function saveDutyDates() {
+
+        if($this->input->post()) {
+          
+            $duty_date = $this->input->post('duty_date', TRUE);
+            $dutyid = $this->input->post('dutyid', TRUE);
+
+            $duty_date  = implode(",",$duty_date);
+            $data = array(
+              'for_day' => $duty_date
+            );
+            $this->AdminModel->update( "duty", "duty_id", $dutyid ,$data );
+            redirect('admin/addDuty');
+         }
+         
+        
+
+    }
+    /**
+     * Age Group
+     */
+    function addRating() {
+
+        if($this->input->post()) {
+          
+            $rating = $this->input->post('rating', TRUE);
+           $assign_duty_id = $this->input->post('assign_duty_id', TRUE);
+          
+          
+            $data = array(
+                'stars' => $rating,
+                'assign_duty_id' => $assign_duty_id,
+                'admin_id' =>  $this->session->userdata('user_id')
+            );
+
+            $this->AdminModel->insert('rating', $data);
+         }
+
+
+
+    }
+  function assignWaaraToUser() {
+        
+        $user_id = $this->input->post('user_id');
+        $start_date = $this->input->post('start_date');
+        $end_date = $this->input->post('end_date');
+        $duty_id = $this->input->post('duty_id');
+        $jk_id = $this->input->post('jk');
+
+        if( (isset( $user_id )) && (isset( $start_date )) )  {
+            $data = array( 
+                        "user_id" => $user_id,
+                        "start_date" => $start_date,
+                        "end_date" => $end_date,
+                        "duty_id" => $duty_id,
+                        "jk_id" => $jk_id,
+                        "admin_id" => $this->session->userdata('user_id')
+                    );
+            $check = $this->AdminModel->checkAssignWaara( $duty_id, $start_date );
+            if(empty($check)){
+                $this->AdminModel->insert('assign_duty', $data); 
+                $emailMessage = $this->EmailModel->getEmailContent();
+                $this->AdminModel->waaraNotificationEmail($user_id, $jk_id, $duty_id, $start_date , $emailMessage[0]->content );
+
+ 
+                echo "Waara assigned successfully";
+            } else {
+                echo "Waara already assigned";
+            }          
+        }
+    } 
+    
 }
 ?>

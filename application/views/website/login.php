@@ -103,7 +103,7 @@
         <form action="<?php echo site_url('Welcome/sendPasswordLink') ?>" method="POST">
                 <div class="cs-field-holder">
                  <p>Enter the email you used to register. An email will be sent to you.</p>
-                    <input name="email" type="email" placeholder="email address *">
+                    <input name="email" type="text" placeholder="email address *">
                 </div>
             </div>
 

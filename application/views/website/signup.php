@@ -1,4 +1,7 @@
- <div style="background:#ebebeb; padding:50px 0 35px;" class="page-section center">
+
+     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+<div style="background:#ebebeb; padding:50px 0 35px;" class="page-section center">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -61,12 +64,24 @@
                                        <input name="password" type="password" placeholder="Password" required >
                                     </div>
                                 </div>
+                              
+                                  <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                                    <div class="cs-field-holder cs-success">
+                                        <select style="height: 50px; padding-left: 35px; font-size: 13px; margin-bottom: 30px;" name="age_group" class="form-control">
+                                           <option > Select Age Group</option>
+                                          <?php foreach( $ageGroup as $item) { ?>
+                                          <option  value="<?php echo $item->id ; ?>" > <?php echo $item->age_group ; ?></option>
+                                          <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
                                     <div class="cs-field-holder cs-success" >
                                         <i class="icon-phone3"></i>
                                        <input style="width: 100%" name="phone" type="phone" placeholder="Phone" required >
                                     </div>
                                 </div>
+                             
 
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
                                     <div class="cs-field-holder cs-success" >
@@ -125,7 +140,9 @@
                                 </div>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
 
-                                       <label id="captchaText" style="
+                                        <div class="g-recaptcha" data-sitekey="6Lfm3h8UAAAAAOKHRVAlIU7qRJobZ2kRITB58LfA"></div>
+
+<!--                                       <label id="captchaText" style="
     background-color: cornflowerblue;
     color: white;
     width: 30%;
@@ -136,10 +153,11 @@
     /* margin-top: -17px; */
     line-height: 40px;
 "></label><a onclick="captcha()" style="cursor:pointer"> <i class="icon-refresh" style="font-size: xx-large;"></i></a>   <label style="color:Red" id="captchaError"></label> </br></br><div class="cs-field-holder cs-success" >
-                                   <input style="width: 100%" name="captchaInput" id="captchaInput" type="text"  required >
+                                   <input style="width: 100%" name="captchaInput" id="captchaInput" type="text"  required > -->
+
                                     </div>
                                 </div>
-
+<br>
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="cs-btn-submit">
                                         <input type="submit" value="register" >
@@ -157,41 +175,48 @@
 
     </div>
     <script type="text/javascript">
-var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+// var text = "";
+//     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for( var i=0; i < 5; i++ ){
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
+//     for( var i=0; i < 5; i++ ){
+//         text += possible.charAt(Math.floor(Math.random() * possible.length));
+//     }
     
-    document.getElementById('captchaText').innerHTML =text;
+//     document.getElementById('captchaText').innerHTML =text;
 
-function captcha()
-{
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+// function captcha()
+// {
+//     var text = "";
+//     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    for( var i=0; i < 5; i++ ){
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
+//     for( var i=0; i < 5; i++ ){
+//         text += possible.charAt(Math.floor(Math.random() * possible.length));
+//     }
 
-    document.getElementById('captchaText').innerHTML =text;
-     document.getElementById('captchaError').innerHTML = "";
+//     document.getElementById('captchaText').innerHTML =text;
+//      document.getElementById('captchaError').innerHTML = "";
 
-}
-function verify (){
-    var userInput = document.getElementById('captchaInput').value;
+// }
+// function verify (){
+//     var userInput = document.getElementById('captchaInput').value;
 
-    if( userInput == text ){
-    } else {
-        captcha()
-        document.getElementById('captchaError').innerHTML ="The captcha is not valid ";
+//     if( userInput == text ){
+//     } else {
+//         captcha()
+//         document.getElementById('captchaError').innerHTML ="The captcha is not valid ";
         
-        return false;
-    }
+//         return false;
+//     }
 
+// }
+      function verify (){
+          if (grecaptcha.getResponse() == ""){
+            return false;
+          } 
+      }
+function YourOnSubmitFn(){
+  
 }
-
 function getDuties() {
     var jks = $('#jks').val();
 

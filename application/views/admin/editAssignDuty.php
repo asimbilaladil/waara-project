@@ -15,16 +15,6 @@
         </section>
         <!-- Main content -->
         <section class="content">
-
-        <?php
-            if( isset($data['message']) ) {
-                echo "<div style='text-align: center;' class='alert alert-success alert-dismissable'>
-                                                         <button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button>"
-                                                               .$data['message'].
-                                                        "</div>";                
-            } 
-        ?>
-
             <!-- Main row -->
             <div class="row">
                 <div class="col-md-12">
@@ -38,13 +28,19 @@
                             <div class="box-body">
 
                                 <div class="form-group">
-                                    <label for="" class="col-sm-2 control-label">Name</label>
+                                    <label for="" class="col-sm-2 control-label">Already Assigned User:</label>
                                     <div class="col-sm-6">
-                                        <input type="text" value="<?php echo $data['user']->first_name ?>" name="user" class="form-control" id="user" placeholder="" required>
-                                        <input type="hidden" id="selectedUser" name="selectedUser" value="<?php echo $data['user']->user_id?>" /> 
-                                        <input type="hidden" id="assignId" name="assignId" value="<?php echo $data['assignId']?>" /> 
+                                        <input disabled type="text" value="<?php echo $data['user']->first_name ." ". $data['user']->last_name ?>" name="user" class="form-control" id="user" placeholder="" required>
                                     </div>
-                                </div>    
+                                </div> 
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Assign New User:</label>
+                                    <div class="col-sm-6">
+                                        <input  type="text" value="" name="user_name" class="form-control" id="user_name" placeholder="" required>
+                                        <input type="hidden" id="selectedUser" name="selectedUser" value="<?php echo $data['user']->user_id?>" /> 
+                                        <input type="hidden" id="assignId" name="assignId" value="<?php echo $data['assignId']?>" />                                       
+                                    </div>
+                                </div>                               
 
 
                                 <div class="form-group">
@@ -59,6 +55,10 @@
                                     <div class="col-sm-offset-2 col-sm-2">
 
                                         <button type="submit" class="btn btn-primary btn-block">Save</button>
+                                    </div>
+                                   <div class="col-sm-offset-2 col-sm-2">
+
+                                        <button type="button" onclick="deleteAssignWaara(<?php echo $_GET['id']; ?>)" class="btn btn-primary btn-block">Delete</button>
                                     </div>
                                 </div>
                             </div><!-- /.box-body -->
@@ -80,7 +80,7 @@
 
 <script type="text/javascript">
     
-    $("#user").autocomplete({
+    $("#user_name").autocomplete({
 
     source : '<?php echo site_url('admin/getUsers') ?>',
     select: function(event, ui) {
@@ -94,5 +94,24 @@
     }
 });
 
+function deleteAssignWaara(id) {
 
+    var assignId = id;
+    $.ajax({
+        url: "<?php echo site_url('Admin/deleteAssignDuty') ?>",
+        type: "POST",
+        data: {
+            'id' : assignId
+        },
+        success: function(response){
+          console.log(response)
+          window.location = "";
+        },
+        error: function(error){
+            console.log(error)
+        }
+    });
+
+
+}
 </script>

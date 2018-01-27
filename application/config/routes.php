@@ -50,5 +50,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 $route['default_controller'] = 'welcome';
+$route['Majalis/(:any)/(:any)'] = 'Majalis/addmajalisdate/$token';
+$route['announcement/(:any)'] = 'SamarMayat/add/$type';
+$route['Administrator/(:any)'] = 'SamarMayat/index/$type';
+$route['Majalis/(:any)/Waara/(:any)'] = 'Majalis/addWaara/$token';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

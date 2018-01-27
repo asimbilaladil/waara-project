@@ -1,0 +1,47 @@
+
+------- get ui sort previous element -------
+ 
+ console.log(ui.item[0].previousElementSibling);
+
+------- End -------
+ 
+------- get ui sort next element all td -------
+
+        $(ui.item[0].nextElementSibling).find("td").each (function(data) {
+          if(counter == rowCount){
+            //console.log($(this).text());
+            before_priority = $(this).text();
+            
+          }
+          if( counter == 0){
+            //console.log($(this).text());
+            before_duty_id = $(this).text();
+          }
+          if( counter == 1){
+            //console.log($(this).text());
+          }          
+          counter++;
+        });
+
+ ------- End -------
+
+------- get ui sort current element all td -------
+
+
+        $(ui.item[0]).find("td").each (function(data) {
+          if(counter == rowCount){
+            //console.log($(this).text());
+            priority = $(this).text();
+            
+          }
+          if( counter == 0){
+            //console.log($(this).text());
+            duty_id = $(this).text();
+          }
+          if( counter == 1){
+           // console.log($(this).text());
+          }          
+          counter++;
+        });  
+
+ ------- End -------        

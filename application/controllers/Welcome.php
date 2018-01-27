@@ -28,6 +28,7 @@ class Welcome extends CI_Controller {
 
             $duties = $this->input->post('duties', true);
             $jks = $this->input->post('jks', true);
+						$age_group = $this->input->post('age_group', true);
 
             $dutiesStr = "";
             $jksStr = "";
@@ -57,7 +58,8 @@ class Welcome extends CI_Controller {
                 'verified' => "false",
                 'token' => $token,
                 'pref_duty' => $dutiesStr,
-                'pref_jk'=> $jksStr
+                'pref_jk'=> $jksStr,
+								'age_group'=> $age_group
                 );
 
             $emailMessage = "Please verify your waaranet user" . $data['first_name'] . " " . $data['last_name'] . " by using this link \n".base_url()."index.php/Welcome/verify?token=".$token;
@@ -113,6 +115,7 @@ class Welcome extends CI_Controller {
             $data['duties'] = $duties;
             $data['jks'] = $jks;
             $data['result'] = $this->UserModel->getCustomFields();
+        		$data['ageGroup'] = $this->UserModel->getAllfromTable( 'age_group' );
 
 
 			$this->load->view('common/header');
@@ -131,11 +134,14 @@ class Welcome extends CI_Controller {
 
         //if query found any result i.e userfound
         if($result) {
+					
             $data['user_id'] = $result->user_id;
             $data['type'] = $result->type;
             $data['fullName'] = $result->first_name . " " . $result->last_name;
             $data['message'] = 'Your are successfully Login && your session has been start';
             $this->session->set_userdata($data);
+
+
             redirect('Welcome/home');
 
         }else{

@@ -34,7 +34,7 @@
                             <h3 class="box-title">Add new JK</h3>
                         </div><!-- /.box-header -->
                         <!-- form start -->
-                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/addJK') ?>" method="post" >
+                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('admin/addJK') ?>" method="post" >
                             <div class="box-body">
 
                                 <div class="form-group">

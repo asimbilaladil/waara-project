@@ -6,7 +6,7 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <div class="copyright-text">
-                            <p>© 2016 Waara | All Rights Reserved.<a class="cs-color" href="#"> Develop by Asim Bilal</a></p>
+                            <p>© 2016 Waara | All Rights Reserved.<a class="cs-color" href="#"> </a></p>
                         </div>
                     </div>
           

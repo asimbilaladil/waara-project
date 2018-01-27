@@ -1,4 +1,5 @@
-<body class="hold-transition skin-green sidebar-mini">
+
+  <body class="hold-transition skin-green sidebar-mini">
 <div class="wrapper">
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -57,12 +58,21 @@
                                         <input type="text" name="phone" class="form-control" id="" value="<?php echo $data['user']->phone; ?>" placeholder="" required>
                                     </div>
                                 </div>
-
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Age Group</label>
+                                    <div class="col-sm-6">
+                                        <select name="age_group" class="form-control">
+                                          <?php foreach($data['ageGroup'] as $item) { ?>
+                                          <option <?php echo ($item->id == $data['user']->age_group ? "selected": "");   ?> value="<?php echo $item->id ; ?>" > <?php echo $item->age_group ; ?></option>
+                                          <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Email</label>
                                     <div class="col-sm-6">
-                                        <input type="text" name="email" class="form-control" id="" value="<?php echo $data['user']->email; ?>" placeholder="" required>
+                                        <input disabled type="text" name="email" class="form-control" id="" value="<?php echo $data['user']->email; ?>" placeholder="" required>
                                     </div>
                                 </div>
 

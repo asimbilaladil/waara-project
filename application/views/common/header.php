@@ -18,6 +18,8 @@
 <link href="<?php echo base_url("includes/website/assets/css/color.css" ) ?>"rel="stylesheet">
 <link href="<?php echo base_url("includes/website/assets/css/widget.css") ?>" rel="stylesheet">
 <link href="<?php echo base_url("includes/website/assets/css/responsive.css") ?>" rel="stylesheet">
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <!-- <link href="assets/css/bootstrap-rtl.css") ?>" rel="stylesheet"> Uncomment it if needed! -->
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -87,8 +89,7 @@
                                 <li><a href="<?php echo base_url("/index.php/Admin") ?>"><i class="icon-user2"></i>Admin</a></li>
 
                                        <?php  } else { ?>
-                        <li><a href="<?php echo base_url("/index.php/Welcome/login") ?> " ><i class="icon-login"></i>Login</a></li>
-                                <li><a href="<?php echo base_url("/index.php/Welcome/signup") ?>"><i class="icon-user2"></i>Signup</a></li>
+                       
                                        <?php } ?>
                             </ul>
                         </div>

@@ -34,19 +34,23 @@
                             <h3 class="box-title">Add new User</h3>
                         </div><!-- /.box-header -->
                         <!-- form start -->
-                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/addNewUser') ?>" method="post" >
+                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Admin/createNewUser') ?>" method="post" >
                             <div class="box-body">
+          
+                                        <input type="hidden" name="waara_id" class="form-control" id="" placeholder="" value="<?php echo $_COOKIE['waara_id']; ?>" >
+                                        <input type="hidden" name="assign_date" class="form-control" id="" placeholder="" value="<?php echo $_COOKIE['date']; ?>" >
+
 
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">First Name</label>
                                     <div class="col-sm-6">
-                                        <input type="text" name="firstName" class="form-control" id="" placeholder="" value="<?php echo $_COOKIE['first_uname']; ?>" required>
+                                        <input style="text-transform:capitalize;" type="text" name="firstName" class="form-control" id="" placeholder="" value="<?php echo $_COOKIE['first_name'] == undefined ? "": $_COOKIE['first_name']; ?>" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Last Name</label>
                                     <div class="col-sm-6">
-                                        <input type="text" name="lastName" class="form-control" id="" placeholder="" value="<?php echo $_COOKIE['last_uname']; ?>" required>
+                                        <input style="text-transform:capitalize;" type="text" name="lastName" class="form-control" id="" placeholder="" value="<?php echo $_COOKIE['last_name'] == undefined ? "": $_COOKIE['last_name']; ?>" required>
                                     </div>
                                 </div>
 
@@ -54,7 +58,7 @@
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Email</label>
                                     <div class="col-sm-6">
-                                        <input type="email" name="email" class="form-control" id="" placeholder="" required>
+                                        <input type="email" name="email" class="form-control" id="" placeholder="" >
                                     </div>
                                 </div>
 
@@ -64,11 +68,20 @@
                                         <input type="text" name="phone" class="form-control" id="" placeholder="" required>
                                     </div>
                                 </div>
-
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Age Group</label>
+                                    <div class="col-sm-6">
+                                        <select name="age_group" class="form-control">
+                                          <?php foreach($data['ageGroup'] as $item) { ?>
+                                          <option  value="<?php echo $item->id ; ?>" > <?php echo $item->age_group ; ?></option>
+                                          <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Password</label>
                                     <div class="col-sm-6">
-                                        <input type="text" name="password" class="form-control" id="" placeholder="" required>
+                                        <input type="text" name="password" class="form-control" id="" placeholder="" >
                                     </div>
                                 </div>
                                                                                              

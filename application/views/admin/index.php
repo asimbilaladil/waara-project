@@ -1,9 +1,7 @@
-
-
 <script >
 
 var events =  <?php  echo json_encode( $data['events']); ?> ;
-    $.getScript('http://arshaw.com/js/fullcalendar-1.6.4/fullcalendar/fullcalendar.min.js',function(){
+    $.getScript('http://waaranet.ca/includes/plugins/fullcalendar/1.6.4/fullcalendar.min.js',function(){
 
   var date = new Date();
   var d = date.getDate();
@@ -27,6 +25,51 @@ function formatDate(date) {
   document.getElementById('date').value = formatDate(new Date());
 
   $('#calendar').fullCalendar({
+    		header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,basicWeek'
+			},events: events,
+// 		events:  [
+//         {
+//             title  : 'event1',
+//             start  : '2017-01-01',
+//           end    : '2017-01-01'
+//         },{
+//             title  : 'event2',
+//             start  : '2017-01-01',
+//           end    : '2017-01-01'
+//         },{
+//             title  : 'event3',
+//             start  : '2017-01-01',
+//           end    : '2017-01-01'
+//         },{
+//             title  : 'event4',
+//             start  : '2017-01-01',
+//           end    : '2017-01-01'
+//         },{
+//             title  : 'event5',
+//             start  : '2017-01-01',
+//           end    : '2017-01-01'
+//         },{
+//             title  : 'event6',
+//             start  : '2017-01-01',
+//           end    : '2017-01-01'
+//         }
+//    ],
+			defaultView: 'basicWeek',
+		  eventClick: function (calEvent, jsEvent, view) {
+
+							var formatedDate = formatDate(calEvent.start);
+
+							document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatedDate;
+
+							$('#date').val( formatedDate );
+
+							ajaxCallDuty();
+
+
+        },
         dayClick: function(date, allDay, jsEvent, view) {
 
         var formatedDate = formatDate(date);
@@ -42,7 +85,12 @@ function formatDate(date) {
   });
 
 })
-
+function getBody(element) {
+    var divider = 2;
+    var originalTable = element.clone();
+    var tds = $(originalTable).children('tbody').children('tr').children('td').length;
+    return tds;
+}
 </script>
 <style type="text/css">
     .fc {
@@ -94,6 +142,7 @@ html .fc,
 .fc-header-title {
     display: inline-block;
     vertical-align: top;
+		
     }
     
 .fc-header-title h2 {
@@ -567,7 +616,8 @@ table.fc-border-separate {
     
 
 </style>
-
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.3/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.3/js/star-rating.js" type="text/javascript"></script>
 <body class="hold-transition skin-green sidebar-mini">
     <div class="wrapper">
         <div class="content-wrapper">
@@ -614,8 +664,19 @@ table.fc-border-separate {
             </section>
             <!-- Main content -->
             <section class="content">
-                <!-- Main row -->
-                <div class="row">
+							<?php if($data['user_count'][0]->users != 0) { ?>
+							<div class="row">
+								<div style="padding: 20px 30px;background: #dd4b39;z-index: 999999;font-size: 16px;font-weight: 600;">
+									
+									<a href="https://themequarry.com" style="color: rgba(255, 255, 255, 0.9); display: inline-block; margin-right: 10px; text-decoration: none;">
+										New Notification ! There are total <?php echo $data['user_count'][0]->users; ?> new users signup. Waiting for your approval.</a>
+									<a class="btn btn-default btn-sm" href="<?php echo site_url('Admin/user') ?>" style="margin-top: -5px; border: 0px; box-shadow: none; color: rgb(243, 156, 18); font-weight: 600; background: rgb(255, 255, 255);">
+										Let's Do It!</a>
+								</div>
+							</div>
+							<?php  } ?>
+							<br>
+								<div class="row">
                     <div class="col-md-12">
                         <div class="col-md-6">
                             <div class="box box-success">
@@ -626,7 +687,16 @@ table.fc-border-separate {
                                 <!-- form start -->
                                 
                                     <div class="box-body">
-                                        <div id="calendar"></div>
+																			<div>
+																				<p>
+																					Default <button   style="opacity: 1; background-color:#3a87ad; width: 3%; height: 15px;"></button>
+																				  <?php foreach($data['color'] as $item) { ?>
+																				<?php echo $item->username; ?> <button   style="opacity: 1; background-color:<?php echo $item->colorCode; ?>; width: 3%; height: 15px;"></button>
+																				
+																				<?php } ?>
+																			</p>
+																			</div>
+                                      <div id="calendar"></div>
                                     </div>
                                     <!-- /.box-body -->
                                     <div class="box-footer">
@@ -645,7 +715,13 @@ table.fc-border-separate {
 
 
                                 </div>
-
+															<div class="col-sm-12" style="top: 20px;">
+																<div class="col-sm-3" >
+																</div>
+																<div class="col-sm-6" >
+																	<button class="btn btn-primary btn-block " onclick="addDutyForDay()">Add Waara</button>
+																</div>
+															</div>
                  
                                 <!-- /.box-header -->
                                 <div class="box-body">
@@ -667,7 +743,7 @@ table.fc-border-separate {
 
                                     </div>
                                    
-                                    <div class="col-sm-9">
+                                    <div class="col-sm-12">
                                      </br>
                                         <!--Dynamicly duty table added  -->
                                         <div id="duty" name="duty" >
@@ -758,6 +834,61 @@ table.fc-border-separate {
         </div>
     </div>
 
+<div id="userRating" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">User Rating</h4>
+      </div>
+      <div class="modal-body">
+				 <div class="form-group" style="text-align: center;">
+
+						 	<input type="hidden" id="assignDutyId" name="assignDuty"/>
+					 		<input id="rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
+
+
+				
+  			</div>
+      </div>
+      <div class="modal-footer">
+				 
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button"  onclick="addRating()" class="btn btn-primary " >Save</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script>
+function addRating(){
+			var rating = $('#rating-system').val()
+			var assignDutyId = $('#assignDutyId').val()
+
+	    $.ajax({
+        url: "<?php echo site_url('Admin/addRating') ?>",
+        type: "POST",
+        data: {
+            'rating' : rating,
+            'assign_duty_id' : assignDutyId
+        },
+        success: function(response){
+
+						$('[id=rating_'+assignDutyId+']').hide();
+						$( '<button id="rating_'+assignDutyId+'" data-toggle="modal" onclick="setAssignDutyId('+assignDutyId+','+rating+')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button>' ).insertAfter( '#rating_'+assignDutyId );
+
+					  $('#userRating').modal('toggle');
+
+        },
+        error: function(){
+            
+        }
+    });
+}
+
+</script>
 <script>
 var type =  <?php echo json_encode($data['users'][0]->type); ?>;
 if(type == 'JK Admin'){
@@ -839,13 +970,35 @@ getJK();
 function getUserName(arg) {
 
 var id = arg.getAttribute('id');
+var waara = id.split("_");
+waara = 'waara_' + waara[1];
+var waara_id = $('#' + waara).val();
+var date = $('#date').val();
+	
+var d = new Date();
+d.setTime(d.getTime() + (24*60*60*1000));
+var expires =  d.toUTCString();
+
 var value = $('#' + id).val();
 var name = value.split(" ");
-document.cookie =   "first_uname=" + name[0]; 
-document.cookie =   "last_uname=" + name[1]; 
+	createCookie("first_name",  name[0] , 1 );
+	createCookie("last_name",  name[1] , 1 );
+	createCookie("waara_id", waara_id , 1 );
+	createCookie("date", date , 1 );
+
 
 }
-
+	
+function createCookie(name,value,days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+}
+	
 function ajaxCallUserHistory(dutyId) {
 
    preferenceAjaxCall(dutyId);
@@ -905,6 +1058,54 @@ $('#selectedShift').val(shift);
 $('#shift').on('change', function() {
     $('#selectedShift').val(this.value);  
 });
+var addDutyForDay = function addDutyForDay (){
+	var date = $('#date').val();
+	createCookie("addDutyDate",  date , 1 );
+	window.location = "/index.php/admin/addDuty";
+}
+var eventClick = function eventClick(formatedDate){
 
-</script>   
+
+        var formatedDate = formatDate(date);
+
+        document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatedDate;
+
+        $('#date').val( formatedDate );
+
+        ajaxCallDuty();
+
+
+    
+}
+function convertDate(d) {
+  var p = d.split("-");
+
+  return (p[0]+p[1]+p[2]);
+}
+
+function sortByDate() {
+
+  var tbody = document.querySelector("#userHistoryt tbody");
+  // get trs as array for ease of use
+  var rows = [].slice.call(tbody.querySelectorAll("tr"));
+  
+  rows.sort(function(a,b) {
+    return convertDate(b.cells[3].innerHTML) - convertDate(a.cells[3].innerHTML);
+  });
+  
+  rows.forEach(function(v) {
+
+    tbody.appendChild(v); // note that .appendChild() *moves* elements
+  });
+}
+
+	var setAssignDutyId = function setAssignDutyId(id,stars){
+		$('#assignDutyId').val(id);
+		$('#rating-system').rating('update', stars);
+		//$('#rating-system').val(stars);
+		
+	}
+
+</script>
+
 

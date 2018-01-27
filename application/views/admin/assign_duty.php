@@ -136,6 +136,8 @@ $(function() {
     $( "#endDate" ).datepicker({  minDate: new Date() });
 
   });
+  
+
    var validateForm =  function () {
         var duty = document.forms["assignDuty"]["duty"].value;
         var jk = document.forms["assignDuty"]["jk"].value;
