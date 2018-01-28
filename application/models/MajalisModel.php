@@ -7,8 +7,9 @@ class MajalisModel extends CI_Model
         parent::__construct();
     }
 
-
-
+    /**
+     * Insert Majalis
+     */
     public function insert( $data ){
 
         if ($this->db->insert('majalis', $data) ) {
@@ -16,11 +17,30 @@ class MajalisModel extends CI_Model
         } 
         return false;
     }
+
+    /**
+     * Insert Majalis Duties
+     */
+    public function insertMajalisDuties($data) {
+        if ($this->db->insert('majalis_duties', $data) ) {
+            return $this->db->insert_id();
+        } 
+        return false;
+    }
+
+    /**
+     * Insert Majalis Dates
+     */
+    public function insertMajalisDates($data) {
+        if ($this->db->insert('majalis_date', $data) ) {
+            return $this->db->insert_id();
+        } 
+        return false;        
+    }
     
     /**
      * Get All Majalis
      */
-
     public function getAllMajalis(){
       
         $this->db->select('*');
@@ -73,7 +93,7 @@ class MajalisModel extends CI_Model
      * Delete Majalis using majalis id
      * @param 1 : data : array
      */
-    public function delete ($data){
+    public function delete($data){
 
         $this->db->delete( 'majalis' , $data ); 
     }  

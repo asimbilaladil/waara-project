@@ -12,7 +12,7 @@ class Majalis extends CI_Controller {
     function index(){
         
         $data['majalis'] = $this->MajalisModel->getAllMajalis();
-        $this->loadView('admin/majalis', $data );
+        $this->loadView('admin//majalis/majalis', $data );
     }
     
     /**
@@ -116,26 +116,51 @@ class Majalis extends CI_Controller {
      * Add Majalis
      */  
     function addMajalis() {   
-      
-        if($this->input->post()) {
+    
+      if($this->input->post()) {
 
-            $data = array (
-                'name' => $this->input->post('majalisName', true),
-                'admin_id' => $this->session->userdata('user_id'),
-                'token'=> random_string('unique', 30)
-            );
-          
-            $majalis_id = $this->MajalisModel->insert( $data );
-          
-            $majalis_data = array (
-                'majalis_id' => $majalis_id,
-                'date' => $this->input->post('majalisDate', true),
-                'admin_id' => $this->session->userdata('user_id'),
-                'token'=> random_string('unique', 30)
-            );
-            $this->MajalisDataModel->insert( $majalis_data );
-            redirect("Majalis");
+        $majalisName = $this->input->post('majalisName', true);
+        $adminId = $this->session->userdata('user_id');
+        $duties = $this->input->post('duties', true);
+        $majalisDate = $this->input->post('majalisDate', true);
+
+        $majalisModel = array (
+          'name' => $majalisName,
+          'admin_id' => $adminId,
+          'token'=> random_string('unique', 30)
+        );
+
+        $majalis_id = $this->MajalisModel->insert($majalisModel);
+
+        foreach($duties as $duty) {
+
+          $dutyModel = array (
+            'name' => $duty,
+            'majalis_id' => $majalis_id,
+            'admin_id' => $adminId,
+            'token'=> random_string('unique', 30)
+          );
+
+          $dutyId = $this->MajalisModel->insertMajalisDuties($dutyModel);
+
         }
+
+        foreach($majalisDate as $date) {
+
+          $dateModel = array (
+              'majalis_id' => $majalis_id,
+              'date' => $date,
+              'admin_id' => $adminId,
+              'token'=> random_string('unique', 30)
+          );
+
+          $dateId = $this->MajalisModel->insertMajalisDates($dateModel);
+
+        }
+        
+        redirect("Majalis");
+
+      }
 
     }
   
