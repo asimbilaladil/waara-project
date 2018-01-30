@@ -7,12 +7,66 @@ class Majalis extends CI_Controller {
             $this->load->model('MajalisModel'); 
             $this->load->model('MajalisDataModel'); 
             $this->load->helper('string');
+            $this->load->helper('custom_helper');
     }
 
     function index(){
-        
-        $data['majalis'] = $this->MajalisModel->getAllMajalis();
-        $this->loadView('admin//majalis/majalis', $data );
+        $this->loadView('admin//majalis/AddMajalis', null);
+    }
+
+    /*
+    item = [
+
+      0 => {
+        majalisName = '',
+        jan = [01-10-2018, 01-10-2018],
+        feb = [],
+        mar = [01-10-2018],
+        ...
+      },
+      1 => {
+        majalisName = '',
+        jan = [],
+        feb = [01-10-2018, 01-10-2018],
+        mar = [],
+        ...
+      }  
+    ]
+    */
+    function view() {
+
+      $majalisWithDates = $this->MajalisModel->getMajalisWithDates();
+
+      $majalisArray = array();
+
+
+      foreach ($majalisWithDates as $majalis) {
+       
+        $index = getIndexOf($majalisArray, 'id', $majalis->id);
+        $majalisMonth = getMonthFromDate($majalis->date);
+
+        if ($index > -1) {
+          
+          if (!isset($majalisArray[$index][$majalisMonth])) {
+            $majalisArray[$index][$majalisMonth] = array();
+          }
+
+          array_push($majalisArray[$index][$majalisMonth], $majalis->date);
+          
+        } else {
+          $dateArray = array();
+          $item['id'] = $majalis->id;
+          $item['majalisName'] = $majalis->name;
+          array_push($dateArray, $majalis->date);
+          $item[$majalisMonth] = $dateArray;
+
+          array_push($majalisArray, $item);
+
+        }
+
+      }
+
+      $this->loadView('admin//majalis/ViewMajalis', $majalisArray);
     }
     
     /**
@@ -114,6 +168,7 @@ class Majalis extends CI_Controller {
     }
     /**
      * Add Majalis
+     * Created By: Moiz
      */  
     function addMajalis() {   
     

@@ -9,6 +9,7 @@ class MajalisModel extends CI_Model
 
     /**
      * Insert Majalis
+     * Created By: Moiz
      */
     public function insert( $data ){
 
@@ -20,6 +21,7 @@ class MajalisModel extends CI_Model
 
     /**
      * Insert Majalis Duties
+     * Created By: Moiz     
      */
     public function insertMajalisDuties($data) {
         if ($this->db->insert('majalis_duties', $data) ) {
@@ -30,12 +32,28 @@ class MajalisModel extends CI_Model
 
     /**
      * Insert Majalis Dates
+     * Created By: Moiz     
      */
     public function insertMajalisDates($data) {
         if ($this->db->insert('majalis_date', $data) ) {
             return $this->db->insert_id();
         } 
         return false;        
+    }
+
+    /**
+     * Insert Majalis Dates
+     * Created By: Moiz     
+     */
+    public function getMajalisWithDates() {
+
+        $query = $this->db->query('SELECT majalis.id, majalis.name, majalis_date.date as date 
+                FROM majalis, majalis_date
+                WHERE majalis.id = majalis_date.majalis_id');
+
+        $query->result();
+
+        return $query->result();
     }
     
     /**
