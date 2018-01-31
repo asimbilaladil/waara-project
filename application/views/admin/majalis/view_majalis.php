@@ -19,12 +19,12 @@
                     <div class="col-md-12">
                         <div class="box box-success">
                             <div class="box-header with-border">
-                                <h3 class="box-title">Add new Duty</h3>
+                                <h3 class="box-title">View Majalis</h3>
                             </div>
                             <!-- /.box-header -->
                             </br> </br>
                             <div class="box-header with-border">
-                                <h3 class="box-title">List Of DUTY:</h3>
+                                <h3 class="box-title">List Of Majalis:</h3>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4">
@@ -55,7 +55,7 @@
                                 <?php 
                                 foreach ($data as $item) {
                                     echo '<tr>
-                                        <td> ' . $item["majalisName"] . ' </td>
+                                        <td> <a href="' . site_url("majalis/detail?token=" . $item["token"]) . '">' . $item["majalisName"] . '</a> </td>
                                         <td> ' . printMonth($item, "January") . ' </td>
                                         <td> ' . printMonth($item, "February") . ' </td>
                                         <td> ' . printMonth($item, "March") . ' </td>

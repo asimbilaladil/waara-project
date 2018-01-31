@@ -10,40 +10,20 @@ class Majalis extends CI_Controller {
             $this->load->helper('custom_helper');
     }
 
+    /**
+     * Index
+     * Created By: Moiz
+     */
     function index(){
-        $this->loadView('admin//majalis/AddMajalis', null);
-    }
-
-    /*
-    item = [
-
-      0 => {
-        majalisName = '',
-        jan = [01-10-2018, 01-10-2018],
-        feb = [],
-        mar = [01-10-2018],
-        ...
-      },
-      1 => {
-        majalisName = '',
-        jan = [],
-        feb = [01-10-2018, 01-10-2018],
-        mar = [],
-        ...
-      }  
-    ]
-    */
-    function view() {
-
       $majalisWithDates = $this->MajalisModel->getMajalisWithDates();
 
       $majalisArray = array();
-
 
       foreach ($majalisWithDates as $majalis) {
        
         $index = getIndexOf($majalisArray, 'id', $majalis->id);
         $majalisMonth = getMonthFromDate($majalis->date);
+        $date = date("d",strtotime($majalis->date));
 
         if ($index > -1) {
           
@@ -51,13 +31,14 @@ class Majalis extends CI_Controller {
             $majalisArray[$index][$majalisMonth] = array();
           }
 
-          array_push($majalisArray[$index][$majalisMonth], $majalis->date);
+          array_push($majalisArray[$index][$majalisMonth], $date);
           
         } else {
           $dateArray = array();
           $item['id'] = $majalis->id;
           $item['majalisName'] = $majalis->name;
-          array_push($dateArray, $majalis->date);
+          $item['token'] = $majalis->token;
+          array_push($dateArray, $date);
           $item[$majalisMonth] = $dateArray;
 
           array_push($majalisArray, $item);
@@ -66,8 +47,112 @@ class Majalis extends CI_Controller {
 
       }
 
-      $this->loadView('admin//majalis/ViewMajalis', $majalisArray);
+      $this->loadView('admin//majalis/view_majalis', $majalisArray);        
     }
+
+    /**
+     * Majalis Detail
+     * Created By: Moiz
+     */  
+    function detail() {
+
+      if($this->input->get('token')) {
+
+        $token = $this->input->get('token');
+        
+        $result = $this->MajalisModel->getMajlisAndDatesByToken($token);
+
+        $this->loadView('admin/majalis/detail_majalis', $result);
+
+      } else {
+        redirect('majalis/');
+      }
+
+    }
+
+    function addDateInMajalis() {
+
+      $token = $this->input->post('token', true);
+      $date = $this->input->post('date', true);
+      $adminId = $this->session->userdata('user_id');
+
+      $result = $this->MajalisModel->getMajalisByToken($token);
+
+      $dateModel = array (
+          'majalis_id' => $result->id,
+          'date' => $date,
+          'admin_id' => $adminId,
+          'token'=> random_string('unique', 30)
+      );
+
+      $dateId = $this->MajalisModel->insertMajalisDates($dateModel);
+
+      redirect('majalis/detail?token=' . $token);
+
+    }
+
+
+    /**
+     * Add Majalis
+     * Created By: Moiz
+     */  
+    function add() {
+      $this->loadView('admin//majalis/add_majalis', null);
+    }
+
+    /**
+     * Add Majalis
+     * Created By: Moiz
+     */  
+    function addMajalis() {   
+    
+      if($this->input->post()) {
+
+        $majalisName = $this->input->post('majalisName', true);
+        $adminId = $this->session->userdata('user_id');
+        $duties = $this->input->post('duties', true);
+        $majalisDate = $this->input->post('majalisDate', true);
+
+        $majalisModel = array (
+          'name' => $majalisName,
+          'admin_id' => $adminId,
+          'token'=> random_string('unique', 30)
+        );
+
+        $majalis_id = $this->MajalisModel->insert($majalisModel);
+
+        foreach($duties as $duty) {
+
+          $dutyModel = array (
+            'name' => $duty,
+            'majalis_id' => $majalis_id,
+            'admin_id' => $adminId,
+            'token'=> random_string('unique', 30)
+          );
+
+          $dutyId = $this->MajalisModel->insertMajalisDuties($dutyModel);
+
+        }
+
+        foreach($majalisDate as $date) {
+
+          $dateModel = array (
+              'majalis_id' => $majalis_id,
+              'date' => $date,
+              'admin_id' => $adminId,
+              'token'=> random_string('unique', 30)
+          );
+
+          $dateId = $this->MajalisModel->insertMajalisDates($dateModel);
+
+        }
+        
+        redirect("Majalis");
+
+      }
+
+    }
+
     
     /**
      * Majalis Home
@@ -164,58 +249,6 @@ class Majalis extends CI_Controller {
 //         $data['jkDb'] = $jamatKhanas;
 
        $this->loadView('admin/addMajalisWaara', $data);
-
-    }
-    /**
-     * Add Majalis
-     * Created By: Moiz
-     */  
-    function addMajalis() {   
-    
-      if($this->input->post()) {
-
-        $majalisName = $this->input->post('majalisName', true);
-        $adminId = $this->session->userdata('user_id');
-        $duties = $this->input->post('duties', true);
-        $majalisDate = $this->input->post('majalisDate', true);
-
-        $majalisModel = array (
-          'name' => $majalisName,
-          'admin_id' => $adminId,
-          'token'=> random_string('unique', 30)
-        );
-
-        $majalis_id = $this->MajalisModel->insert($majalisModel);
-
-        foreach($duties as $duty) {
-
-          $dutyModel = array (
-            'name' => $duty,
-            'majalis_id' => $majalis_id,
-            'admin_id' => $adminId,
-            'token'=> random_string('unique', 30)
-          );
-
-          $dutyId = $this->MajalisModel->insertMajalisDuties($dutyModel);
-
-        }
-
-        foreach($majalisDate as $date) {
-
-          $dateModel = array (
-              'majalis_id' => $majalis_id,
-              'date' => $date,
-              'admin_id' => $adminId,
-              'token'=> random_string('unique', 30)
-          );
-
-          $dateId = $this->MajalisModel->insertMajalisDates($dateModel);
-
-        }
-        
-        redirect("Majalis");
-
-      }
 
     }
   

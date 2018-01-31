@@ -47,7 +47,7 @@ class MajalisModel extends CI_Model
      */
     public function getMajalisWithDates() {
 
-        $query = $this->db->query('SELECT majalis.id, majalis.name, majalis_date.date as date 
+        $query = $this->db->query('SELECT majalis.id, majalis.token, majalis.name, majalis_date.date as date 
                 FROM majalis, majalis_date
                 WHERE majalis.id = majalis_date.majalis_id');
 
@@ -55,6 +55,18 @@ class MajalisModel extends CI_Model
 
         return $query->result();
     }
+
+    public function getMajlisAndDatesByToken($token) {
+        $query = $this->db->query("SELECT majalis.id, majalis.token, majalis.name, majalis_date.date as date 
+                FROM majalis, majalis_date
+                WHERE majalis.token = '" . $token . "'
+                AND majalis.id = majalis_date.majalis_id");
+
+        $query->result();
+
+        return $query->result();
+    }
+
     
     /**
      * Get All Majalis
