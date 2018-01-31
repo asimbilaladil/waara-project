@@ -56,8 +56,12 @@ class MajalisModel extends CI_Model
         return $query->result();
     }
 
+    /**
+     * Get Majalis and their dates by token
+     * Created By: Moiz     
+     */
     public function getMajlisAndDatesByToken($token) {
-        $query = $this->db->query("SELECT majalis.id, majalis.token, majalis.name, majalis_date.date as date 
+        $query = $this->db->query("SELECT majalis.id, majalis.token, majalis.name, majalis_date.token as majalisDateToken, majalis_date.date as date 
                 FROM majalis, majalis_date
                 WHERE majalis.token = '" . $token . "'
                 AND majalis.id = majalis_date.majalis_id");
@@ -67,6 +71,13 @@ class MajalisModel extends CI_Model
         return $query->result();
     }
 
+    /**
+     * Delete Majlis date by token
+     * Created By: Moiz     
+     */
+    public function deleteMajalisDateByToken($token) {
+        $this->db->delete( 'majalis_date' , array( 'token' => $token) ); 
+    }
     
     /**
      * Get All Majalis

@@ -19,7 +19,7 @@
                     <div class="col-md-12">
                         <div class="box box-success">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><?php echo $data[0]->name ?></h3>
+                                <h3 class="box-title"><?php echo !empty($data) ? $data[0]->name : '' ?> </h3>
                             </div>
                             <!-- /.box-header -->
 
@@ -39,7 +39,7 @@
                                             </div>
                                         </div>
 
-                                        <input type="hidden" name="token" value="<?php echo $data[0]->token ?>"/>
+                                        <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
                                     </div>
                                 </form>
@@ -60,6 +60,7 @@
                                 <thead>
                                     <tr>
                                         <th> Date </th>
+                                        <th> Action </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -68,10 +69,11 @@
                                 foreach ($data as $item) {
                                     echo '<tr>
                                         <td> ' . $item->date . ' </td>
+                                        <td> <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
                                     </tr>';
                                 }
 
-                                ?>
+                                ?> 
                                     
                                 </tbody>
                             </table>

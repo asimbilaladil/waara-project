@@ -8,6 +8,7 @@ class Majalis extends CI_Controller {
             $this->load->model('MajalisDataModel'); 
             $this->load->helper('string');
             $this->load->helper('custom_helper');
+            $this->load->library('user_agent');
     }
 
     /**
@@ -66,6 +67,22 @@ class Majalis extends CI_Controller {
 
       } else {
         redirect('majalis/');
+      }
+
+    }
+
+    function deleteMajalidDate() {
+
+      if($this->input->get('token')) {
+
+        $token = $this->input->get('token');
+
+        $this->MajalisModel->deleteMajalisDateByToken($token);
+
+        redirect($this->agent->referrer());
+
+      } else {
+        redirect($this->agent->referrer());
       }
 
     }
