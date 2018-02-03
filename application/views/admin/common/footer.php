@@ -36,6 +36,8 @@
 <!-- AdminLTE App -->
 <script src="<?php echo base_url(); ?>includes/dist/js/app.min.js"></script>
 
+<script src="//cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+
 <script type="text/javascript">
 
 

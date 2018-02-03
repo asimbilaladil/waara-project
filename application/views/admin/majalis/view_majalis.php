@@ -31,7 +31,6 @@
                                     <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
                                 </div>
                             </div>
-
                             <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
@@ -72,18 +71,15 @@
                                 }
 
                                 function printMonth($item, $month) {
-                                    
                                     $str = '';
-
                                     if (isset($item[$month])) {
-                                        
-                                        foreach($item[$month] as $m)
-                                        $str = $str . $m . '<br>';
-
+                                        foreach($item[$month] as $m) {
+                                            $dutyUrl = site_url('majalis/viewMajalisDuties?token=' . $item["token"] .'&date='. $m['completeDate']);
+                                            $str = $str . '<a href="'. $dutyUrl .'">'. $m['date'] .'</a> <br>';        
+                                        }
                                     } else {
                                         $str =  ' - ';
                                     }
-
                                     return $str;
                                 }
 

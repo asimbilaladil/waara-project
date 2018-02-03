@@ -25,6 +25,14 @@ class Majalis extends CI_Controller {
         $index = getIndexOf($majalisArray, 'id', $majalis->id);
         $majalisMonth = getMonthFromDate($majalis->date);
         $date = date("d",strtotime($majalis->date));
+        $completeDate = $majalis->date;
+        $dateToken = $majalis->dateToken;
+
+        $dateItem = array(
+          'date' => $date,
+          'completeDate' => $completeDate,
+          'dateToken' => $dateToken
+        );
 
         if ($index > -1) {
           
@@ -32,14 +40,15 @@ class Majalis extends CI_Controller {
             $majalisArray[$index][$majalisMonth] = array();
           }
 
-          array_push($majalisArray[$index][$majalisMonth], $date);
+          array_push($majalisArray[$index][$majalisMonth], $dateItem);
           
         } else {
           $dateArray = array();
           $item['id'] = $majalis->id;
           $item['majalisName'] = $majalis->name;
           $item['token'] = $majalis->token;
-          array_push($dateArray, $date);
+
+          array_push($dateArray, $dateItem);
           $item[$majalisMonth] = $dateArray;
 
           array_push($majalisArray, $item);
@@ -48,7 +57,11 @@ class Majalis extends CI_Controller {
 
       }
 
-      $this->loadView('admin//majalis/view_majalis', $majalisArray);        
+      //echo json_encode($majalisArray);
+      //print_r($majalisArray);
+      //die;
+    
+      $this->loadView('admin/majalis/view_majalis', $majalisArray);        
     }
 
     /**
@@ -58,41 +71,40 @@ class Majalis extends CI_Controller {
     function detail() {
 
       if($this->input->get('token')) {
-
         $token = $this->input->get('token');
-        
         $result = $this->MajalisModel->getMajlisAndDatesByToken($token);
-
         $this->loadView('admin/majalis/detail_majalis', $result);
-
       } else {
         redirect('majalis/');
       }
 
     }
 
+    /**
+     * Delete Majalis by date
+     * Created By: Moiz
+     */  
     function deleteMajalidDate() {
 
       if($this->input->get('token')) {
-
         $token = $this->input->get('token');
-
         $this->MajalisModel->deleteMajalisDateByToken($token);
-
         redirect($this->agent->referrer());
-
       } else {
         redirect($this->agent->referrer());
       }
 
     }
 
+    /**
+     * Add date in Majalis
+     * Created By: Moiz
+     */ 
     function addDateInMajalis() {
 
       $token = $this->input->post('token', true);
       $date = $this->input->post('date', true);
       $adminId = $this->session->userdata('user_id');
-
       $result = $this->MajalisModel->getMajalisByToken($token);
 
       $dateModel = array (
@@ -103,18 +115,16 @@ class Majalis extends CI_Controller {
       );
 
       $dateId = $this->MajalisModel->insertMajalisDates($dateModel);
-
       redirect('majalis/detail?token=' . $token);
 
     }
-
 
     /**
      * Add Majalis
      * Created By: Moiz
      */  
     function add() {
-      $this->loadView('admin//majalis/add_majalis', null);
+      $this->loadView('admin/majalis/add_majalis', null);
     }
 
     /**
@@ -161,16 +171,59 @@ class Majalis extends CI_Controller {
           );
 
           $dateId = $this->MajalisModel->insertMajalisDates($dateModel);
-
         }
         
         redirect("Majalis");
-
       }
 
     }
 
+    /**
+     * Edit Majalis Date
+     * Created By: Moiz
+     */      
+    function editMajalisDate() {
+
+      if ($this->input->post()) {
+
+        $data = array(
+          'date' => $this->input->post('value')
+        );
+
+        $result = $this->MajalisModel->updateMajalisDate($this->input->post('pk'), $data);
+        echo json_encode(array('success' => $result));
+      }
+
+    }
+
+    function viewMajalisDuties() {
+
+      if($this->input->get('token')) {
+        $token = $this->input->get('token');
+        $date = $this->input->get('date');
+        $majalis = $this->MajalisModel->getMajalisByToken($token);
+        $duties = $this->MajalisModel->getDutiesForDateOrMajalis($majalis->id, $date);
+        $this->loadView('admin/majalis/view_duties', $duties);
+
+      } else {
+        redirect('majalis/');
+      }
+
+    }
+
+    function deleteMajalisDuty() {
+      if($this->input->get('token')) {
+        $token = $this->input->get('token');
+        $this->MajalisModel->deleteMajalisDutyByToken($token);
+        redirect($this->agent->referrer());
+      } else {
+        redirect($this->agent->referrer());
+      }      
+    }
     
+
+/*********************************************** OLD WORK ***********************************************/
+
     /**
      * Majalis Home
      */ 

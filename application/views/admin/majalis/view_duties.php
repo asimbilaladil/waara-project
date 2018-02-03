@@ -19,11 +19,11 @@
                     <div class="col-md-12">
                         <div class="box box-success">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><?php echo !empty($data) ? $data[0]->name : '' ?> </h3>
-                            </div>
+                                <!-- <h3 class="box-title"><?php echo !empty($data) ? $data[0]->name : '' ?> </h3>
+ -->                            </div>
                             <!-- /.box-header -->
 
-                                <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addDateInMajalis') ?>" method="post" >
+<!--                                 <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addDateInMajalis') ?>" method="post" >
                                     <div class="box-body">
 
                                         <div class="form-group">
@@ -42,12 +42,12 @@
                                         <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
                                     </div>
-                                </form>
+                                </form> -->
 
 
                             </br> </br>
                             <div class="box-header with-border">
-                                <h3 class="box-title">List Of Majalis Date:</h3>
+                                <h3 class="box-title">List Of Duties:</h3>
                             </div>
 
                             <div class="form-group">
@@ -59,7 +59,7 @@
                             <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
-                                        <th> Date </th>
+                                        <th> Duty </th>
                                         <th> Action </th>
                                     </tr>
                                 </thead>
@@ -69,13 +69,13 @@
                                 
                                 foreach ($data as $key => $item) {
                                     echo '<tr>
-                                        <td> <a href="#" id="date" name="editDate" data-type="date" data-pk="' . $item->dateId .'" data-url="editMajalisDate" data-title="Select date">' . $item->date . '</a> </td>
-                                        <td> <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+                                        <td> ' . $item->name . ' </td>
+                                        <td> <a href="deleteMajalisDuty?token=' . $item->token . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
                                     </tr>';
                                 }
 
                                 ?> 
-                                    
+                                    <!-- <td> <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td> -->
                                 </tbody>
                             </table>
                         </div>
@@ -103,4 +103,4 @@ $(function(){
         });
 });
 
-</script>       
+</script>

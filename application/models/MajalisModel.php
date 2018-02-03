@@ -41,13 +41,22 @@ class MajalisModel extends CI_Model
         return false;        
     }
 
+    public function updateMajalisDate($id, $data) {
+        $this->db->where('id', $id );
+        $result = $this->db->update( 'majalis_date', $data);
+        if ($result) {
+            return true;
+        } 
+        return false;        
+    }
+
     /**
      * Insert Majalis Dates
      * Created By: Moiz     
      */
     public function getMajalisWithDates() {
 
-        $query = $this->db->query('SELECT majalis.id, majalis.token, majalis.name, majalis_date.date as date 
+        $query = $this->db->query('SELECT majalis.id, majalis.token, majalis.name, majalis_date.id as dateId, majalis_date.token as dateToken, majalis_date.date as date 
                 FROM majalis, majalis_date
                 WHERE majalis.id = majalis_date.majalis_id');
 
@@ -61,7 +70,7 @@ class MajalisModel extends CI_Model
      * Created By: Moiz     
      */
     public function getMajlisAndDatesByToken($token) {
-        $query = $this->db->query("SELECT majalis.id, majalis.token, majalis.name, majalis_date.token as majalisDateToken, majalis_date.date as date 
+        $query = $this->db->query("SELECT majalis.id, majalis.token, majalis.name, majalis_date.id as dateId, majalis_date.token as majalisDateToken, majalis_date.date as date 
                 FROM majalis, majalis_date
                 WHERE majalis.token = '" . $token . "'
                 AND majalis.id = majalis_date.majalis_id");
@@ -77,6 +86,28 @@ class MajalisModel extends CI_Model
      */
     public function deleteMajalisDateByToken($token) {
         $this->db->delete( 'majalis_date' , array( 'token' => $token) ); 
+    }
+
+    /**
+     * Delete Duty date by token
+     * Created By: Moiz     
+     */
+    public function deleteMajalisDutyByToken($token) {
+        $this->db->delete( 'majalis_duties' , array( 'token' => $token) ); 
+    }
+
+    /**
+     * Get Duties by majalis or local dates
+     * Created By: Moiz     
+     */
+    public function getDutiesForDateOrMajalis($id, $date) {
+
+        $query = $this->db->query("SELECT id, token, name, majalis_id 
+                FROM majalis_duties
+                WHERE majalis_id = " . $id);
+
+        $query->result();
+        return $query->result();
     }
     
     /**
