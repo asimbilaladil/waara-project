@@ -51,21 +51,6 @@ class MajalisModel extends CI_Model
     }
 
     /**
-     * Insert Majalis Dates
-     * Created By: Moiz     
-     */
-    public function getMajalisWithDates() {
-
-        $query = $this->db->query('SELECT majalis.id, majalis.token, majalis.name, majalis_date.id as dateId, majalis_date.token as dateToken, majalis_date.date as date 
-                FROM majalis, majalis_date
-                WHERE majalis.id = majalis_date.majalis_id');
-
-        $query->result();
-
-        return $query->result();
-    }
-
-    /**
      * Get Majalis and their dates by token
      * Created By: Moiz     
      */

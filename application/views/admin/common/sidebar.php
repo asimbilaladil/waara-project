@@ -59,6 +59,13 @@
           
           <?php } ?>
 
+          <?php if($_SESSION['type'] == 'Super Admin'){ ?>
+             <li class="treeview">
+                <a href="<?php echo site_url('Festival/add'); ?>"><i class="fa  fa-list-alt"></i> <span> Add Festival</span></a>                
+            </li>
+          
+          <?php } ?>          
+
 
           <?php if($_SESSION['type'] == 'Super Admin'){ ?>
              <li class="treeview">

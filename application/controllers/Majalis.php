@@ -4,64 +4,31 @@ class Majalis extends CI_Controller {
     public function __construct(){
         parent::__construct();
 
-            $this->load->model('MajalisModel'); 
-            $this->load->model('MajalisDataModel'); 
-            $this->load->helper('string');
-            $this->load->helper('custom_helper');
-            $this->load->library('user_agent');
+        $this->load->model('MajalisModel'); 
+        $this->load->model('FestivalMajalisModel'); 
+        $this->load->model('MajalisDataModel'); 
+        $this->load->helper('string');
+        $this->load->helper('custom_helper');
+        $this->load->library('user_agent');
     }
 
     /**
      * Index
      * Created By: Moiz
      */
-    function index(){
-      $majalisWithDates = $this->MajalisModel->getMajalisWithDates();
+    function index() {
 
-      $majalisArray = array();
 
-      foreach ($majalisWithDates as $majalis) {
-       
-        $index = getIndexOf($majalisArray, 'id', $majalis->id);
-        $majalisMonth = getMonthFromDate($majalis->date);
-        $date = date("d",strtotime($majalis->date));
-        $completeDate = $majalis->date;
-        $dateToken = $majalis->dateToken;
+      $majalisData = $this->FestivalMajalisModel->getMajalisForTable();
+      $festivalData = $this->FestivalMajalisModel->getFestivalForTable();
 
-        $dateItem = array(
-          'date' => $date,
-          'completeDate' => $completeDate,
-          'dateToken' => $dateToken
-        );
+      $data = array(
+        'majalis' => $majalisData,
+        'festival' => $festivalData
+      );
+      
+      $this->loadView('admin/majalis/view_majalis', $data);
 
-        if ($index > -1) {
-          
-          if (!isset($majalisArray[$index][$majalisMonth])) {
-            $majalisArray[$index][$majalisMonth] = array();
-          }
-
-          array_push($majalisArray[$index][$majalisMonth], $dateItem);
-          
-        } else {
-          $dateArray = array();
-          $item['id'] = $majalis->id;
-          $item['majalisName'] = $majalis->name;
-          $item['token'] = $majalis->token;
-
-          array_push($dateArray, $dateItem);
-          $item[$majalisMonth] = $dateArray;
-
-          array_push($majalisArray, $item);
-
-        }
-
-      }
-
-      //echo json_encode($majalisArray);
-      //print_r($majalisArray);
-      //die;
-    
-      $this->loadView('admin/majalis/view_majalis', $majalisArray);        
     }
 
     /**
@@ -202,8 +169,13 @@ class Majalis extends CI_Controller {
         $token = $this->input->get('token');
         $date = $this->input->get('date');
         $majalis = $this->MajalisModel->getMajalisByToken($token);
-        $duties = $this->MajalisModel->getDutiesForDateOrMajalis($majalis->id, $date);
-        $this->loadView('admin/majalis/view_duties', $duties);
+
+        if($majalis) {
+          $duties = $this->MajalisModel->getDutiesForDateOrMajalis($majalis->id, $date);
+          $this->loadView('admin/majalis/view_duties', $duties);
+        } else {
+          redirect('majalis/');
+        }
 
       } else {
         redirect('majalis/');

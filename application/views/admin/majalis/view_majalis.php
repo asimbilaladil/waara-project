@@ -26,11 +26,11 @@
                             <div class="box-header with-border">
                                 <h3 class="box-title">List Of Majalis:</h3>
                             </div>
-                            <div class="form-group">
+<!--                             <div class="form-group">
                                 <div class="col-sm-4">
                                     <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
                                 </div>
-                            </div>
+                            </div> -->
                             <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
@@ -52,7 +52,7 @@
                                 <tbody>
                                     
                                 <?php 
-                                foreach ($data as $item) {
+                                foreach ($data['majalis'] as $item) {
                                     echo '<tr>
                                         <td> <a href="' . site_url("majalis/detail?token=" . $item["token"]) . '">' . $item["majalisName"] . '</a> </td>
                                         <td> ' . printMonth($item, "January") . ' </td>
@@ -92,7 +92,78 @@
                     <!-- /.box -->
                 </div>
                 <!-- /.box-footer -->
-                </form>
+
+
+
+                <!-- Festival Start -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box box-success">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">View Festival</h3>
+                            </div>
+                            <!-- /.box-header -->
+                            </br> </br>
+                            <div class="box-header with-border">
+                                <h3 class="box-title">List of Festival:</h3>
+                            </div>
+<!--                             <div class="form-group">
+                                <div class="col-sm-4">
+                                    <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
+                                </div>
+                            </div> -->
+                            <table class="table table-striped" id="table" width="80%">
+                                <thead>
+                                    <tr>
+                                        <th> Festival Name </th>
+                                        <th> January </th>
+                                        <th> February </th>
+                                        <th> March </th>
+                                        <th> April </th>
+                                        <th> May </th>
+                                        <th> June </th>
+                                        <th> July </th>
+                                        <th> August </th>
+                                        <th> September </th>
+                                        <th> October </th>
+                                        <th> November </th>
+                                        <th> December </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                <?php 
+                                foreach ($data['festival'] as $item) {
+                                    echo '<tr>
+                                        <td> <a href="' . site_url("majalis/detail?token=" . $item["token"]) . '">' . $item["festivalName"] . '</a> </td>
+                                        <td> ' . printMonth($item, "January") . ' </td>
+                                        <td> ' . printMonth($item, "February") . ' </td>
+                                        <td> ' . printMonth($item, "March") . ' </td>
+                                        <td> ' . printMonth($item, "April") . ' </td>
+                                        <td> ' . printMonth($item, "May") . ' </td>
+                                        <td> ' . printMonth($item, "June") . ' </td>
+                                        <td> ' . printMonth($item, "July") . ' </td>
+                                        <td> ' . printMonth($item, "August") . ' </td>
+                                        <td> ' . printMonth($item, "September") . ' </td>
+                                        <td> ' . printMonth($item, "October") . ' </td>
+                                        <td> ' . printMonth($item, "November") . ' </td>
+                                        <td> ' . printMonth($item, "December") . ' </td>
+                                    </tr>';
+                                }
+
+
+
+                                ?>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- /.box -->
+                </div>
+                <!-- Festival END -->
+
+
         </div>
         <!-- /.box -->
     </div>

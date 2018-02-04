@@ -19,11 +19,11 @@
         <div class="col-md-12">
         <div class="box box-success">
             <div class="box-header with-border">
-                <h3 class="box-title">Add new Majalis</h3>
+                <h3 class="box-title">Add new Festival</h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Majalis/addFestival') ?>" method="post" >
+            <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Festival/addFestival') ?>" method="post" >
                 <div class="box-body">
 
                     <!-- 1st Page -->
@@ -37,7 +37,7 @@
                         </div>
                         <div id="dutiesDiv">
                             <div id="dutyDiv_1" class="form-group">
-                                <label for="" class="col-sm-2 control-label">Festival 1</label>
+                                <label for="" class="col-sm-2 control-label">Duty 1</label>
                                 <div class="col-sm-6">
                                     <input type="text" name="duties[0]" class="form-control" placeholder="" required>
                                 </div>
@@ -69,7 +69,7 @@
                             <div class="form-group" id="dateDiv_1">
                                 <label for="" class="col-sm-2 control-label">Date 1</label>
                                 <div class="col-sm-6">
-                                    <input type="date" name="majalisDate[1]" class="form-control"  placeholder="" required>
+                                    <input type="date" name="festivalDate[1]" class="form-control"  placeholder="" required>
                                 </div>
                             </div>
                         </div>                     
@@ -148,7 +148,7 @@
         var dateHtml = `<div class="form-group" id="dateDiv_` + dateCount + `">
                             <label for="" class="col-sm-2 control-label">Date ` + dateCount + `</label>
                             <div class="col-sm-6">
-                                <input type="date" name="majalisDate[` + dateCount + `]" class="form-control"  placeholder="" required>
+                                <input type="date" name="festivalDate[` + dateCount + `]" class="form-control"  placeholder="" required>
                             </div>
                         </div>`;
 
