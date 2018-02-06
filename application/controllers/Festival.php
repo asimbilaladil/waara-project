@@ -9,8 +9,9 @@ class Festival extends CI_Controller {
         
         if( $id != NULL  && $type != 'User' ) {
             $this->load->model('FestivalModel'); 
-            
+            $this->load->model('FestivalMajalisModel'); 
             $this->load->library('user_agent');
+            $this->load->helper('custom_helper');
         } else {
             redirect('Login/');
         }      
@@ -22,6 +23,12 @@ class Festival extends CI_Controller {
      */
     function index() {
 
+      $festivalData = $this->FestivalMajalisModel->getFestivalForTable();
+      $data = array(
+        'festival' => $festivalData,
+      );
+      
+      $this->loadView('admin/festival/view_festival', $data);      
     }
 
     /**

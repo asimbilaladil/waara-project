@@ -46,22 +46,16 @@
          
           <?php if($_SESSION['type'] == 'Super Admin'){ ?>
              <li class="treeview">
-                <a href="<?php echo site_url('majalis'); ?>"><i class="fa  fa-list-alt"></i> <span>View Majalis</span></a>                
+                <a href="<?php echo site_url('majalis'); ?>"><i class="fa  fa-list-alt"></i> <span>Majalis</span></a>                
             </li>
           
           <?php } ?>
 
 
-          <?php if($_SESSION['type'] == 'Super Admin'){ ?>
-             <li class="treeview">
-                <a href="<?php echo site_url('majalis/add'); ?>"><i class="fa  fa-list-alt"></i> <span> Add Majalis</span></a>                
-            </li>
-          
-          <?php } ?>
 
           <?php if($_SESSION['type'] == 'Super Admin'){ ?>
              <li class="treeview">
-                <a href="<?php echo site_url('Festival/add'); ?>"><i class="fa  fa-list-alt"></i> <span> Add Festival</span></a>                
+                <a href="<?php echo site_url('Festival'); ?>"><i class="fa  fa-list-alt"></i> <span> Festival</span></a>                
             </li>
           
           <?php } ?>          

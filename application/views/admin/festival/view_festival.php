@@ -15,23 +15,26 @@
             <!-- Main content -->
             <section class="content">
                 <!-- Main row -->
+                
                 <div class="row">
                     <div class="col-md-12">
                         <div class="box box-success">
                             <div class="box-header with-border">
-                                <h3 class="box-title">View Majalis</h3>
+                                <h3 class="box-title">View Festival</h3>
                             </div>
                             <!-- /.box-header -->
+
                             <br>
                             <div class="form-group">
                                 <div class="col-sm-offset-0 col-sm-2">
-                                    <button type="button" onclick="location.href='<?php echo site_url("majalis/add") ;?>'" class="btn btn-primary btn-block">Add Majalis</button>
+                                    <button type="button" onclick="location.href='<?php echo site_url("Festival/add") ;?>'" class="btn btn-primary btn-block">Add Festival</button>
                                 </div>
                             </div>
 
+
                             </br> </br>
                             <div class="box-header with-border">
-                                <h3 class="box-title">List Of Majalis:</h3>
+                                <h3 class="box-title">List of Festival:</h3>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4">
@@ -41,7 +44,7 @@
                             <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
-                                        <th> Majalis Name </th>
+                                        <th> Festival Name </th>
                                         <th> January </th>
                                         <th> February </th>
                                         <th> March </th>
@@ -59,9 +62,9 @@
                                 <tbody>
                                     
                                 <?php 
-                                foreach ($data['majalis'] as $item) {
+                                foreach ($data['festival'] as $item) {
                                     echo '<tr>
-                                        <td> <a href="' . site_url("majalis/detail?token=" . $item["token"]) . '">' . $item["majalisName"] . '</a> </td>
+                                        <td> <a href="' . site_url("majalis/detail?token=" . $item["token"]) . '">' . $item["festivalName"] . '</a> </td>
                                         <td> ' . printMonth($item, "January") . ' </td>
                                         <td> ' . printMonth($item, "February") . ' </td>
                                         <td> ' . printMonth($item, "March") . ' </td>
@@ -97,7 +100,10 @@
                         </div>
                     </div>
                     <!-- /.box -->
-                </div>
+                </div>                
+
+
+
                 <!-- /.box-footer -->
 
         </div>

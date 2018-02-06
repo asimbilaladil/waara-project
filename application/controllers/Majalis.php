@@ -18,13 +18,10 @@ class Majalis extends CI_Controller {
      */
     function index() {
 
-
       $majalisData = $this->FestivalMajalisModel->getMajalisForTable();
-      $festivalData = $this->FestivalMajalisModel->getFestivalForTable();
-
+      
       $data = array(
         'majalis' => $majalisData,
-        'festival' => $festivalData
       );
       
       $this->loadView('admin/majalis/view_majalis', $data);
