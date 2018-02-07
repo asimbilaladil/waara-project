@@ -23,7 +23,7 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Majalis/addFestival') ?>" method="post" >
+            <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('Majalis/addMajalis') ?>" method="post" >
                 <div class="box-body">
 
                     <!-- 1st Page -->
@@ -32,12 +32,20 @@
                         <div class="form-group">
                             <label for="" class="col-sm-2 control-label">Name</label>
                             <div class="col-sm-6">
-                                <input type="text" name="festivalName" class="form-control"  placeholder="" required>
+                                <input type="text" name="majalisName" class="form-control"  placeholder="" required>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">Override</label>
+                            <div class="col-sm-6">
+                                <input type="checkbox" name="override" value="1">
+                            </div>
+                        </div>
+                            
                         <div id="dutiesDiv">
                             <div id="dutyDiv_1" class="form-group">
-                                <label for="" class="col-sm-2 control-label">Festival 1</label>
+                                <label for="" class="col-sm-2 control-label">Duty 1</label>
                                 <div class="col-sm-6">
                                     <input type="text" name="duties[0]" class="form-control" placeholder="" required>
                                 </div>

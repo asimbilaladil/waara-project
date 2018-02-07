@@ -103,11 +103,13 @@ class Majalis extends CI_Controller {
         $adminId = $this->session->userdata('user_id');
         $duties = $this->input->post('duties', true);
         $majalisDate = $this->input->post('majalisDate', true);
+        $override = $this->input->post('override') ? 1 : 0;
 
         $majalisModel = array (
           'name' => $majalisName,
           'admin_id' => $adminId,
-          'token'=> random_string('unique', 30)
+          'token' => random_string('unique', 30),
+          'override' => $override
         );
 
         $majalis_id = $this->MajalisModel->insert($majalisModel);

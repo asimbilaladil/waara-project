@@ -36,12 +36,12 @@ class FestivalMajalisModel extends CI_Model {
             );
 
             if ($index > -1) {
+                                
+                if (!isset($festivalArray[$index][$festivalMonth])) {
+                    $festivalArray[$index][$festivalMonth] = array();
+                }
 
-            if (!isset($festivalArray[$index][$festivalMonth])) {
-                $festivalArray[$index][$festivalMonth] = array();
-            }
-
-            array_push($festivalArray[$index][$festivalMonth], $dateItem);
+                array_push($festivalArray[$index][$festivalMonth], $dateItem);
 
             } else {
                 $dateArray = array();
@@ -53,10 +53,11 @@ class FestivalMajalisModel extends CI_Model {
                 $item[$festivalMonth] = $dateArray;
 
                 array_push($festivalArray, $item);
-
+                $item = null;
             }
 
         }
+
         return $festivalArray;
     }
 
@@ -107,6 +108,8 @@ class FestivalMajalisModel extends CI_Model {
                 $item[$majalisMonth] = $dateArray;
 
                 array_push($majalisArray, $item);
+
+                $item = null;
 
             }
         }

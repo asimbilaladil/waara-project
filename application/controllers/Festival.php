@@ -51,11 +51,13 @@ class Festival extends CI_Controller {
             $adminId = $this->session->userdata('user_id');
             $duties = $this->input->post('duties', true);
             $festivalDate = $this->input->post('festivalDate', true);
+            $override = $this->input->post('override') ? 1 : 0;
 
             $festivalModel = array (
               'festival' => $festivalName,
               'admin_id' => $adminId,
-              'token'=> random_string('unique', 30)
+              'token' => random_string('unique', 30),
+              'override' => $override
             );
 
             $festival_id = $this->FestivalModel->insertFestival($festivalModel);
@@ -85,9 +87,9 @@ class Festival extends CI_Controller {
                 $dateId = $this->FestivalModel->insertFestivalDates($dateModel);
             }
 
-            redirect("festival/add");
+            redirect("festival");
         } else {
-            redirect("festival/add");
+            redirect("festival");
         }        
     }
 

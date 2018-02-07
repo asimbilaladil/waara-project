@@ -35,6 +35,14 @@
                                 <input type="text" name="festivalName" class="form-control"  placeholder="" required>
                             </div>
                         </div>
+
+                        <div class="form-group">
+                            <label for="" class="col-sm-2 control-label">Override</label>
+                            <div class="col-sm-6">
+                                <input type="checkbox" name="override" value="1">
+                            </div>
+                        </div>
+
                         <div id="dutiesDiv">
                             <div id="dutyDiv_1" class="form-group">
                                 <label for="" class="col-sm-2 control-label">Duty 1</label>
