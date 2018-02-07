@@ -61,7 +61,7 @@
                                 <?php 
                                 foreach ($data['majalis'] as $item) {
                                     echo '<tr>
-                                        <td> <a href="' . site_url("majalis/detail?token=" . $item["token"]) . '">' . $item["majalisName"] . '</a> </td>
+                                        <td> <a href="' . site_url("majalis/viewMajalisDuties?token=" . $item["token"]) . '">' . $item["majalisName"] . '</a> </td>
                                         <td> ' . printMonth($item, "January") . ' </td>
                                         <td> ' . printMonth($item, "February") . ' </td>
                                         <td> ' . printMonth($item, "March") . ' </td>

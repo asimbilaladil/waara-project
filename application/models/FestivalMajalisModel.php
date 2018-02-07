@@ -110,7 +110,6 @@ class FestivalMajalisModel extends CI_Model {
                 array_push($majalisArray, $item);
 
                 $item = null;
-
             }
         }
 
