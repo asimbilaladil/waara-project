@@ -116,4 +116,5 @@ class FestivalMajalisModel extends CI_Model {
         return $majalisArray;         
     }
 
+
 }

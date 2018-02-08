@@ -93,6 +93,104 @@ class Festival extends CI_Controller {
         }        
     }
 
+
+    /**
+     * Insert Duty in DB
+     * Created By: Moiz
+     */
+    function addDuty() {
+
+      $token = $this->input->post('token', true);
+      $duty = $this->input->post('duty', true);
+      $date = $this->input->post('date', true);
+      $adminId = $this->session->userdata('user_id');
+      $result = $this->FestivalModel->getFestivalByToken($token);
+
+      $dutyModel = array (
+        'festival_id' => ($date ? '' : $result->id ),
+        'duty' => $duty,
+        'admin_id' => $adminId,
+        'token'=> random_string('unique', 30)
+      );
+
+      if ($date) {
+
+        $dutyId = $this->FestivalModel->insertFestivalDuties($dutyModel);
+
+        $this->FestivalModel->insertDutyOnSpecfic(array(
+          'date' => $date,
+          'type' => 'FESTIVAL',
+          'duty_id' => $dutyId
+        ));
+
+        redirect('festival/viewFestivalDuties?token=' . $token . '&date=' . $date);
+
+      } else {
+
+        $dutyId = $this->FestivalModel->insertFestivalDuties($dutyModel);
+        redirect('festival/viewFestivalDuties?token=' . $token);
+
+      }
+
+    }
+
+
+    /**
+     * View Festival duties Global/Local
+     * Created By: Moiz
+     */
+    function viewFestivalDuties() {
+      if($this->input->get('token')) {
+        $token = $this->input->get('token');
+        $date = $this->input->get('date');
+        
+        $duties = $this->FestivalModel->getDutiesForFestival($token);
+
+        if ($date) {
+
+          $dateSpecficDuties = $this->FestivalModel->getDutiesForSpecticDate($date, 'FESTIVAL');
+
+          if ($dateSpecficDuties) {
+
+            foreach ($dateSpecficDuties as $item) {
+              array_push($duties, $item);
+
+            }
+          }
+        } 
+
+        $data = array(
+          'duties' => $duties,
+        );            
+        
+        $this->loadView('admin/festival/view_festival_duties', $data);
+        
+      } else {
+        redirect('festival/');
+      }
+
+    }
+
+    /**
+     * Delete festival duty
+     * Created By: Moiz
+     */
+    function deleteFestivalDuty() {
+      if($this->input->get('token')) {
+        
+        $token = $this->input->get('token');
+        $duty = $this->FestivalModel->getDutyByToken($token);
+        $dutyId = $duty->id;
+
+        $this->FestivalModel->deletFestivalDutyByToken($token);
+        $this->FestivalModel->deleteDutyForSpecficDate($dutyId, 'FESTIVAL');
+
+        redirect($this->agent->referrer());
+      } else {
+        redirect($this->agent->referrer());
+      }      
+    }    
+
     /**
      * Load view 
      * @param 1 : view name

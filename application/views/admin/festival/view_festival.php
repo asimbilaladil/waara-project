@@ -64,7 +64,7 @@
                                 <?php 
                                 foreach ($data['festival'] as $item) {
                                     echo '<tr>
-                                        <td> <a href="' . site_url("majalis/detail?token=" . $item["token"]) . '">' . $item["festivalName"] . '</a> </td>
+                                        <td> <a href="' . site_url("festival/viewFestivalDuties?token=" . $item["token"]) . '">' . $item["festivalName"] . '</a> </td>
                                         <td> ' . printMonth($item, "January") . ' </td>
                                         <td> ' . printMonth($item, "February") . ' </td>
                                         <td> ' . printMonth($item, "March") . ' </td>
@@ -84,7 +84,7 @@
                                     $str = '';
                                     if (isset($item[$month])) {
                                         foreach($item[$month] as $m) {
-                                            $dutyUrl = site_url('majalis/viewMajalisDuties?token=' . $item["token"] .'&date='. $m['completeDate']);
+                                            $dutyUrl = site_url('festival/viewFestivalDuties?token=' . $item["token"] .'&date='. $m['completeDate']);
                                             $str = $str . '<a href="'. $dutyUrl .'">'. $m['date'] .'</a> <br>';        
                                         }
                                     } else {

@@ -84,7 +84,8 @@ class Majalis extends CI_Controller {
 
         $this->MajalisModel->insertDutyOnSpecfic(array(
           'date' => $date,
-          'duty_id' => $dutyId
+          'duty_id' => $dutyId,
+          'type' => 'MAJALIS'
         ));
 
         redirect('majalis/viewMajalisDuties?token=' . $token . '&date=' . $date);
@@ -198,7 +199,7 @@ class Majalis extends CI_Controller {
 
           if ($date) {
 
-            $dateSpecficDuties = $this->MajalisModel->getDutiesForSpecticDate($date);
+            $dateSpecficDuties = $this->MajalisModel->getDutiesForSpecticDate($date, 'MAJALIS');
 
             if ($dateSpecficDuties) {
 
@@ -211,8 +212,8 @@ class Majalis extends CI_Controller {
 
           $data = array(
             'duties' => $duties,
-          );            
-          
+          );
+
           $this->loadView('admin/majalis/view_duties', $data);
           
         } else {
@@ -227,8 +228,14 @@ class Majalis extends CI_Controller {
 
     function deleteMajalisDuty() {
       if($this->input->get('token')) {
+        
         $token = $this->input->get('token');
+        $duty = $this->MajalisModel->getDutyByToken($token);
+        $dutyId = $duty->id;
+
         $this->MajalisModel->deleteMajalisDutyByToken($token);
+        $this->MajalisModel->deleteDutyForSpecficDate($dutyId, 'MAJALIS');
+
         redirect($this->agent->referrer());
       } else {
         redirect($this->agent->referrer());

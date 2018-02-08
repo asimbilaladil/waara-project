@@ -37,6 +37,20 @@ class MajalisModel extends CI_Model
         return false;
     }
 
+    public function getDutiesForSpecticDate($date, $type) {
+
+        $query = $this->db->query("SELECT majalis_duties.id, majalis_duties.name, majalis_duties.token
+                FROM majalis_duties, specfic_date_duties
+                WHERE specfic_date_duties.date = '". $date ."'
+                AND specfic_date_duties.duty_id = majalis_duties.id
+                AND specfic_date_duties.type = '". $type ."'");
+
+        $query->result();
+        return $query->result();
+
+    }
+    
+
     /**
      * Insert Majalis Dates
      * Created By: Moiz     
@@ -88,6 +102,13 @@ class MajalisModel extends CI_Model
         $this->db->delete( 'majalis_duties' , array( 'token' => $token) ); 
     }
 
+    public function deleteDutyForSpecficDate($dutyId, $type) {
+        $this->db->delete( 'specfic_date_duties' , array(
+            'duty_id' => $dutyId,
+            'type' => $type
+        ));    
+    }
+
     /**
      * Get Duties by majalis or local dates
      * Created By: Moiz     
@@ -102,17 +123,6 @@ class MajalisModel extends CI_Model
         return $query->result();
     }
     
-    public function getDutiesForSpecticDate($date) {
-        $query = $this->db->query("SELECT majalis_duties.id, majalis_duties.name, majalis_duties.token
-                FROM majalis_duties, specfic_date_duties
-                WHERE specfic_date_duties.date = '". $date ."'
-                AND specfic_date_duties.duty_id = majalis_duties.id");
-
-        $query->result();
-        return $query->result();
-
-    }
-
     /**
      * Get All Majalis
      */
@@ -163,7 +173,22 @@ class MajalisModel extends CI_Model
         $quary_result=$this->db->get();
         $result=$quary_result->row();
         return $result;
-    }      
+    } 
+
+    /**
+     * Get All Majalis Duty
+     */
+    public function getDutyByToken($token){
+      
+        $this->db->select('*');
+        $this->db->from('majalis_duties');
+        $this->db->where('token', $token);
+        $quary_result=$this->db->get();
+        $result=$quary_result->row();
+        return $result;
+    }    
+
+
     /**
      * Delete Majalis using majalis id
      * @param 1 : data : array

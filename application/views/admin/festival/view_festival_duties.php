@@ -19,11 +19,11 @@
                     <div class="col-md-12">
                         <div class="box box-success">
                             <div class="box-header with-border">
-                                <!-- <h3 class="box-title"><?php echo !empty($data) ? $data[0]->name : '' ?> </h3>
- -->                            </div>
+                               
+                             </div>
                             <!-- /.box-header -->
 
-                            <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
+                            <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('festival/addDuty') ?>" method="post" >
                                 <div class="box-body">
 
                                     <div class="form-group">
@@ -72,13 +72,13 @@
                                 
                                 foreach ($data['duties'] as $key => $item) {
                                     echo '<tr>
-                                        <td> ' . $item->name . ' </td>
-                                        <td> <a href="deleteMajalisDuty?token=' . $item->token . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+                                        <td> ' . $item->duty . ' </td>
+                                        <td> <a href="deleteFestivalDuty?token=' . $item->token . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
                                     </tr>';
                                 }
 
                                 ?> 
-
+                                    <!-- <td> <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td> -->
                                 </tbody>
                             </table>
                         </div>
@@ -94,16 +94,3 @@
     </section><!-- /.content -->
     </div>
     </div>
-
-<script>
-$(function(){
-    $("[name='editDate']").editable({
-        format: 'yyyy-mm-dd',    
-        viewformat: 'yyyy-mm-dd',    
-        datepicker: {
-                weekStart: 1
-           }
-        });
-});
-
-</script>
