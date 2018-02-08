@@ -30,6 +30,13 @@ class MajalisModel extends CI_Model
         return false;
     }
 
+    public function insertDutyOnSpecfic($data) {
+        if ($this->db->insert('specfic_date_duties', $data) ) {
+            return $this->db->insert_id();
+        } 
+        return false;
+    }
+
     /**
      * Insert Majalis Dates
      * Created By: Moiz     
@@ -85,7 +92,7 @@ class MajalisModel extends CI_Model
      * Get Duties by majalis or local dates
      * Created By: Moiz     
      */
-    public function getDutiesForDateOrMajalis($id, $date) {
+    public function getDutiesForMajalis($id, $date) {
 
         $query = $this->db->query("SELECT id, token, name, majalis_id 
                 FROM majalis_duties
@@ -95,6 +102,17 @@ class MajalisModel extends CI_Model
         return $query->result();
     }
     
+    public function getDutiesForSpecticDate($date) {
+        $query = $this->db->query("SELECT majalis_duties.id, majalis_duties.name, majalis_duties.token
+                FROM majalis_duties, specfic_date_duties
+                WHERE specfic_date_duties.date = '". $date ."'
+                AND specfic_date_duties.duty_id = majalis_duties.id");
+
+        $query->result();
+        return $query->result();
+
+    }
+
     /**
      * Get All Majalis
      */

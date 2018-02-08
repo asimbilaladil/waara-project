@@ -64,22 +64,45 @@ class Majalis extends CI_Controller {
      * Add date in Majalis
      * Created By: Moiz
      */ 
-    function addDateInMajalis() {
+    function addDuty() {
 
       $token = $this->input->post('token', true);
+      $duty = $this->input->post('duty', true);
       $date = $this->input->post('date', true);
       $adminId = $this->session->userdata('user_id');
       $result = $this->MajalisModel->getMajalisByToken($token);
 
-      $dateModel = array (
-          'majalis_id' => $result->id,
-          'date' => $date,
+      if ($date) {
+
+        $dutyModel = array (
+          'name' => $duty,
           'admin_id' => $adminId,
           'token'=> random_string('unique', 30)
-      );
+        );
 
-      $dateId = $this->MajalisModel->insertMajalisDates($dateModel);
-      redirect('majalis/detail?token=' . $token);
+        $dutyId = $this->MajalisModel->insertMajalisDuties($dutyModel);
+
+        $this->MajalisModel->insertDutyOnSpecfic(array(
+          'date' => $date,
+          'duty_id' => $dutyId
+        ));
+
+        redirect('majalis/viewMajalisDuties?token=' . $token . '&date=' . $date);
+
+      } else {
+
+        $dutyModel = array (
+          'majalis_id' => $result->id,
+          'name' => $duty,
+          'admin_id' => $adminId,
+          'token'=> random_string('unique', 30)
+        );
+
+        $dutyId = $this->MajalisModel->insertMajalisDuties($dutyModel);
+
+        redirect('majalis/viewMajalisDuties?token=' . $token);
+
+      }
 
     }
 
@@ -168,10 +191,30 @@ class Majalis extends CI_Controller {
         $token = $this->input->get('token');
         $date = $this->input->get('date');
         $majalis = $this->MajalisModel->getMajalisByToken($token);
+        
+        if ($majalis) {
 
-        if($majalis) {
-          $duties = $this->MajalisModel->getDutiesForDateOrMajalis($majalis->id, $date);
-          $this->loadView('admin/majalis/view_duties', $duties);
+          $duties = $this->MajalisModel->getDutiesForMajalis($majalis->id, $date);
+
+          if ($date) {
+
+            $dateSpecficDuties = $this->MajalisModel->getDutiesForSpecticDate($date);
+
+            if ($dateSpecficDuties) {
+
+              foreach ($dateSpecficDuties as $item) {
+                array_push($duties, $item);
+
+              }
+            }
+          } 
+
+          $data = array(
+            'duties' => $duties,
+          );            
+          
+          $this->loadView('admin/majalis/view_duties', $data);
+          
         } else {
           redirect('majalis/');
         }

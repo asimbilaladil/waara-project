@@ -23,26 +23,29 @@
  -->                            </div>
                             <!-- /.box-header -->
 
-<!--                                 <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addDateInMajalis') ?>" method="post" >
-                                    <div class="box-body">
+                            <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
+                                <div class="box-body">
 
-                                        <div class="form-group">
-                                            <label for="" class="col-sm-2 control-label">Date</label>
-                                            <div class="col-sm-6">
-                                                <input type="date" name="date" class="form-control"  placeholder="" required>
-                                            </div>
+                                    <div class="form-group">
+                                        <label for="" class="col-sm-2 control-label">Duty</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" name="duty" class="form-control"  placeholder="" required>
                                         </div>
-
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-2">
-                                                <button type="submit" class="btn btn-primary btn-block">Add</button>
-                                            </div>
-                                        </div>
-
-                                        <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
-
                                     </div>
-                                </form> -->
+
+                                    <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
+
+                                    <input type="hidden" name="date" value="<?php echo $this->input->get('date', TRUE); ?>"/> 
+
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-2">
+                                            <button type="submit" class="btn btn-primary btn-block">Add</button>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </form>
 
 
                             </br> </br>
@@ -67,7 +70,7 @@
                                     
                                 <?php 
                                 
-                                foreach ($data as $key => $item) {
+                                foreach ($data['duties'] as $key => $item) {
                                     echo '<tr>
                                         <td> ' . $item->name . ' </td>
                                         <td> <a href="deleteMajalisDuty?token=' . $item->token . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
