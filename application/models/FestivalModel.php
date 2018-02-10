@@ -3,6 +3,7 @@ class FestivalModel extends CI_Model {
 
   function __construct() {
       parent::__construct();
+      $this->load->model('CommonModel'); 
   }
 
 
@@ -34,39 +35,24 @@ class FestivalModel extends CI_Model {
         return $this->insert('festival_duties', $data);
     }      
 
-    /**
-     * Insert Festival Dates
-     * Created By: Moiz     
-     */
-    public function insertFestivalDates($data) {
-        return $this->insert('festival_date', $data);
-    } 
-
 
     /**
      * Get festival by token
      * Created By: Moiz     
      */
     public function getFestivalByToken($token) {
-        $this->db->select('*');
-        $this->db->from('festival');
-        $this->db->where('token', $token);
-        $quary_result=$this->db->get();
-        $result=$quary_result->row();
-        return $result;
+        return $this->CommonModel->getAllFromTable('festival', 'token', $token);
+    }
+
+    public function insertFestivalDates($data) {
+        return $this->CommonModel->insertIntoTable('festival_date', $data);
     }
 
     /**
      * Get All Festival Duty
      */
     public function getDutyByToken($token){
-      
-        $this->db->select('*');
-        $this->db->from('festival_duties');
-        $this->db->where('token', $token);
-        $quary_result=$this->db->get();
-        $result=$quary_result->row();
-        return $result;
+        $this->CommonModel->getAllFromTable('festival_duties', 'token', $token);
     }      
 
     /**
@@ -83,6 +69,21 @@ class FestivalModel extends CI_Model {
         $query->result();
         return $query->result();
     }
+
+    /**
+     * Get Festival and their dates by token
+     * Created By: Moiz     
+     */
+    public function getFestivalAndDatesByToken($token) {
+        $query = $this->db->query("SELECT festival.id, festival.token, festival.festival, festival_date.id as dateId, festival_date.token as festivalDateToken, festival_date.date as date 
+                FROM festival, festival_date
+                WHERE festival.token = '" . $token . "'
+                AND festival.id = festival_date.festival_id");
+
+        $query->result();
+
+        return $query->result();
+    }    
 
 
     /**
@@ -101,6 +102,15 @@ class FestivalModel extends CI_Model {
         return $query->result();
 
     }
+
+
+    /**
+     * Delete Majlis date by token
+     * Created By: Moiz     
+     */
+    public function deleteFestivalDateByToken($token) {
+        $this->db->delete( 'festival_date' , array( 'token' => $token) ); 
+    }    
 
     /**
      * insert duty for specfic date

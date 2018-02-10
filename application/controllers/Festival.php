@@ -87,9 +87,9 @@ class Festival extends CI_Controller {
                 $dateId = $this->FestivalModel->insertFestivalDates($dateModel);
             }
 
-            redirect("festival");
+            redirect("Majalis");
         } else {
-            redirect("festival");
+            redirect("Majalis");
         }        
     }
 
@@ -134,6 +134,67 @@ class Festival extends CI_Controller {
 
     }
 
+
+    /**
+     * view festival dates
+     * Created By: Moiz
+     */  
+    function viewFestivalDates() {
+
+      if($this->input->get('token')) {
+        $token = $this->input->get('token');
+        $result = $this->FestivalModel->getFestivalAndDatesByToken($token);
+        $this->loadView('admin/festival/view_festival_dates', $result);
+      } else {
+        redirect('majalis/');
+      }
+
+    }
+
+
+    /**
+     * Delete Festival by date
+     * Created By: Moiz
+     */  
+    function deleteFestivalDate() {
+
+      if($this->input->get('token')) {
+        $token = $this->input->get('token');
+        $this->FestivalModel->deleteFestivalDateByToken($token);
+        redirect($this->agent->referrer());
+      } else {
+        redirect($this->agent->referrer());
+      }
+
+    }
+
+    /**
+     * Add Festival Date
+     * Created By: Moiz
+     */      //
+    function addFestivalDate() {
+
+      if ($this->input->post()) {
+
+        $token = $this->input->post('token');
+        $date = $this->input->post('date', true);
+        $adminId = $this->session->userdata('user_id');
+        $result = $this->FestivalModel->getFestivalByToken($token);
+
+        $data = array (
+          'admin_id' => $adminId,
+          'festival_id' => $result->id,
+          'date' => $date,
+          'token' => random_string('unique', 30)
+        );
+
+        $this->FestivalModel->insertFestivalDates($data);
+
+        redirect('Festival/viewFestivalDates?token=' . $token);
+
+      }
+
+    }
 
     /**
      * View Festival duties Global/Local

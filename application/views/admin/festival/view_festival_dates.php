@@ -23,7 +23,7 @@
                             </div>
                             <!-- /.box-header -->
 
-                                <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addDateInMajalis') ?>" method="post" >
+                                <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('festival/addFestivalDate') ?>" method="post" >
                                     <div class="box-body">
 
                                         <div class="form-group">
@@ -67,10 +67,16 @@
                                     
                                 <?php 
                                 
+                                // foreach ($data as $key => $item) {
+                                //     echo '<tr>
+                                //         <td> <a href="#" id="date" name="editDate" data-type="date" data-pk="' . $item->dateId .'" data-url="editMajalisDate" data-title="Select date">' . $item->date . '</a> </td>
+                                //         <td> <a href="deleteMajalidDate?token=' . $item->festivalDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+                                //     </tr>';
+
                                 foreach ($data as $key => $item) {
                                     echo '<tr>
-                                        <td> <a href="#" id="date" name="editDate" data-type="date" data-pk="' . $item->dateId .'" data-url="editMajalisDate" data-title="Select date">' . $item->date . '</a> </td>
-                                        <td> <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+                                        <td> <a href="'. site_url('festival/viewFestivalDuties?token=' . $item->token .'&date=' . $item->date) .'">' . $item->date . '</a> </td>
+                                        <td> <a href="deleteFestivalDate?token=' . $item->festivalDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
                                     </tr>';
                                 }
 
@@ -93,14 +99,14 @@
     </div>
 
 <script>
-$(function(){
-    $("[name='editDate']").editable({
-        format: 'yyyy-mm-dd',    
-        viewformat: 'yyyy-mm-dd',    
-        datepicker: {
-                weekStart: 1
-           }
-        });
-});
+// $(function(){
+//     $("[name='editDate']").editable({
+//         format: 'yyyy-mm-dd',    
+//         viewformat: 'yyyy-mm-dd',    
+//         datepicker: {
+//                 weekStart: 1
+//            }
+//         });
+// });
 
 </script>       

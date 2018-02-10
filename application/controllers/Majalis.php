@@ -19,9 +19,11 @@ class Majalis extends CI_Controller {
     function index() {
 
       $majalisData = $this->FestivalMajalisModel->getMajalisForTable();
+      $festivalData = $this->FestivalMajalisModel->getFestivalForTable();
       
       $data = array(
         'majalis' => $majalisData,
+        'festival' => $festivalData
       );
       
       $this->loadView('admin/majalis/view_majalis', $data);
@@ -29,17 +31,42 @@ class Majalis extends CI_Controller {
     }
 
     /**
-     * Majalis Detail
+     * view majalis dates
      * Created By: Moiz
      */  
-    function detail() {
+    function viewMajalisDates() {
 
       if($this->input->get('token')) {
         $token = $this->input->get('token');
         $result = $this->MajalisModel->getMajlisAndDatesByToken($token);
-        $this->loadView('admin/majalis/detail_majalis', $result);
+        $this->loadView('admin/majalis/view_majalis_dates', $result);
       } else {
         redirect('majalis/');
+      }
+
+    }
+
+
+    function addMajalisDate() {
+
+      if ($this->input->post()) {
+
+        $token = $this->input->post('token');
+        $date = $this->input->post('date', true);
+        $adminId = $this->session->userdata('user_id');
+        $result = $this->MajalisModel->getMajalisByToken($token);
+
+        $data = array (
+          'admin_id' => $adminId,
+          'majalis_id' => $result->id,
+          'date' => $date,
+          'token' => random_string('unique', 30)
+        );
+
+        $this->MajalisModel->insertMajalisDates($data);
+
+        redirect('majalis/viewMajalisDates?token=' . $token);
+
       }
 
     }
@@ -101,7 +128,7 @@ class Majalis extends CI_Controller {
 
         $dutyId = $this->MajalisModel->insertMajalisDuties($dutyModel);
 
-        redirect('majalis/viewMajalisDuties?token=' . $token);
+        redirect('majalis/viewMajalisDates?token=' . $token);
 
       }
 
@@ -377,29 +404,29 @@ class Majalis extends CI_Controller {
     /**
      * Add Majalis Date
      */  
-    function addMajalisDate() {   
+    // function addMajalisDate() {   
       
-            if($this->input->post()) {
-              $majalis_token= $this->input->post('majalis', true);
-              $majalis_data = $this->MajalisModel->getMajalisByToken($majalis_token);
+    //         if($this->input->post()) {
+    //           $majalis_token= $this->input->post('majalis', true);
+    //           $majalis_data = $this->MajalisModel->getMajalisByToken($majalis_token);
 
-                $data = array (
-                    'date' => $this->input->post('majalisDate', true),
-                    'admin_id' => $this->session->userdata('user_id'),
-                    'token'=> random_string('unique', 30),
-                    'majalis_id' => $majalis_data->id
-                );
-              $this->MajalisDataModel->insert( $data );
-              redirect("Majalis/".$majalis_data->name.'/'.$majalis_token);
-            }
+    //             $data = array (
+    //                 'date' => $this->input->post('majalisDate', true),
+    //                 'admin_id' => $this->session->userdata('user_id'),
+    //                 'token'=> random_string('unique', 30),
+    //                 'majalis_id' => $majalis_data->id
+    //             );
+    //           $this->MajalisDataModel->insert( $data );
+    //           redirect("Majalis/".$majalis_data->name.'/'.$majalis_token);
+    //         }
       
-            $token =  $this->uri->segment(3);
-            $majalisName =  $this->uri->segment(2);
-            $data['majalis'] = $this->MajalisDataModel->getAllMajalisDates($token);
-            $data['token'] = $token;
-            $this->loadView('admin/addMajalisDates', $data );            
+    //         $token =  $this->uri->segment(3);
+    //         $majalisName =  $this->uri->segment(2);
+    //         $data['majalis'] = $this->MajalisDataModel->getAllMajalisDates($token);
+    //         $data['token'] = $token;
+    //         $this->loadView('admin/addMajalisDates', $data );            
 
-    }  
+    // }  
   
   
     /**

@@ -139,7 +139,7 @@ class MajalisModel extends CI_Model
      * Get Majalis by id
      */
 
-    public function getMajalisById($id){
+    public function TId($id){
       
         $this->db->select('*');
         $this->db->from('majalis');

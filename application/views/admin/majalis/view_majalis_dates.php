@@ -23,7 +23,7 @@
                             </div>
                             <!-- /.box-header -->
 
-                                <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addDateInMajalis') ?>" method="post" >
+                                <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addMajalisDate') ?>" method="post" >
                                     <div class="box-body">
 
                                         <div class="form-group">
@@ -40,6 +40,30 @@
                                         </div>
 
                                         <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
+
+                                    </div>
+                                </form>
+
+                                <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
+                                    <div class="box-body">
+
+                                        <div class="form-group">
+                                            <label for="" class="col-sm-2 control-label">Duty</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" name="duty" class="form-control"  placeholder="" required>
+                                            </div>
+                                        </div>
+
+                                        <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
+
+                                        <input type="hidden" name="date" value="<?php echo $this->input->get('date', TRUE); ?>"/> 
+
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-2">
+                                                <button type="submit" class="btn btn-primary btn-block">Add</button>
+                                            </div>
+                                        </div>
+
 
                                     </div>
                                 </form>
@@ -68,10 +92,22 @@
                                 <?php 
                                 
                                 foreach ($data as $key => $item) {
+                                    // echo '<tr>
+                                    //     <td> <a href="#" id="date" name="editDate" data-type="date" data-pk="' . $item->dateId .'" data-url="editMajalisDate" data-title="Select date">' . $item->date . '</a> </td>
+                                    //     <td> 
+                                        
+                                    //     <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+        
+                                    // </tr>';
+
                                     echo '<tr>
-                                        <td> <a href="#" id="date" name="editDate" data-type="date" data-pk="' . $item->dateId .'" data-url="editMajalisDate" data-title="Select date">' . $item->date . '</a> </td>
-                                        <td> <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+                                        <td> <a href="'. site_url("majalis/viewMajalisDuties?token=" . $item->token . "&date=" . $item->date) .'" >' . $item->date . '</a> </td>
+                                        <td> 
+                                        
+                                        <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+        
                                     </tr>';
+
                                 }
 
                                 ?> 
@@ -93,14 +129,14 @@
     </div>
 
 <script>
-$(function(){
-    $("[name='editDate']").editable({
-        format: 'yyyy-mm-dd',    
-        viewformat: 'yyyy-mm-dd',    
-        datepicker: {
-                weekStart: 1
-           }
-        });
-});
+// $(function(){
+//     $("[name='editDate']").editable({
+//         format: 'yyyy-mm-dd',    
+//         viewformat: 'yyyy-mm-dd',    
+//         datepicker: {
+//                 weekStart: 1
+//            }
+//         });
+// });
 
 </script>       
