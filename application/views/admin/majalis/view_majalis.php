@@ -19,7 +19,7 @@
                     <div class="col-md-12">
                         <div class="box box-success">
                             <div class="box-header with-border">
-                                <h3 class="box-title">View Majalis</h3>
+                                <h3 class="box-title">Majalis/Festival</h3>
                             </div>
                             <!-- /.box-header -->
                             <br>
@@ -107,9 +107,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="box box-success">
-                            <div class="box-header with-border">
+<!--                             <div class="box-header with-border">
                                 <h3 class="box-title">View Festival</h3>
-                            </div>
+                            </div> -->
                             <!-- /.box-header -->
 
                             <br>

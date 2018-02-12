@@ -37,7 +37,7 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="" class="col-sm-2 control-label">Override</label>
+                            <label for="" class="col-sm-2 control-label">Override evening JK schedule</label>
                             <div class="col-sm-6">
                                 <input type="checkbox" name="override" value="1">
                             </div>
