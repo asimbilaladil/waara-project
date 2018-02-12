@@ -123,6 +123,10 @@ class FestivalModel extends CI_Model {
         return false;
     }
 
+    public function insertAssignFestivalDuty($data) {
+        return $this->CommonModel->insertIntoTable('festival_duty_assign', $data);
+    }
+
     /*
      * Delete Duty date by token
      * Created By: Moiz     

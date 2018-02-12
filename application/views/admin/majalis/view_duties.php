@@ -63,6 +63,7 @@
                                 <thead>
                                     <tr>
                                         <th> Duty </th>
+                                        <th> User Fullname </th>
                                         <th> Action </th>
                                     </tr>
                                 </thead>
@@ -72,16 +73,21 @@
                                 
                                 foreach ($data['duties'] as $key => $item) {
                                     echo '<tr>
-                                        <td> ' . $item->name . ' </td>
-                                        <td> <a href="deleteMajalisDuty?token=' . $item->token . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+                                            <td> ' . $item->name . ' </td>
+                                            <td> <input type="text" id="users_'. $key .'" name="users" class="form-control  ui-autocomplete-input"> </td>
+
+                                            <td> <button class="btn btn-primary" onclick="openConfirmModal('.$key.', '.$item->id.')">SAVE</button> </td>
+                                        </form>
                                     </tr>';
                                 }
-
                                 ?> 
+<!-- 
+                                 <td> <a href="deleteMajalisDuty?token=' . $item->token . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td> -->
 
                                 </tbody>
                             </table>
                         </div>
+                        
                     </div>
                     <!-- /.box -->
                 </div>
@@ -95,15 +101,60 @@
     </div>
     </div>
 
+                                        <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Confirm</h4>
+      </div>
+          <form action="<?php echo site_url('majalis/assginMajalisDuty') ?>" method="POST">
+              <div class="modal-body">
+                <p> Are you sure you want to assign this duty? </p>
+              </div>
+              <input type="hidden" id="selectedUser" name="selectedUser" />
+              <input type="hidden" id="selectedDuty" name="selectedDuty" />
+              <input type="hidden" id="token" name="token" value="<?php echo $this->input->get('token') ?>"/>
+              <input type="hidden" id="date" name="date" value="<?php echo $this->input->get('date') ?>"/>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-primary" />
+              </div>
+          </form>
+    </div>
+  </div>
+</div>
+
+
 <script>
-$(function(){
-    $("[name='editDate']").editable({
-        format: 'yyyy-mm-dd',    
-        viewformat: 'yyyy-mm-dd',    
-        datepicker: {
-                weekStart: 1
-           }
-        });
+
+    function openConfirmModal(key, dutyId) {
+        if($("#users_" + key).val() && $("#selectedUser").val() ) {
+            $("#selectedDuty").val(dutyId);
+            $('#myModal').modal('toggle');
+        }
+        
+    }
+
+$("[name=users]").autocomplete({
+
+    source : '<?php echo site_url('admin/getUsers') ?>',
+    select: function(event, ui) {
+
+        // if(ui.item.value == 'NOUSER') {
+        //     $('#addNewUser').modal('toggle');
+        //     window.location.href = '<?php echo site_url('admin/addNewUser') ?>';
+        // }
+
+        event.preventDefault();
+        $('#' + this.id).val(ui.item.label);
+        $("#selectedUser").val(ui.item.value);
+    },
+    focus: function(event, ui) {
+        event.preventDefault();
+        $('#' + this.id).val(ui.item.label);
+    }
 });
 
 </script>

@@ -93,6 +93,30 @@ class Festival extends CI_Controller {
         }        
     }
 
+    function assginFestivalDuty() {
+
+      if($this->input->post()) {
+
+        $selectedUserId = $this->input->post('selectedUser', true);
+        $selectedDutyId = $this->input->post('selectedDuty', true);
+        $token = $this->input->post('token', true);
+        $date = $this->input->post('date', true);
+        $adminId = $this->session->userdata('user_id');
+
+        $data = array (
+          'duty_id' => $selectedDutyId,
+          'user_id' => $selectedUserId,
+          'token' => random_string('unique', 30),
+          'admin_id' => $adminId 
+        );
+
+        $this->FestivalModel->insertAssignFestivalDuty($data);
+
+        redirect('festival/viewFestivalDuties?token=' . $token . '&date=' . $date);
+
+      }      
+
+    }
 
     /**
      * Insert Duty in DB

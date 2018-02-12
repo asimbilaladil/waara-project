@@ -5,6 +5,7 @@ class MajalisModel extends CI_Model
     function __construct()
     {
         parent::__construct();
+        $this->load->model('CommonModel'); 
     }
 
     /**
@@ -48,6 +49,10 @@ class MajalisModel extends CI_Model
         $query->result();
         return $query->result();
 
+    }
+
+    public function insertAssignMajalisDuty($data) {
+        return $this->CommonModel->insertIntoTable('majalis_duty_assign', $data);
     }
     
 
