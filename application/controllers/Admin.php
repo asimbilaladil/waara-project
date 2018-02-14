@@ -21,10 +21,63 @@ class Admin extends CI_Controller {
 
     }
     function globalSort() {   
-   		$data = array();
-			$data['jk'] = $this->AdminModel->getAllfromTable('jk');
+      $data = array();
+      $data['duties'] =  $this->AdminModel->getGlobalDuty();
+      $data['jk'] = $this->AdminModel->getAllfromTable('jk');
+      $jamatKhanas = $this->AdminModel->getJamatKhana();
+
+      $jkArray = array();
+
+      //populate array with Id as key and value
+      foreach($jamatKhanas as $item => $value) {
+          $jkArray[$value->id] = $value->name;
+      }
+
+      $data['duty'] = $this->AdminModel->getAllfromTableOrderBy('duty', 'priority', 'asc');
+
+      $data['jkArray'] = $jkArray;
+      $data['jkDb'] = $jamatKhanas;
+      
       $this->loadView('admin/globalSort', $data);
 
+    }
+    function changeDutyType(){
+        if($this->input->post()) {
+            $duty_id =  $this->input->post('duty_id');
+            $for_day =  $this->input->post('for_day');
+            $data = array(
+              'for_day' => $for_day
+            );
+            $this->AdminModel->update( 'duty', 'duty_id', $duty_id, $data );
+            
+        }
+    }
+    function addGlobalTemplateDuty(){
+        if($this->input->post()) {
+          $duty_id =  $this->input->post('duty_id');
+          $data = array(
+            'duty_id' => $duty_id,
+            'admin_id' => $this->session->userdata('user_id')
+          );
+          $this->AdminModel->insert('waara_global_template', $data);
+//          $beforeDutyData = $this->AdminModel->getHighestGlobalSortNumber(date('Y-m-d'));
+
+//          $highestGlobalSortNumber = $this->AdminModel->getDutyPriority($duty_id);
+          
+          
+//          if(!empty($highestGlobalSortNumber)){
+              
+//              $data1 = array(
+//                'priority' => $highestGlobalSortNumber[0]->priority,
+//                'duty_id' => $duty_id,
+//                'date' => ($beforeDutyData[0]->date == NULL ? date('Y-m-d') : $beforeDutyData[0]->date),
+//                'admin_id' => $this->session->userdata('user_id'),
+//                'sort_number' => ($beforeDutyData[0]->max_sort_number+1)
+//              );
+//              $this->AdminModel->insert('globalWaaraSort' , $data1);  
+//          }           
+          redirect('admin/globalSort');
+        }
     }
 
     function index()
@@ -189,153 +242,28 @@ class Admin extends CI_Controller {
         echo $html;
 
     }
-   function getGlobalSortDutyFromJk() {
+  function ajaxGetMultipleAssignDutyFromJk() {
 
         $state=$this->input->post('state');
 
         $date=$this->input->post('date');
         
-        $duty = $this->AdminModel->getGlobalSortDutyByJkandDate( $state, $date );
-        if(empty($duty)){
-		        $duty = $this->AdminModel->getDutyByJkandDate( $state, $date );			
-				}
-
-        $html = '<table class="table table-striped" id="dutyTable">
-        <thead>
-        <tr>
-            <th> Waara </th>
-
-        </tr>
-        </thead>
-        <tbody>';
-        
-        $count = 0;
-
-        foreach($duty as $row) { 
-
-            $count++;
-
-            $result = $this->AdminModel->getUserOfDutyByDate( $date, $row->duty_id );
-
+        $checkSpecificDuty = $this->AdminModel->checkSpecificDayDutyByJkandDate( $state, $date );
+        if(empty($checkSpecificDuty)){
             
-
-            if( count($result) > 0) {
-
-                $user =  $result[0]->first_name . " " . $result[0]->last_name ;
-                $assignId =  $result[0]->assign_id;  
-                $ratingHtml = ($result[0]->rating == 'not exists') ? ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .',0)" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Rating</button> </td> <td  style="display:none;">'.$row->unionsorting.'</td>  <td style="display:none;"></td>' : ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .','.$result[0]->rating.')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button> </td><td  style="display:none;">'.$row->unionsorting.'</td> <td style="display:none;"></td>';
-								$rowCount = 7;
-                $html = $html . '<tr>
-                                <td style="display:none;"> '. $row->duty_id .' </td>
-                                <td> '. $row->name .' </td>
-                                <td style="display:none;">  <a href="'. site_url('userHistory/index?id=' .$result[0]->user_id ) .'" >'. $user . '</a></td>     
-                                <td style="display:none;"> <a href= " ' . site_url("Welcome/waara?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >View</button> </td>
-                                <td style="display:none;"> <a href= " ' . site_url("admin/editAssignDuty?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >Edit</button></a></td>
-                                '.$ratingHtml.'
-                                
-                               </tr>';
-
-
-            } else {
-							
-								$rowCount = 7;
-                $html = $html . '<tr>
-                                <td style="display:none;"> '. $row->duty_id .' </td>
-                                <td> '. $row->name .' </td>
-                                <td style="display:none;"> <input  onkeyup="getUserName(this)" type="text" name="users" id="users_'. $count .'" class="form-control " placeholder="Search User.." required> <input type="hidden" value="'. $row->duty_id .'" id="waara_'. $count .'"></td>     
-                                <td style="display:none;"> <button type="button" class="btn btn-primary btn-block"   onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
-                               	<td style="display:none;"></td>
-																<td style="display:none;"></td>
-																<td  style="display:none;">'.$row->unionsorting.'</td>
-                                <td style="display:none;"></td>
-                                </tr>';
+            $duty = $this->AdminModel->getSpecificGlobalDayDutyByJkandDate( $state, $date );
+            if(empty($duty)){
+                $duty = $this->AdminModel->getGlobalSortDutyByTodayDate( $state, $date, false );
+                if(empty($duty)){
+                    $duty = $this->AdminModel->getDutyByJkandDate( $state, $date );     
+                }   
             }
-
+        } else {
+          $duty = $this->AdminModel->getSpecificDayDutyByJkandDate( $state, $date );
         }
+    
+       
 
-        $html = $html . '<tbody></table><script>$( "#dutyTable tbody" ).sortable( {
-	update: function( event, ui ) {
-    var totalRowCount = $("#dutyTable > tbody > tr:first > td").length //$("#dutyTable tbody tr").length;
-    var rowCount = '.$rowCount.' //$("#dutyTable td").closest("tr").length;
-
-    var selectedDate = $("#date").val()
-    $(this).children().each(function(index) {
-   	$(this).find("td").last().html(index + 1)
-    });
-		var priority = []; 
-		var duty_id = [];
-		var order = [];
-		$("#dutyTable tbody tr").each(function() {
-				var counter = 0;
-
-				$.each(this.cells, function(){
-						//console.log("rowCount: " + rowCount);
-					//	console.log($(this).text())
-						if(counter == (rowCount - 1) ){
-								//console.log( "priority: " + $(this).text());
-								priority.push(parseInt($.trim($(this).text())));
-						}
-						if( counter == 0){
-								//console.log( "duty id: " + $(this).text());
-								duty_id.push(parseInt($.trim($(this).text())));
-
-						}
-						//console.log(counter)
-						if( counter == rowCount){
-								//console.log( "Order Index: " + $(this).text());
-								order.push(parseInt($.trim($(this).text())));
-						}
-						counter++;
-				});
-				
-		});
-
-        sortGlobalDuties(priority, duty_id, order, selectedDate);
-  }
-});
-  var sortGlobalDuties = function sortGlobalDuties(priority, duty_id, order, selectedDate){
-
-      $.ajax({
-         url: "'.site_url('Admin/updateGlobalDutyPriority').'",
-         type: "POST",
-         data: {
-             "priority" : priority,
-             "duty_id" : duty_id,
-						 "order" : order,
-						 "selectedDate" : selectedDate
-         },
-         success: function(response){
-         },
-         error: function(){  
-         }
-     });
-  }
-
-</script>';
-
-
-
-        echo $html;
-
-    }
-    function ajaxGetDutyFromJk() {
-
-        $state=$this->input->post('state');
-
-        $date=$this->input->post('date');
-        
-        $duty = $this->AdminModel->getSpecificDayDutyByJkandDate( $state, $date );
-        if(empty($duty)){
-						$duty = $this->AdminModel->getSpecificGlobalDayDutyByJkandDate( $state, $date );
-						if(empty($duty)){
-		        		$duty = $this->AdminModel->getGlobalSortDutyByTodayDate( $state, $date );
-								if(empty($duty)){
-										$duty = $this->AdminModel->getDutyByJkandDate( $state, $date );			
-								}		
-						}
-						
-				
-				}
 
         $html = '<table class="table table-striped" id="dutyTable">
         <thead>
@@ -362,7 +290,7 @@ class Admin extends CI_Controller {
                 $user =  $result[0]->first_name . " " . $result[0]->last_name ;
                 $assignId =  $result[0]->assign_id;  
                 $ratingHtml = ($result[0]->rating == 'not exists') ? ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .',0)" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Rating</button> </td> <td  style="display:none;">'.$row->unionsorting.'</td>  <td style="display:none;"></td>' : ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .','.$result[0]->rating.')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button> </td><td  style="display:none;">'.$row->unionsorting.'</td> <td style="display:none;"></td>';
-								$rowCount = 7;
+                $rowCount = 7;
                 $html = $html . '<tr>
                                 <td style="display:none;"> '. $row->duty_id .' </td>
                                 <td> '. $row->name .' </td>
@@ -375,16 +303,16 @@ class Admin extends CI_Controller {
 
 
             } else {
-							
-								$rowCount = 7;
+              
+                $rowCount = 7;
                 $html = $html . '<tr>
                                 <td style="display:none;"> '. $row->duty_id .' </td>
                                 <td> '. $row->name .' </td>
-                                <td> <input  onkeyup="getUserName(this)" type="text" name="users" id="users_'. $count .'" class="form-control " placeholder="Search User.." required> <input type="hidden" value="'. $row->duty_id .'" id="waara_'. $count .'"></td>     
-                                <td> <button type="button" class="btn btn-primary btn-block"   onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
-                               	<td style="display:none;"></td>
-																<td style="display:none;"></td>
-																<td  style="display:none;">'.$row->unionsorting.'</td>
+                                <td><input type="hidden" value="" id="userid_'. $count .'" > <input  onkeyup="getUserName(this)" type="text" name="users" id="users_'. $count .'" class="form-control " placeholder="Search User.." required> <input type="hidden" value="'. $row->duty_id .'" id="waara_'. $count .'"></td>     
+                                <td  style="display:none;" > <button type="button" class="btn btn-primary btn-block"   onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
+                                <td style="display:none;"></td>
+                                <td style="display:none;"></td>
+                                <td  style="display:none;">'.$row->unionsorting.'</td>
                                 <td style="display:none;"></td>
                                 </tr>';
             }
@@ -392,41 +320,41 @@ class Admin extends CI_Controller {
         }
 
         $html = $html . '<tbody></table><script>$( "#dutyTable tbody" ).sortable( {
-	update: function( event, ui ) {
+  update: function( event, ui ) {
     var totalRowCount = $("#dutyTable > tbody > tr:first > td").length //$("#dutyTable tbody tr").length;
     var rowCount = '.$rowCount.' //$("#dutyTable td").closest("tr").length;
 
-    var selectedDate = $("#date").val()
+    var selectedDate = $("#selectDate").val()
     $(this).children().each(function(index) {
-   	$(this).find("td").last().html(index + 1)
+    $(this).find("td").last().html(index + 1)
     });
-		var priority = []; 
-		var duty_id = [];
-		var order = [];
-		$("#dutyTable tbody tr").each(function() {
-				var counter = 0;
+    var priority = []; 
+    var duty_id = [];
+    var order = [];
+    $("#dutyTable tbody tr").each(function() {
+        var counter = 0;
 
-				$.each(this.cells, function(){
-						//console.log("rowCount: " + rowCount);
-					//	console.log($(this).text())
-						if(counter == (rowCount - 1) ){
-								//console.log( "priority: " + $(this).text());
-								priority.push(parseInt($.trim($(this).text())));
-						}
-						if( counter == 0){
-								//console.log( "duty id: " + $(this).text());
-								duty_id.push(parseInt($.trim($(this).text())));
+        $.each(this.cells, function(){
+            //console.log("rowCount: " + rowCount);
+          //  console.log($(this).text())
+            if(counter == (rowCount - 1) ){
+                //console.log( "priority: " + $(this).text());
+                priority.push(parseInt($.trim($(this).text())));
+            }
+            if( counter == 0){
+                //console.log( "duty id: " + $(this).text());
+                duty_id.push(parseInt($.trim($(this).text())));
 
-						}
-						//console.log(counter)
-						if( counter == rowCount){
-								//console.log( "Order Index: " + $(this).text());
-								order.push(parseInt($.trim($(this).text())));
-						}
-						counter++;
-				});
-				
-		});
+            }
+            //console.log(counter)
+            if( counter == rowCount){
+                //console.log( "Order Index: " + $(this).text());
+                order.push(parseInt($.trim($(this).text())));
+            }
+            counter++;
+        });
+        
+    });
 
         sortDuties(priority, duty_id, order, selectedDate);
   }
@@ -439,8 +367,284 @@ class Admin extends CI_Controller {
          data: {
              "priority" : priority,
              "duty_id" : duty_id,
-						 "order" : order,
-						 "selectedDate" : selectedDate
+             "order" : order,
+             "selectedDate" : selectedDate
+         },
+         success: function(response){
+         },
+         error: function(){  
+         }
+     });
+  }
+
+</script>';
+
+
+
+        echo $html;
+
+    }
+   function getGlobalSortDutyFromJk() {
+
+        $state=$this->input->post('state');
+
+        $date=$this->input->post('date');
+        
+        $duty = $this->AdminModel->getGlobalSortDutyByTodayDate( $state, $date, true );
+        if(empty($duty)){
+            $duty = $this->AdminModel->getDutyByJkandDate( $state, $date );     
+        }
+
+        $html = '<table class="table table-striped" id="dutyTable">
+        <thead>
+        <tr>
+            <th> Waara </th>
+
+        </tr>
+        </thead>
+        <tbody>';
+        
+        $count = 0;
+
+        foreach($duty as $row) { 
+
+            $count++;
+
+            $result = $this->AdminModel->getUserOfDutyByDate( $date, $row->duty_id );
+
+            
+
+            if( count($result) > 0) {
+
+                $user =  $result[0]->first_name . " " . $result[0]->last_name ;
+                $assignId =  $result[0]->assign_id;  
+                $ratingHtml = ($result[0]->rating == 'not exists') ? ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .',0)" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Rating</button> </td> <td  style="display:none;">'.$row->unionsorting.'</td>  <td style="display:none;"></td>' : ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .','.$result[0]->rating.')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button> </td><td  style="display:none;">'.$row->unionsorting.'</td> <td style="display:none;"></td>';
+                $rowCount = 7;
+                $html = $html . '<tr>
+                                <td style="display:none;"> '. $row->duty_id .' </td>
+                                <td> '. $row->name .' </td>
+                                <td style="display:none;">  <a href="'. site_url('userHistory/index?id=' .$result[0]->user_id ) .'" >'. $user . '</a></td>     
+                                <td style="display:none;"> <a href= " ' . site_url("Welcome/waara?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >View</button> </td>
+                                <td style="display:none;"> <a href= " ' . site_url("admin/editAssignDuty?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >Edit</button></a></td>
+                                '.$ratingHtml.'
+                                
+                               </tr>';
+
+
+            } else {
+              
+                $rowCount = 7;
+                $html = $html . '<tr>
+                                <td style="display:none;"> '. $row->duty_id .' </td>
+                                <td> '. $row->name .' </td>
+                                <td style="display:none;"> <input  onkeyup="getUserName(this)" type="text" name="users" id="users_'. $count .'" class="form-control " placeholder="Search User.." required> <input type="hidden" value="'. $row->duty_id .'" id="waara_'. $count .'"></td>     
+                                <td> <button type="button" class="btn btn-primary"  data-toggle="modal" data-target="#myModal"  onclick="setDaysChecklist('.$row->duty_id.',&#39;'.$row->Monday.'&#39;,&#39;'.$row->Tuesday.'&#39;,&#39;'.$row->Wednesday.'&#39;,&#39;'.$row->Thursday.'&#39;,&#39;'.$row->Friday.'&#39;,&#39;'.$row->Saturday.'&#39;,&#39;'.$row->Sunday.'&#39;)">Disable Days</button> </td>
+                                <td> <a href="deleteGlobalDuty?id='.$row->duty_id.'" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+                                <td style="display:none;"></td>
+                                <td  style="display:none;">'.$row->unionsorting.'</td>
+                                <td style="display:none;"></td>
+                                </tr>';
+            }
+
+        }
+
+        $html = $html . '<tbody></table><script>$( "#dutyTable tbody" ).sortable( {
+  update: function( event, ui ) {
+    var totalRowCount = $("#dutyTable > tbody > tr:first > td").length //$("#dutyTable tbody tr").length;
+    var rowCount = '.$rowCount.' //$("#dutyTable td").closest("tr").length;
+
+    var selectedDate = $("#date").val()
+    $(this).children().each(function(index) {
+    $(this).find("td").last().html(index + 1)
+    });
+    var priority = []; 
+    var duty_id = [];
+    var order = [];
+    $("#dutyTable tbody tr").each(function() {
+        var counter = 0;
+
+        $.each(this.cells, function(){
+            //console.log("rowCount: " + rowCount);
+          //  console.log($(this).text())
+            if(counter == (rowCount - 1) ){
+                //console.log( "priority: " + $(this).text());
+                priority.push(parseInt($.trim($(this).text())));
+            }
+            if( counter == 0){
+                //console.log( "duty id: " + $(this).text());
+                duty_id.push(parseInt($.trim($(this).text())));
+
+            }
+            //console.log(counter)
+            if( counter == rowCount){
+                //console.log( "Order Index: " + $(this).text());
+                order.push(parseInt($.trim($(this).text())));
+            }
+            counter++;
+        });
+        
+    });
+
+        sortGlobalDuties(priority, duty_id, order, selectedDate);
+  }
+});
+  var sortGlobalDuties = function sortGlobalDuties(priority, duty_id, order, selectedDate){
+
+      $.ajax({
+         url: "'.site_url('Admin/updateGlobalDutyPriority').'",
+         type: "POST",
+         data: {
+             "priority" : priority,
+             "duty_id" : duty_id,
+             "order" : order,
+             "selectedDate" : selectedDate
+         },
+         success: function(response){
+         },
+         error: function(){  
+         }
+     });
+  }
+
+</script>';
+
+
+
+        echo $html;
+
+    }
+    function ajaxGetDutyFromJk() {
+
+        $state=$this->input->post('state');
+
+        $date=$this->input->post('date');
+        
+        //Check is there any sorting available for specific day if not go for global specific day sort
+        $checkSpecificDuty = $this->AdminModel->checkSpecificDayDutyByJkandDate( $state, $date );
+        if(empty($checkSpecificDuty)){
+            //Check is there any global specific day available for specific day if not go for global template sort
+            $checkGlobalSpecificDuty = $this->AdminModel->checkGlobalSpecificSortRecord( $state, $date );
+            if(empty($checkGlobalSpecificDuty)){
+                $duty = $this->AdminModel->getGlobalSortDutyByTodayDate( $state, $date, false );
+                if(empty($duty)){
+                    //Get Duties without sorting because there is no sort available
+                    $duty = $this->AdminModel->getDutyByJkandDate( $state, $date );     
+                }   
+                
+            } else {
+                //Get Global specific day sort
+                $duty = $this->AdminModel->getSpecificGlobalDayDutyByJkandDate( $state, $date );
+            }
+
+        } else {
+          //Get specific day sort
+          $duty = $this->AdminModel->getSpecificDayDutyByJkandDate( $state, $date );
+        }
+
+        $html = '<table class="table table-striped" id="dutyTable">
+        <thead>
+        <tr>
+            <th> Waara </th>
+            <th> User Fullname </th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>';
+        
+        $count = 0;
+
+        foreach($duty as $row) { 
+
+            $count++;
+
+            $result = $this->AdminModel->getUserOfDutyByDate( $date, $row->duty_id );
+
+            
+
+            if( count($result) > 0) {
+
+                $user =  $result[0]->first_name . " " . $result[0]->last_name ;
+                $assignId =  $result[0]->assign_id;  
+                $ratingHtml = ($result[0]->rating == 'not exists') ? ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .',0)" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Rating</button> </td> <td  style="display:none;">'.$row->unionsorting.'</td>  <td style="display:none;"></td>' : ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .','.$result[0]->rating.')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button> </td><td  style="display:none;">'.$row->unionsorting.'</td> <td style="display:none;"></td>';
+                $rowCount = 7;
+                $html = $html . '<tr>
+                                <td style="display:none;"> '. $row->duty_id .' </td>
+                                <td> '. $row->name .' </td>
+                                <td>  <a href="'. site_url('userHistory/index?id=' .$result[0]->user_id ) .'" >'. $user . '</a></td>     
+                                <td> <a href= " ' . site_url("Welcome/waara?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >View</button> </td>
+                                <td> <a href= " ' . site_url("admin/editAssignDuty?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >Edit</button></a></td>
+                                '.$ratingHtml.'
+                                
+                               </tr>';
+
+
+            } else {
+              
+                $rowCount = 7;
+                $html = $html . '<tr>
+                                <td style="display:none;"> '. $row->duty_id .' </td>
+                                <td> '. $row->name .' </td>
+                                <td> <input  onkeyup="getUserName(this)" type="text" name="users" id="users_'. $count .'" class="form-control " placeholder="Search User.." required> <input type="hidden" value="'. $row->duty_id .'" id="waara_'. $count .'"></td>     
+                                <td> <button type="button" class="btn btn-primary btn-block"   onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
+                                <td style="display:none;"></td>
+                                <td style="display:none;"></td>
+                                <td  style="display:none;">'.$row->unionsorting.'</td>
+                                <td style="display:none;"></td>
+                                </tr>';
+            }
+
+        }
+
+        $html = $html . '<tbody></table><script>$( "#dutyTable tbody" ).sortable( {
+  update: function( event, ui ) {
+    var totalRowCount = $("#dutyTable > tbody > tr:first > td").length //$("#dutyTable tbody tr").length;
+    var rowCount = '.$rowCount.' //$("#dutyTable td").closest("tr").length;
+
+    var selectedDate = $("#date").val()
+    $(this).children().each(function(index) {
+    $(this).find("td").last().html(index + 1)
+    });
+    var priority = []; 
+    var duty_id = [];
+    var order = [];
+    $("#dutyTable tbody tr").each(function() {
+        var counter = 0;
+
+        $.each(this.cells, function(){
+            //console.log("rowCount: " + rowCount);
+          //  console.log($(this).text())
+            if(counter == (rowCount - 1) ){
+                //console.log( "priority: " + $(this).text());
+                priority.push(parseInt($.trim($(this).text())));
+            }
+            if( counter == 0){
+                //console.log( "duty id: " + $(this).text());
+                duty_id.push(parseInt($.trim($(this).text())));
+
+            }
+            //console.log(counter)
+            if( counter == rowCount){
+                //console.log( "Order Index: " + $(this).text());
+                order.push(parseInt($.trim($(this).text())));
+            }
+            counter++;
+        });
+        
+    });
+
+        sortDuties(priority, duty_id, order, selectedDate);
+  }
+});
+  var sortDuties = function sortDuties(priority, duty_id, order, selectedDate){
+
+      $.ajax({
+         url: "'.site_url('Admin/updateDutyPriority').'",
+         type: "POST",
+         data: {
+             "priority" : priority,
+             "duty_id" : duty_id,
+             "order" : order,
+             "selectedDate" : selectedDate
          },
          success: function(response){
          },
@@ -458,59 +662,68 @@ class Admin extends CI_Controller {
     }
 
     function updateGlobalDutyPriority(){
-				
+        
       if($this->input->post()) {
 
         $priority = $this->input->post('priority', true);
         $duty_id = $this->input->post('duty_id', true);
-				$order = $this->input->post('order', true);
-				$selectedDate = $this->input->post('selectedDate', true);
-				//echo  " Count order: ". count($order);
+        $order = $this->input->post('order', true);
+        $selectedDate = $this->input->post('selectedDate', true);
+        //echo  " Count order: ". count($order);
 
-				//echo  " Count order 1: ". count($order);
-				for( $i= 0; $i < count($order); $i++ ){
-					
-						$data = array(
-							'priority' => $priority[$i],
-							'duty_id' => $duty_id[$i],
-							'sort_number' => $order[$i],
-							'date' => $selectedDate,
-							'admin_id' => $this->session->userdata('user_id')
-						);
-					
-						//Delete all old sort data by date and if duty is enable only
-						$this->AdminModel->deleteDutyIfEnable( 'globalWaaraSort', $selectedDate, $duty_id[$i]);					
-						$this->AdminModel->insert( 'globalWaaraSort', $data );
-				}
-			
+        //echo  " Count order 1: ". count($order);
+        for( $i= 0; $i < count($order); $i++ ){
+          
+            $data = array(
+              'priority' => $priority[$i],
+              'duty_id' => $duty_id[$i],
+              'sort_number' => $order[$i],
+              'date' => $selectedDate,
+              'admin_id' => $this->session->userdata('user_id')
+            );
+          
+            //Delete all old sort data by date and if duty is enable only
+            $this->AdminModel->deleteDutyIfEnable( 'globalWaaraSort', $selectedDate, $duty_id[$i]);         
+            $this->AdminModel->insert( 'globalWaaraSort', $data );
+        }
+      
       }
-    }	
+    } 
+    function deleteGlobalDuty(){
+        if($this->input->get()) {
+            $id = $this->input->get('id');
+            $this->AdminModel->delete ( 'duty_id', $id, 'waara_global_template' );
+            $this->AdminModel->delete ( 'duty_id', $id, 'globalWaaraSort' );
+            redirect('Admin/globalSort');
+          
+        }
+    }
     function updateDutyPriority(){
-				
+        
       if($this->input->post()) {
 
         $priority = $this->input->post('priority', true);
         $duty_id = $this->input->post('duty_id', true);
-				$order = $this->input->post('order', true);
-				$selectedDate = $this->input->post('selectedDate', true);
-				//echo  " Count order: ". count($order);
+        $order = $this->input->post('order', true);
+        $selectedDate = $this->input->post('selectedDate', true);
+        //echo  " Count order: ". count($order);
 
-				//echo  " Count order 1: ". count($order);
-				for( $i= 0; $i < count($order); $i++ ){
-					
-						$data = array(
-							'priority' => $priority[$i],
-							'duty_id' => $duty_id[$i],
-							'sort_number' => $order[$i],
-							'date' => $selectedDate,
-							'admin_id' => $this->session->userdata('user_id')
-						);
-					
-						//Delete all old sort data by date and if duty is enable only
-						$this->AdminModel->deleteDutyIfEnable( 'waaraSort' , $selectedDate, $duty_id[$i]);					
-						$this->AdminModel->insert( 'waaraSort', $data );
-				}
-			
+        //echo  " Count order 1: ". count($order);
+        for( $i= 0; $i < count($order); $i++ ){
+          
+            $data = array(
+              'priority' => $priority[$i],
+              'duty_id' => $duty_id[$i],
+              'sort_number' => $order[$i],
+              'date' => $selectedDate,
+              'admin_id' => $this->session->userdata('user_id')
+            );
+          
+            //Delete all old sort data by date and if duty is enable only
+            $this->AdminModel->deleteDutyIfEnable( 'waaraSort' , $selectedDate, $duty_id[$i]);          
+            $this->AdminModel->insert( 'waaraSort', $data );
+        }
+      
       }
     }
     function addJK() {   
@@ -549,6 +762,8 @@ class Admin extends CI_Controller {
             
             //Date or for_all to add duty for specific day only
             $addDutyDate =  $this->input->post('addDutyDate', true);
+            $selectedSpecificDate =  $this->input->post('addDutyDate', true);
+            $refresh =  $this->input->post('refresh', true);
            
             $dutyExists = $this->AdminModel->getDutyDetails( $this->input->post('duty_name', true) );
 
@@ -572,51 +787,98 @@ class Admin extends CI_Controller {
                 //get inserted id of duty
                 $dutyInsertedId = $this->db->insert_id();
 
-								//get order_number from waaraSort by date and duty_id	 
-								//Priority not empty
-							if(!empty($beforeDuty)){
-									$waara_data = $this->AdminModel->getWaaraidByPriority($beforeDuty+1);
-							
-								if(!empty($waara_data)){
-									$waara_id = $waara_data->duty_id;
-									$sort_data = $this->AdminModel->getWaaraSortNumber('waaraSort',$waara_id, $addDutyDate);
-									$global_sort_data = $this->AdminModel->getWaaraSortNumber('globalWaaraSort',$waara_id, $addDutyDate);
-									
-									//Data found in waara sort table by duty id and selected date
-									if(!empty($sort_data)){
-										$sort_number = $sort_data->sort_number;
-										$this->AdminModel->sortDutyNumbers( $sort_number, $dutyInsertedId, $addDutyDate, $this->session->userdata('user_id'));
-									}
-									//Data found in waara sort table by duty id and selected date
-									if(!empty($global_sort_data)){
-										$sort_number = $sort_data->sort_number;
-										$this->AdminModel->globalSortDutyNumbers( $sort_number, $dutyInsertedId, $addDutyDate, $this->session->userdata('user_id'));
-									}									
-								} else {
-									//Get Max sort number from waara Sort Table by date selected
-									$getMaxSortNumber = $this->AdminModel->getHighestSortNumber($addDutyDate);
-									
-									//Data found by date but no Priority found
-									if(!empty($getMaxSortNumber)){
-										$data = array(
-											'priority' => $beforeDuty,
-											'duty_id' => $dutyInsertedId,
-											'date' => $addDutyDate,
-											'admin_id' => $this->session->userdata('user_id'),
-											'sort_number' => ($getMaxSortNumber[0]->max_sort_number+1)
-										);
-
-										$this->AdminModel->insert('waaraSort' , $data);	
-									} 
-
-								}							
-							} 
+              //Global Duty Added 
 
 
+              if($addDutyDate == 'all'){
+                
+                  $check_record_exists = $this->AdminModel->checkGlobalSortRecord();
+                  //Check if there is any record exists in the global waara sort table or not before add any new record
+                  if ( count($check_record_exists) > 0 ){
+                      
+                      $waara_data = $this->AdminModel->getWaaraidByPriority($beforeDuty+1);
+                      if( isset($waara_data)  ){
+                                $waara_id = $waara_data->duty_id;
+                                $sort_data = $this->AdminModel->getGlobalSortNumber($waara_id);
 
-								
-							//	die();
-							
+                                //Data found in waara sort table by duty id and selected date
+                                if(!empty($sort_data)){
+
+                                  $sort_number = $sort_data[0]->sort_number;
+                                  $dutyDate = $sort_data[0]->date;
+                                  $this->AdminModel->globalSortDutyNumbers( $sort_number, $dutyInsertedId, $dutyDate, $this->session->userdata('user_id'));
+
+                                }
+
+                       } else {
+                              //Get Max sort number  global waara Sort Table by date selected using limit 1
+                              $getMaxSortNumber = $this->AdminModel->getHighestGlobalSortNumber();
+
+                              //Data found by date but no Priority found
+                              if(!empty($getMaxSortNumber)){
+                                    $data = array(
+                                      'priority' => $beforeDuty,
+                                      'duty_id' => $dutyInsertedId,
+                                      'date' => $getMaxSortNumber[0]->date,
+                                      'admin_id' => $this->session->userdata('user_id'),
+                                      'sort_number' => ($getMaxSortNumber[0]->max_sort_number+1)
+                                    );
+
+                                    $this->AdminModel->insert('globalWaaraSort' , $data); 
+                                }                     
+
+                      }   
+                  }
+
+
+            
+              } else {
+                  $check_record_exists = $this->AdminModel->checkSpecificSortRecord($selectedSpecificDate);
+                  if(count($check_record_exists) > 0 ){
+                        //Specific Day Duty Added
+                        //get order_number from waaraSort by date and duty_id  
+                        //Priority not empty
+                        if(!empty($beforeDuty)){
+                            $waara_data = $this->AdminModel->getWaaraidByPriority($beforeDuty+1);
+
+                            if(!empty($waara_data)){
+                                  $waara_id = $waara_data->duty_id;
+                                  $sort_data = $this->AdminModel->getWaaraSortNumber($waara_id, $addDutyDate);
+
+                                  //Data found in waara sort table by duty id and selected date
+                                  if(!empty($sort_data)){
+                                    $sort_number = $sort_data->sort_number;
+                                    $this->AdminModel->sortDutyNumbers( $sort_number, $dutyInsertedId, $addDutyDate, $this->session->userdata('user_id'));
+                                  } 
+                            } else {
+                                  //Get Max sort number from waara Sort Table by date selected
+                                  $getMaxSortNumber = $this->AdminModel->getHighestSortNumber($addDutyDate);
+
+                                  //Data found by date but no Priority found
+                                  if(!empty($getMaxSortNumber)){
+                                    $data = array(
+                                      'priority' => $beforeDuty,
+                                      'duty_id' => $dutyInsertedId,
+                                      'date' => $addDutyDate,
+                                      'admin_id' => $this->session->userdata('user_id'),
+                                      'sort_number' => ($getMaxSortNumber[0]->max_sort_number+1)
+                                    );
+
+                                    $this->AdminModel->insert('waaraSort' , $data); 
+                                  } 
+
+                            }             
+                        }                     
+                  }
+                
+              }
+
+
+
+
+                
+              //  die();
+              
                 if( count( $selectJkIds ) > 0 ) {
                     //iterate selected jk and add there ids 
                     foreach( $selectJkIds as $id ) {
@@ -650,7 +912,10 @@ class Admin extends CI_Controller {
 
         $data['jkArray'] = $jkArray;
         $data['jkDb'] = $jamatKhanas;
-
+        //Redirect user to global sort page if duty is created from globalSort page
+        if($refresh == 'globalSort'){
+          redirect('admin/globalSort');
+        }
        $this->loadView('admin/addDuty', $data);
 
     }
@@ -1642,6 +1907,34 @@ class Admin extends CI_Controller {
 
 
     }
+  function enableDisableDays(){
+    if($this->input->post()) {
+          
+      
+          $monday = $this->input->post('Monday', TRUE) == "" ? '' : 'Monday';
+          $tuesday = $this->input->post('Tuesday', TRUE) == "" ? '' : 'Tuesday';
+          $wednesday = $this->input->post('Wednesday', TRUE) == "" ? '' : 'Wednesday';
+          $thursday = $this->input->post('Thursday', TRUE) == "" ? '' : 'Thursday';
+          $friday = $this->input->post('Friday', TRUE) == "" ? '' : 'Friday';
+          $saturday = $this->input->post('Saturday', TRUE) == "" ? '' : 'Saturday';
+          $sunday = $this->input->post('Sunday') == "" ? '' : 'Sunday';
+
+          $id = $this->input->post('id', TRUE);
+          
+          $data = array(
+                    'Monday' => $monday,
+                    'Tuesday' => $tuesday,
+                    'Wednesday' => $wednesday,
+                    'Thursday' => $thursday,
+                    'Friday' => $friday, 
+                    'Saturday' => $saturday,
+                    'Sunday' => $sunday 
+          );
+
+          $this->AdminModel->update( 'duty', 'duty_id', $id, $data );
+          redirect('admin/globalSort');
+    }
+  }
   function assignWaaraToUser() {
         
         $user_id = $this->input->post('user_id');
@@ -1672,6 +1965,6 @@ class Admin extends CI_Controller {
             }          
         }
     } 
-    
+
 }
 ?>
