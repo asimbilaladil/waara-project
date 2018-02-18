@@ -21,8 +21,10 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-  document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatDate(new Date());        
+  document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatDate(new Date());
+  document.getElementById('selectedMajalisDate').innerHTML = 'Selected Date is ' + formatDate(new Date());        
   document.getElementById('date').value = formatDate(new Date());
+  document.getElementById('majalisDate').value = formatDate(new Date());
 
   $('#calendar').fullCalendar({
     		header: {
@@ -64,9 +66,15 @@ function formatDate(date) {
 
 							document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatedDate;
 
+                            document.getElementById('selectedMajalisDate').innerHTML = 'Selected Date is ' + formatedDate;
+
 							$('#date').val( formatedDate );
 
+                            $('#majalisDate').val( formatedDate );
+
 							ajaxCallDuty();
+
+                            ajaxGetMajalisDuties();
 
 
         },
@@ -75,10 +83,15 @@ function formatDate(date) {
         var formatedDate = formatDate(date);
 
         document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatedDate;
+        document.getElementById('selectedMajalisDate').innerHTML = 'Selected Date is ' + formatedDate;
 
         $('#date').val( formatedDate );
 
+        $('#majalisDate').val( formatedDate );
+
         ajaxCallDuty();
+
+        ajaxGetMajalisDuties();
 
 
     }
@@ -753,7 +766,7 @@ table.fc-border-separate {
 
 
                                         <!-- Modal -->
-                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal fade" id="majalisUserHistoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                           <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                               <div class="modal-header">
@@ -826,6 +839,134 @@ table.fc-border-separate {
                             </div>
                             <!-- /.box -->
                         </div>
+
+                    </form>
+
+
+                        <!-- MAJALIS START -->
+                        <div class="col-md-6">
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    
+                                    <div for="" class="col-sm-4 "><h3 class="box-title">list of Majalis</h3></div>
+                                    <div for="" class="col-sm-8 "><h3 id="selectedMajalisDate" class="box-title"> Selected Date is : </h3></div>
+
+                                </div>
+
+                                    <div class="col-sm-12" style="top: 20px;">
+                                        <div class="col-sm-3" >
+                                        </div>
+                                        <div class="col-sm-6" >
+                                            <button class="btn btn-primary btn-block " onclick="addDutyForDay()">Add Waara</button>
+                                        </div>
+                                    </div>
+                 
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div>
+                                    <form action="<?php echo site_url('AdminMajalis/assignDuty') ?>" method="post" >
+                                        
+                                        <div class="col-sm-12">
+                                     </br>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+
+                                                <input type="hidden" name="selectedMajalisUser" id="selectedMajalisUser"/>
+                                                <input type="hidden" name="selectedMajalisDuty" id="selectedMajalisDuty"/>
+                                                <input type="hidden" id="majalisDate" name="majalisDate"  />                                               
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                   
+                                    <div class="col-sm-12">
+                                     </br>
+                                        <!--Dynamicly duty table added  -->
+                                        <div id="majalisDuty" name="majalisDuty" >
+
+                                        </div>
+                                    </div>
+
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">User History</h4>
+                                              </div>
+                                              <div class="modal-body">
+                                                <div id="userHistoryForMajalis">
+
+                                                </div>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                    </form>
+
+                                        <!-- Modal -->
+<!--                                         <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">How do you want to notify user?</h4>
+                                              </div>
+                                              <div class="modal-body">
+
+                                                <label class="checkbox-inline"><input id="byEmail" name="byEmail" value="email" type="checkbox" value="">By Email</label>
+                                                <label class="checkbox-inline"><input id="bySms" name="bySms" value="sms" type="checkbox" value="">By Message</label>
+                                                
+
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div> -->
+
+
+
+                                        <!-- Modal -->
+<!--                                         <div class="modal fade" id="preferences" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Alert</h4>
+                                              </div>
+                                              <div class="modal-body">
+
+                                              <p> Preferences does not match </p>
+
+                                              </div>
+                                              
+                                            </div>
+                                          </div>
+                                        </div> -->
+
+                                       
+                                </div>
+                                <!-- /.box-body -->
+                                <div class="box-footer">
+                                </div>
+                                <!-- /.box-footer -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+
+                        <!-- MAJALIS END -->
+
+
                     </div>
                 </div>
                 <!-- /.row (main row) -->
@@ -833,6 +974,32 @@ table.fc-border-separate {
             <!-- /.content -->
         </div>
     </div>
+
+<!-- MAJALIS DUTY RATING START -->
+<div id="userMajalisDutyRating" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">User Rating</h4>
+            </div>
+        <div class="modal-body">
+            <div class="form-group" style="text-align: center;">
+                <input type="text" id="assignMajalisDutyId" name="assignDuty"/>
+                <input id="rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
+            </div>
+        </div>
+        <div class="modal-footer"> 
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" onclick="addRatingForMajalisDuty()" class="btn btn-primary">Save</button>
+        </div>
+        </div>
+
+    </div>
+</div>
+<!-- MAJALIS DUTY RATING END -->
+
 
 <div id="userRating" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -847,7 +1014,7 @@ table.fc-border-separate {
 				 <div class="form-group" style="text-align: center;">
 
 						 	<input type="hidden" id="assignDutyId" name="assignDuty"/>
-					 		<input id="rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
+					 		<input id="majalis-duty-rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
 
 
 				
@@ -918,6 +1085,7 @@ function formatDate(date) {
 
   document.getElementById('date').value = formatDate(new Date());
    ajaxCallDuty();
+   ajaxGetMajalisDuties();
 });
 
 function ajaxCallDuty() {
@@ -950,6 +1118,7 @@ function ajaxCallDuty() {
                     event.preventDefault();
                     $('#' + this.id).val(ui.item.label);
                     $("#selectedUser").val(ui.item.value);
+                    $("#selectedMajalisUser").val(ui.item.value);
                 },
                 focus: function(event, ui) {
                     event.preventDefault();
@@ -1070,9 +1239,15 @@ var eventClick = function eventClick(formatedDate){
 
         document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatedDate;
 
+        document.getElementById('selectedMajalisDate').innerHTML = 'Selected Date is ' + formatedDate
+
         $('#date').val( formatedDate );
 
+        $('#majalisDate').val( formatedDate );
+
         ajaxCallDuty();
+
+        ajaxGetMajalisDuties();
 
 
     
@@ -1105,6 +1280,83 @@ function sortByDate() {
 		//$('#rating-system').val(stars);
 		
 	}
+
+
+
+
+function ajaxGetMajalisDuties() {
+
+    var date = $('#date').val();
+
+    console.log('date', date);
+
+    $.ajax({
+        url: "<?php echo site_url('AdminMajalis/ajaxGetMajalisDuties') ?>",
+        type: "POST",
+        data: {
+            'date' : date
+        },
+        success: function(response){
+            $('#majalisDuty').html(response);
+        },
+        error: function(){
+            
+        }
+    });
+}    
+
+function ajaxCallUserHistoryForMajalis(dutyId) {
+
+   //preferenceAjaxCall(dutyId);
+
+   $('#myModal').modal('toggle');
+   $('#selectedMajalisDuty').val(dutyId);
+
+   var state = $('#selectedMajalisUser').val();
+
+    $.post('<?php echo site_url('Admin/ajaxUserHistory') ?>', {
+        state:state
+    }, function(data) {
+
+        $('#userHistoryForMajalis').show().html(data);
+
+    }); 
+
+}
+
+
+var setAssignMajalisDutyId = function setAssignMajalisDutyId(id,stars){
+    
+    $('#assignMajalisDutyId').val(id);
+    $('#majalis-duty-rating-system').rating('update', stars);
+    //$('#rating-system').val(stars);
+}
+
+function addRatingForMajalisDuty(){
+    var rating = $('#majalis-duty-rating-system').val()
+    var assignDutyId = $('#assignMajalisDutyId').val()
+
+    $.ajax({
+        url: "<?php echo site_url('AdminMajalis/addRating') ?>",
+        type: "POST",
+        data: {
+            'rating' : rating,
+            'assign_duty_id' : assignDutyId
+        },
+        success: function(response){
+
+            $('[id=dutyRating_'+assignDutyId+']').hide();
+            $( '<button id="dutyRating_'+assignDutyId+'" data-toggle="modal" onclick="setAssignMajalisDutyId('+assignDutyId+','+rating+')" data-target="#userMajalisDutyRating" type="button" class="btn btn-primary btn-block"> Edit Rating</button>' ).insertAfter('#dutyRating_'+assignDutyId );
+
+            $('#userMajalisDutyRating').modal('toggle');
+
+        },
+        error: function(){
+            
+        }
+    });
+}
+
 
 </script>
 

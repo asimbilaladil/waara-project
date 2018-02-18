@@ -1,3 +1,6 @@
+<?php 
+    $years = $data['years'];
+?>
 <body class="hold-transition skin-green sidebar-mini">
     <div class="wrapper">
         <div class="content-wrapper">
@@ -19,11 +22,11 @@
                     <div class="col-md-12">
                         <div class="box box-success">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><?php echo !empty($data) ? $data[0]->name : '' ?> </h3>
+                                <h3 class="box-title"><?php echo !empty($dates) ? $dates[0]->name : '' ?> </h3>
                             </div>
                             <!-- /.box-header -->
 
-                                <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addMajalisDate') ?>" method="post" >
+                                <form  class="form-horizontal" action="<?php echo site_url('majalis/addMajalisDate') ?>" method="post" >
                                     <div class="box-body">
 
                                         <div class="form-group">
@@ -39,12 +42,12 @@
                                             </div>
                                         </div>
 
-                                        <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
+                                        <input id="dutyToken" type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
                                     </div>
                                 </form>
 
-                                <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
+                                <form class="form-horizontal" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
                                     <div class="box-body">
 
                                         <div class="form-group">
@@ -77,40 +80,26 @@
                             <div class="form-group">
                                 <div class="col-sm-4">
                                     <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
+
                                 </div>
+
+                                <div class="col-sm-4">
+                                    <select required="" name="years" id="yearDropdown" onchange="onYearChange(this)" class="form-control">
+                                        <?php
+                                            foreach ($years as $key => $value) {
+                                                echo '<option value"'. $value->year .'"> '.$value->year.' </option>';
+                                            }
+                                        ?>
+                                    </select>
+
+                                    <input type="hidden" value="<?php echo $years ? $years[0]->year : 0 ?>" id="selectedYear"/>
+
+                                </div>
+
                             </div>
 
-                            <table class="table table-striped" id="table" width="80%">
-                                <thead>
-                                    <tr>
-                                        <th> Date </th>
-                                        <th> Action </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                <?php 
-                                
-                                foreach ($data as $key => $item) {
-                                    // echo '<tr>
-                                    //     <td> <a href="#" id="date" name="editDate" data-type="date" data-pk="' . $item->dateId .'" data-url="editMajalisDate" data-title="Select date">' . $item->date . '</a> </td>
-                                    //     <td> 
-                                        
-                                    //     <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
-        
-                                    // </tr>';
+                            <table id="dutiesDiv" class="table table-striped" id="table" width="80%">
 
-                                    echo '<tr>
-                                        <td> <a href="'. site_url("majalis/viewMajalisDuties?token=" . $item->token . "&date=" . $item->date) .'" >' . $item->date . '</a> </td>
-                                        <td> 
-                                        
-                                        <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
-        
-                                    </tr>';
-
-                                }
-
-                                ?> 
                                     
                                 </tbody>
                             </table>
@@ -129,14 +118,61 @@
     </div>
 
 <script>
-// $(function(){
-//     $("[name='editDate']").editable({
-//         format: 'yyyy-mm-dd',    
-//         viewformat: 'yyyy-mm-dd',    
-//         datepicker: {
-//                 weekStart: 1
-//            }
-//         });
-// });
+
+
+$(function(){
+
+
+    
+
+
+    
+
+    getYearDates();
+
+    function onYearChange() {
+        
+        var year = $('#yearDropdown').val();
+        var token = $('#dutyToken').val();
+        $('#selectedYear').val(year);
+        getYearDates();
+    }
+
+    function getYearDates() {
+
+        var year = $('#yearDropdown').val();
+        var token = $('#dutyToken').val();
+
+        $.ajax({
+            url: "<?php echo site_url('Majalis/getMajalisDateByYear') ?>",
+            type: "POST",
+            data: {
+                'year': year,
+                'token': token
+            },
+            success: function(response){
+
+                $('#dutiesDiv').html(response);
+
+                $("[name='editDate']").editable({
+                    format: 'yyyy-mm-dd',    
+                    viewformat: 'yyyy-mm-dd',
+                    display: false,    
+                    datepicker: {
+                        weekStart: 1
+                    },
+                    success: function (data, config) {
+                        location.reload();
+                    }
+                });
+
+
+            }, error: function(){
+                
+            }
+        });        
+    }
+
+});
 
 </script>       

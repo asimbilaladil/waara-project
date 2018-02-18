@@ -76,6 +76,25 @@ class MajalisModel extends CI_Model
         return false;        
     }
 
+    public function updateMajalisDuty($id, $data) {
+        $this->db->where('id', $id );
+        $result = $this->db->update( 'majalis_duties', $data);
+        if ($result) {
+            return true;
+        } 
+        return false;        
+    }
+
+
+    public function updateMajalis($token, $data) {
+        $this->db->where('token', $token );
+        $result = $this->db->update( 'majalis', $data);
+        if ($result) {
+            return true;
+        } 
+        return false;        
+    }
+
     /**
      * Get Majalis and their dates by token
      * Created By: Moiz     
@@ -91,12 +110,68 @@ class MajalisModel extends CI_Model
         return $query->result();
     }
 
+    public function getMajalisDatesByYear($token, $year) {
+
+        $query = $this->db->query("SELECT majalis.id, majalis.token, majalis.name, majalis_date.id as dateId, majalis_date.token as majalisDateToken, majalis_date.date as date 
+                FROM majalis, majalis_date
+                WHERE majalis.token = '". $token ."'
+                AND majalis.id = majalis_date.majalis_id
+                AND majalis_date.date LIKE '". $year ."-%' ");
+    
+        return $query->result();
+    }
+
+
+    /**
+     * Get Majalis dates group by date year
+     * Created By: Moiz     
+     */
+    public function getDutiesYear($token) {
+
+        $query = $this->db->query("SELECT majalis_date.id, majalis_date.date as date, YEAR(STR_TO_DATE(majalis_date.date, '%Y-%m-%d')) as year
+                FROM majalis, majalis_date
+                WHERE majalis.token = '". $token ."'
+                AND majalis.id = majalis_date.majalis_id
+                GROUP BY YEAR(STR_TO_DATE(majalis_date.date, '%Y-%m-%d'))
+                ORDER BY year desc ");
+
+        $query->result();
+
+        return $query->result();
+
+    }
+
     /**
      * Delete Majlis date by token
      * Created By: Moiz     
      */
     public function deleteMajalisDateByToken($token) {
         $this->db->delete( 'majalis_date' , array( 'token' => $token) ); 
+    }
+
+    public function deleteMajalisWithDutiesAndDates($id) {
+
+        $this->db->delete( 'majalis' , array( 'id' => $id) );
+        $this->db->delete( 'majalis_date' , array( 'majalis_id' => $id) );
+
+        $query = $this->db->query("DELETE specfic_date_duties
+            FROM specfic_date_duties
+            INNER JOIN majalis_duties
+            ON majalis_duties.id = specfic_date_duties.duty_id
+            WHERE majalis_duties.majalis_id = " . $id);
+
+        
+
+        $query = $this->db->query("DELETE  majalis_duty_assign
+            FROM majalis_duty_assign
+            INNER JOIN majalis_duties
+            ON majalis_duties.id = majalis_duty_assign.duty_id
+            WHERE majalis_duties.majalis_id = " . $id);
+
+        
+
+        $this->db->delete( 'majalis_duties' , array( 'majalis_id' => $id) );
+
     }
 
     /**
@@ -122,7 +197,7 @@ class MajalisModel extends CI_Model
 
         $query = $this->db->query("SELECT id, token, name, majalis_id 
                 FROM majalis_duties
-                WHERE majalis_id = " . $id);
+                WHERE majalis_id = " . $id . " AND type = 'GLOBAL'");
 
         $query->result();
         return $query->result();
@@ -202,4 +277,56 @@ class MajalisModel extends CI_Model
 
         $this->db->delete( 'majalis' , $data ); 
     }  
+
+
+    public function getDutiesByDate($date) {
+
+        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, majalis_date.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId
+            FROM majalis_date, majalis_duties
+            LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
+            WHERE majalis_duties.majalis_id = majalis_date.majalis_id
+            AND majalis_date.date = '". $date ."'
+            AND majalis_duties.type = 'GLOBAL'");
+        $query->result();
+
+        return $query->result();     
+    }
+
+
+    public function getDutiesFromSpecficTable($date) {
+
+        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId
+            FROM specfic_date_duties, majalis_duties
+            LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
+            WHERE specfic_date_duties.date = '". $date ."'
+            AND majalis_duties.id = specfic_date_duties.duty_id");
+        $query->result();
+
+        return $query->result();     
+    }    
+
+
+    public function getAssignMajalisDutyDetail($dutyId, $date) {
+
+        $query =  $this->db->query("SELECT majalis.name, majalis_duties.name as dutyName, majalis_date.date, majalis_duty_assign.id, user.first_name, user.last_name
+            FROM majalis, majalis_duties, majalis_date, majalis_duty_assign, user
+            WHERE majalis_duties.majalis_id = majalis.id
+            AND majalis.id = majalis_date.majalis_id
+            AND majalis_duties.id = majalis_duty_assign.duty_id
+            AND majalis_duty_assign.user_id = user.user_id
+            AND majalis_duties.id = " . $dutyId ."
+            AND majalis_date.date = '". $date ."'");
+        $query->result();
+
+        return $query->result();     
+    }    
+
+
+
+    public function insertMajalisDutyRating($data) {
+        return $this->CommonModel->insertIntoTable('majalis_duty_rating', $data);
+    }
+
+
+
 }

@@ -54,14 +54,21 @@
                                         <th> October </th>
                                         <th> November </th>
                                         <th> December </th>
+                                        <th> Actions </th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
                                     
                                 <?php 
                                 foreach ($data['majalis'] as $item) {
+
+                                    $deleteUrl = site_url('majalis/deleteMajalis?token=' . $item["token"]);
+                                    $viewDutiesUrl = site_url("majalis/viewMajalisDates?token=" . $item["token"]);
+                                    $editMajalisUrl = site_url("majalis/editMajalis");
+
                                     echo '<tr>
-                                        <td> <a href="' . site_url("majalis/viewMajalisDates?token=" . $item["token"]) . '">' . $item["majalisName"] . '</a> </td>
+                                        <td> <a href="' . $viewDutiesUrl . '">' . $item["majalisName"] . '</a> </td>
                                         <td> ' . printMonthMajalis($item, "January") . ' </td>
                                         <td> ' . printMonthMajalis($item, "February") . ' </td>
                                         <td> ' . printMonthMajalis($item, "March") . ' </td>
@@ -74,6 +81,11 @@
                                         <td> ' . printMonthMajalis($item, "October") . ' </td>
                                         <td> ' . printMonthMajalis($item, "November") . ' </td>
                                         <td> ' . printMonthMajalis($item, "December") . ' </td>
+                                        <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+
+                                        <td> <a href="#" name="editMajalis" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["majalisName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
+
+
                                     </tr>';
                                 }
 
@@ -200,3 +212,18 @@
     </section><!-- /.content -->
     </div>
     </div>
+
+
+<script>
+    $(function(){
+    $.fn.editable.defaults.mode = 'inline';
+
+    $("[name='editMajalis']").editable({
+        display: false,
+        success: function(data, config) {
+            location.reload();
+        }
+    });
+
+});
+</script>    
