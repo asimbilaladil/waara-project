@@ -22,7 +22,7 @@ class AdminMajalis extends CI_Controller {
     function ajaxGetMajalisDuties() {
 
         $date = $this->input->post('date');
-
+        $majalisBoxHideShow =  '<script>$(".majalisBox").hide()</script>';
         $userIds = array();
 
         $html = '<table class="table table-striped" id="dutyTable">
@@ -56,7 +56,7 @@ class AdminMajalis extends CI_Controller {
 
     
         foreach($result as $key => $row) {
-
+            $majalisBoxHideShow =  '<script>$(".majalisBox").show()</script>';
             $assigned = $row->user_id != null ? true : false;
 
             if ($assigned) {
@@ -82,7 +82,7 @@ class AdminMajalis extends CI_Controller {
             }
 
         }
-
+        $html = $html .$majalisBoxHideShow;
         echo $html;
 
     }

@@ -27,12 +27,12 @@ function formatDate(date) {
   document.getElementById('majalisDate').value = formatDate(new Date());
 
   $('#calendar').fullCalendar({
-    		header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,basicWeek'
-			},events: events,
-// 		events:  [
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,basicWeek'
+            },events: events,
+//      events:  [
 //         {
 //             title  : 'event1',
 //             start  : '2017-01-01',
@@ -59,20 +59,20 @@ function formatDate(date) {
 //           end    : '2017-01-01'
 //         }
 //    ],
-			defaultView: 'basicWeek',
-		  eventClick: function (calEvent, jsEvent, view) {
+            defaultView: 'basicWeek',
+          eventClick: function (calEvent, jsEvent, view) {
 
-							var formatedDate = formatDate(calEvent.start);
+                            var formatedDate = formatDate(calEvent.start);
 
-							document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatedDate;
+                            document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatedDate;
 
                             document.getElementById('selectedMajalisDate').innerHTML = 'Selected Date is ' + formatedDate;
 
-							$('#date').val( formatedDate );
+                            $('#date').val( formatedDate );
 
                             $('#majalisDate').val( formatedDate );
 
-							ajaxCallDuty();
+                            ajaxCallDuty();
 
                             ajaxGetMajalisDuties();
 
@@ -104,8 +104,22 @@ function getBody(element) {
     var tds = $(originalTable).children('tbody').children('tr').children('td').length;
     return tds;
 }
+        setTimeout(function(){
+
+        $( ".fc-button-month" ).after( "<br>" );
+
+}, 2000);
 </script>
 <style type="text/css">
+    @media only screen and (max-width: 576px) {
+        #duty{
+                position: relative; 
+                overflow-x: scroll;
+        }
+
+
+    } 
+
     .fc {
     direction: ltr;
     text-align: left;
@@ -139,7 +153,7 @@ html .fc,
     }
 
 .fc-header-left {
-    width: 25%;
+    width: 20%;
     text-align: left;
     }
     
@@ -148,14 +162,13 @@ html .fc,
     }
     
 .fc-header-right {
-    width: 25%;
+    width: 20%;
     text-align: right;
     }
     
 .fc-header-title {
     display: inline-block;
     vertical-align: top;
-		
     }
     
 .fc-header-title h2 {
@@ -175,12 +188,13 @@ html .fc,
 /* buttons edges butting together */
 
 .fc-header .fc-button {
-    margin-right: -1px;
+    margin-right: -7px;
     }
     
 .fc-header .fc-corner-right,  /* non-theme */
 .fc-header .ui-corner-right { /* theme */
-    margin-right: 0; /* back to normal */
+    padding-left: 15px;
+    margin-right: -6px; /* back to normal */
     }
     
 /* button layering (for border precedence) */
@@ -677,19 +691,19 @@ table.fc-border-separate {
             </section>
             <!-- Main content -->
             <section class="content">
-							<?php if($data['user_count'][0]->users != 0) { ?>
-							<div class="row">
-								<div style="padding: 20px 30px;background: #dd4b39;z-index: 999999;font-size: 16px;font-weight: 600;">
-									
-									<a href="https://themequarry.com" style="color: rgba(255, 255, 255, 0.9); display: inline-block; margin-right: 10px; text-decoration: none;">
-										New Notification ! There are total <?php echo $data['user_count'][0]->users; ?> new users signup. Waiting for your approval.</a>
-									<a class="btn btn-default btn-sm" href="<?php echo site_url('Admin/user') ?>" style="margin-top: -5px; border: 0px; box-shadow: none; color: rgb(243, 156, 18); font-weight: 600; background: rgb(255, 255, 255);">
-										Let's Do It!</a>
-								</div>
-							</div>
-							<?php  } ?>
-							<br>
-								<div class="row">
+                            <?php if($data['user_count'][0]->users != 0) { ?>
+                            <div class="row">
+                                <div style="padding: 20px 30px;background: #dd4b39;z-index: 999999;font-size: 16px;font-weight: 600;">
+                                    
+                                    <a href="https://themequarry.com" style="color: rgba(255, 255, 255, 0.9); display: inline-block; margin-right: 7px; text-decoration: none;">
+                                        New Notification ! There are total <?php echo $data['user_count'][0]->users; ?> new users signup. Waiting for your approval.</a>
+                                    <a class="btn btn-default btn-sm" href="<?php echo site_url('Admin/user') ?>" style="margin-top: -5px; border: 0px; box-shadow: none; color: rgb(243, 156, 18); font-weight: 600; background: rgb(255, 255, 255);">
+                                        Let's Do It!</a>
+                                </div>
+                            </div>
+                            <?php  } ?>
+                            <br>
+                                <div class="row">
                     <div class="col-md-12">
                         <div class="col-md-6">
                             <div class="box box-success">
@@ -700,15 +714,15 @@ table.fc-border-separate {
                                 <!-- form start -->
                                 
                                     <div class="box-body">
-																			<div>
-																				<p>
-																					Default <button   style="opacity: 1; background-color:#3a87ad; width: 3%; height: 15px;"></button>
-																				  <?php foreach($data['color'] as $item) { ?>
-																				<?php echo $item->username; ?> <button   style="opacity: 1; background-color:<?php echo $item->colorCode; ?>; width: 3%; height: 15px;"></button>
-																				
-																				<?php } ?>
-																			</p>
-																			</div>
+                                                                            <div>
+                                                                                <p>
+                                                                                    Default <button   style="opacity: 1; background-color:#3a87ad; width: 3%; height: 15px;"></button>
+                                                                                  <?php foreach($data['color'] as $item) { ?>
+                                                                                <?php echo $item->username; ?> <button   style="opacity: 1; background-color:<?php echo $item->colorCode; ?>; width: 3%; height: 15px;"></button>
+                                                                                
+                                                                                <?php } ?>
+                                                                            </p>
+                                                                            </div>
                                       <div id="calendar"></div>
                                     </div>
                                     <!-- /.box-body -->
@@ -728,13 +742,13 @@ table.fc-border-separate {
 
 
                                 </div>
-															<div class="col-sm-12" style="top: 20px;">
-																<div class="col-sm-3" >
-																</div>
-																<div class="col-sm-6" >
-																	<button class="btn btn-primary btn-block " onclick="addDutyForDay()">Add Waara</button>
-																</div>
-															</div>
+                                                            <div class="col-sm-12" style="top: 20px;">
+                                                                <div class="col-sm-3" >
+                                                                </div>
+                                                                <div class="col-sm-6" >
+                                                                    <button class="btn btn-primary btn-block " onclick="addDutyForDay()">Add Waara</button>
+                                                                </div>
+                                                            </div>
                  
                                 <!-- /.box-header -->
                                 <div class="box-body">
@@ -844,7 +858,7 @@ table.fc-border-separate {
 
 
                         <!-- MAJALIS START -->
-                        <div class="col-md-6">
+                        <div class="col-md-6 majalisBox"  style="display:none;">
                             <div class="box box-success">
                                 <div class="box-header with-border">
                                     
@@ -1011,19 +1025,19 @@ table.fc-border-separate {
         <h4 class="modal-title">User Rating</h4>
       </div>
       <div class="modal-body">
-				 <div class="form-group" style="text-align: center;">
+                 <div class="form-group" style="text-align: center;">
 
-						 	<input type="hidden" id="assignDutyId" name="assignDuty"/>
-					 		<input id="majalis-duty-rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
+                            <input type="hidden" id="assignDutyId" name="assignDuty"/>
+                            <input id="majalis-duty-rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
 
 
-				
-  			</div>
+                
+            </div>
       </div>
       <div class="modal-footer">
-				 
+                 
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-				<button type="button"  onclick="addRating()" class="btn btn-primary " >Save</button>
+                <button type="button"  onclick="addRating()" class="btn btn-primary " >Save</button>
       </div>
     </div>
 
@@ -1031,10 +1045,10 @@ table.fc-border-separate {
 </div>
 <script>
 function addRating(){
-			var rating = $('#rating-system').val()
-			var assignDutyId = $('#assignDutyId').val()
+            var rating = $('#rating-system').val()
+            var assignDutyId = $('#assignDutyId').val()
 
-	    $.ajax({
+        $.ajax({
         url: "<?php echo site_url('Admin/addRating') ?>",
         type: "POST",
         data: {
@@ -1043,10 +1057,10 @@ function addRating(){
         },
         success: function(response){
 
-						$('[id=rating_'+assignDutyId+']').hide();
-						$( '<button id="rating_'+assignDutyId+'" data-toggle="modal" onclick="setAssignDutyId('+assignDutyId+','+rating+')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button>' ).insertAfter( '#rating_'+assignDutyId );
+                        $('[id=rating_'+assignDutyId+']').hide();
+                        $( '<button id="rating_'+assignDutyId+'" data-toggle="modal" onclick="setAssignDutyId('+assignDutyId+','+rating+')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button>' ).insertAfter( '#rating_'+assignDutyId );
 
-					  $('#userRating').modal('toggle');
+                      $('#userRating').modal('toggle');
 
         },
         error: function(){
@@ -1143,21 +1157,21 @@ var waara = id.split("_");
 waara = 'waara_' + waara[1];
 var waara_id = $('#' + waara).val();
 var date = $('#date').val();
-	
+    
 var d = new Date();
 d.setTime(d.getTime() + (24*60*60*1000));
 var expires =  d.toUTCString();
 
 var value = $('#' + id).val();
 var name = value.split(" ");
-	createCookie("first_name",  name[0] , 1 );
-	createCookie("last_name",  name[1] , 1 );
-	createCookie("waara_id", waara_id , 1 );
-	createCookie("date", date , 1 );
+    createCookie("first_name",  name[0] , 1 );
+    createCookie("last_name",  name[1] , 1 );
+    createCookie("waara_id", waara_id , 1 );
+    createCookie("date", date , 1 );
 
 
 }
-	
+    
 function createCookie(name,value,days) {
     if (days) {
         var date = new Date();
@@ -1167,7 +1181,7 @@ function createCookie(name,value,days) {
     else var expires = "";
     document.cookie = name+"="+value+expires+"; path=/";
 }
-	
+    
 function ajaxCallUserHistory(dutyId) {
 
    preferenceAjaxCall(dutyId);
@@ -1228,9 +1242,9 @@ $('#shift').on('change', function() {
     $('#selectedShift').val(this.value);  
 });
 var addDutyForDay = function addDutyForDay (){
-	var date = $('#date').val();
-	createCookie("addDutyDate",  date , 1 );
-	window.location = "/index.php/admin/addDuty";
+    var date = $('#date').val();
+    createCookie("addDutyDate",  date , 1 );
+    window.location = "/index.php/admin/addDuty";
 }
 var eventClick = function eventClick(formatedDate){
 
@@ -1274,12 +1288,12 @@ function sortByDate() {
   });
 }
 
-	var setAssignDutyId = function setAssignDutyId(id,stars){
-		$('#assignDutyId').val(id);
-		$('#rating-system').rating('update', stars);
-		//$('#rating-system').val(stars);
-		
-	}
+    var setAssignDutyId = function setAssignDutyId(id,stars){
+        $('#assignDutyId').val(id);
+        $('#rating-system').rating('update', stars);
+        //$('#rating-system').val(stars);
+        
+    }
 
 
 
