@@ -18,17 +18,77 @@ class Majalis extends CI_Controller {
      */
     function index() {
 
-      $majalisData = $this->FestivalMajalisModel->getMajalisForTable();
+      //$majalisData = $this->FestivalMajalisModel->getMajalisForTable();
       $festivalData = $this->FestivalMajalisModel->getFestivalForTable();
+
+      $years = $this->MajalisModel->getDutiesByYear();
       
       $data = array(
-        'majalis' => $majalisData,
-        'festival' => $festivalData
+        'festival' => $festivalData,
+        'years' => $years
       );
       
       $this->loadView('admin/majalis/view_majalis', $data);
 
     }
+
+    /**
+     * get Majalis by year
+     * Created By: Moiz
+     */
+    function getMajalisByYear() {
+
+      $year = $this->input->post('year');
+      $majalisData = $this->FestivalMajalisModel->getMajalisForTable($year);
+
+      $html = '';
+
+      foreach ($majalisData as $item) {
+
+        $deleteUrl = site_url('majalis/deleteMajalis?token=' . $item["token"]);
+        $viewDutiesUrl = site_url("majalis/viewMajalisDates?token=" . $item["token"]);
+        $editMajalisUrl = site_url("majalis/editMajalis");
+
+        $html = $html . '<tr>
+            <td> <a href="' . $viewDutiesUrl . '">' . $item["majalisName"] . '</a> </td>
+            <td> ' . $this->printMonthMajalis($item, "January") . ' </td>
+            <td> ' . $this->printMonthMajalis($item, "February") . ' </td>
+            <td> ' . $this->printMonthMajalis($item, "March") . ' </td>
+            <td> ' . $this->printMonthMajalis($item, "April") . ' </td>
+            <td> ' . $this->printMonthMajalis($item, "May") . ' </td>
+            <td> ' . $this->printMonthMajalis($item, "June") . ' </td>
+            <td> ' . $this->printMonthMajalis($item, "July") . ' </td>
+            <td> ' . $this->printMonthMajalis($item, "August") . ' </td>
+            <td> ' . $this->printMonthMajalis($item, "September") . ' </td>
+            <td> ' . $this->printMonthMajalis($item, "October") . ' </td>
+            <td> ' . $this->printMonthMajalis($item, "November") . ' </td>
+            <td> ' . $this->printMonthMajalis($item, "December") . ' </td>
+            <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+
+            <td> <a href="#" name="editMajalis" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["majalisName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
+
+        </tr>';
+
+      }
+
+      echo $html;
+
+    }
+
+    function printMonthMajalis($item, $month) {
+        $str = '';
+        if (isset($item[$month])) {
+            foreach($item[$month] as $m) {
+                $dutyUrl = site_url('majalis/viewMajalisDates?token=' . $item["token"] .'&date='. $m['completeDate']);
+                $str = $str . '<a href="'. $dutyUrl .'">'. $m['date'] .'</a> <br>';        
+            }
+        } else {
+            $addUrl = site_url('majalis/viewMajalisDates?token=' . $item["token"]);
+            $str = '<a href="'. $addUrl .'"> ADD </a>';
+        }
+        return $str;
+    }
+
 
     /**
      * view majalis dates
@@ -233,18 +293,23 @@ class Majalis extends CI_Controller {
 
         $majalis_id = $this->MajalisModel->insert($majalisModel);
 
-        foreach($duties as $duty) {
+        if ($duties) {
 
-          $dutyModel = array (
-            'name' => $duty,
-            'majalis_id' => $majalis_id,
-            'admin_id' => $adminId,
-            'token'=> random_string('unique', 30),
-            'type' => 'GLOBAL'
-          );
+          foreach($duties as $duty) {
 
-          $dutyId = $this->MajalisModel->insertMajalisDuties($dutyModel);
+            if (!empty($duty)) {
+              $dutyModel = array (
+                'name' => $duty,
+                'majalis_id' => $majalis_id,
+                'admin_id' => $adminId,
+                'token'=> random_string('unique', 30),
+                'type' => 'GLOBAL'
+              );
 
+              $dutyId = $this->MajalisModel->insertMajalisDuties($dutyModel);            
+            }
+
+          }
         }
 
         foreach($majalisDate as $date) {

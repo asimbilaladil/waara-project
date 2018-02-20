@@ -12,6 +12,7 @@ class AdminMajalis extends CI_Controller {
             $this->load->model('MajalisModel');
             $this->load->model('UserModel');
             $this->load->helper('string');
+            $this->load->library('user_agent');
 
         } else {
             redirect('Login/');
@@ -111,6 +112,9 @@ class AdminMajalis extends CI_Controller {
 
         if ($this->input->post()) {
 
+            $fromViewDuties = $this->input->post('fromViewDuties') ? true : false;
+
+
             $selectedUserId = $this->input->post('selectedMajalisUser', true);
             $selectedDutyId = $this->input->post('selectedMajalisDuty', true);
             $majalisDate = $this->input->post('majalisDate', true);            
@@ -126,7 +130,12 @@ class AdminMajalis extends CI_Controller {
 
             $this->MajalisModel->insertAssignMajalisDuty($data);
 
-            redirect('Admin/index');
+            if ($fromViewDuties) {
+                redirect($this->agent->referrer());
+            } else {
+                redirect('Admin/index');    
+            }
+            
         }
 
     }

@@ -33,11 +33,22 @@
                             <div class="box-header with-border">
                                 <h3 class="box-title">List Of Majalis:</h3>
                             </div>
-<!--                             <div class="form-group">
+
                                 <div class="col-sm-4">
-                                    <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
+                                    <select required="" name="years" id="yearDropdown" onchange="onYearChange(this)" class="form-control">
+                                        <?php
+                                            $years = $data["years"];
+                                            foreach ($years as $key => $value) {
+                                                echo '<option value"'. $value->year .'"> '.$value->year.' </option>';
+                                            }
+                                        ?>
+                                    </select>
+
+                                    <input type="hidden" value="<?php echo $years ? $years[0]->year : 0 ?>" id="selectedYear"/>
+
                                 </div>
-                            </div> -->
+
+
                             <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
@@ -58,53 +69,8 @@
 
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    
-                                <?php 
-                                foreach ($data['majalis'] as $item) {
-
-                                    $deleteUrl = site_url('majalis/deleteMajalis?token=' . $item["token"]);
-                                    $viewDutiesUrl = site_url("majalis/viewMajalisDates?token=" . $item["token"]);
-                                    $editMajalisUrl = site_url("majalis/editMajalis");
-
-                                    echo '<tr>
-                                        <td> <a href="' . $viewDutiesUrl . '">' . $item["majalisName"] . '</a> </td>
-                                        <td> ' . printMonthMajalis($item, "January") . ' </td>
-                                        <td> ' . printMonthMajalis($item, "February") . ' </td>
-                                        <td> ' . printMonthMajalis($item, "March") . ' </td>
-                                        <td> ' . printMonthMajalis($item, "April") . ' </td>
-                                        <td> ' . printMonthMajalis($item, "May") . ' </td>
-                                        <td> ' . printMonthMajalis($item, "June") . ' </td>
-                                        <td> ' . printMonthMajalis($item, "July") . ' </td>
-                                        <td> ' . printMonthMajalis($item, "August") . ' </td>
-                                        <td> ' . printMonthMajalis($item, "September") . ' </td>
-                                        <td> ' . printMonthMajalis($item, "October") . ' </td>
-                                        <td> ' . printMonthMajalis($item, "November") . ' </td>
-                                        <td> ' . printMonthMajalis($item, "December") . ' </td>
-                                        <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
-
-                                        <td> <a href="#" name="editMajalis" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["majalisName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
-
-
-                                    </tr>';
-                                }
-
-                                function printMonthMajalis($item, $month) {
-                                    $str = '';
-                                    if (isset($item[$month])) {
-                                        foreach($item[$month] as $m) {
-                                            $dutyUrl = site_url('majalis/viewMajalisDates?token=' . $item["token"] .'&date='. $m['completeDate']);
-                                            $str = $str . '<a href="'. $dutyUrl .'">'. $m['date'] .'</a> <br>';        
-                                        }
-                                    } else {
-                                        $addUrl = site_url('majalis/viewMajalisDates?token=' . $item["token"]);
-                                        $str = '<a href="'. $addUrl .'"> ADD </a>';
-                                    }
-                                    return $str;
-                                }
-
-                                ?>
-                                    
+                                <tbody id="majalisData">
+                                                                        
                                 </tbody>
                             </table>
                         </div>
@@ -215,15 +181,46 @@
 
 
 <script>
-    $(function(){
-    $.fn.editable.defaults.mode = 'inline';
 
-    $("[name='editMajalis']").editable({
-        display: false,
-        success: function(data, config) {
-            location.reload();
+
+getYearDates();
+
+function onYearChange() {
+    
+    var year = $('#yearDropdown').val();
+    $('#selectedYear').val(year);
+    getYearDates();
+}
+
+function getYearDates() {
+
+    var year = $('#yearDropdown').val();
+
+    console.log(year);
+
+    $.ajax({
+        url: "<?php echo site_url('Majalis/getMajalisByYear') ?>",
+        type: "POST",
+        data: {
+            'year': year
+        },
+        success: function(response){
+
+            $('#majalisData').html(response);
+
+            $.fn.editable.defaults.mode = 'inline';
+
+            $("[name='editMajalis']").editable({
+                display: false,
+                success: function(data, config) {
+                    location.reload();
+                }
+            });
+
+        }, error: function(){
+            
         }
-    });
+    });        
+}
 
-});
 </script>    

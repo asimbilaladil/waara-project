@@ -907,10 +907,14 @@ class AdminModel extends CI_Model
     }
     public function getWaarabyIds( $duties ) {
 
-        
-        $query = $this->db->query("select * from duty where duty_id IN (". $duties .")");
-        $query->result();
-        return $query->result();
+        if(!empty($duties)){
+                        $query = $this->db->query("select * from duty where duty_id IN (". $duties .")");
+                        $query->result();
+                        return $query->result();                    
+                } else {
+                    return "";
+                }
+
     } 
 
     function checkAssignWaara( $duty, $date ) {
@@ -955,6 +959,34 @@ class AdminModel extends CI_Model
        
 
     }
+        
+        public function sendNotificationEmail($user_id,  $content , $type,$subject ){
+
+        $user = $this->getUserById($user_id);
+        $jk = $this->getJkById($jk_id);
+        $duty = $this->getWaarabyIds($duty_id);
+
+        $name = $user->first_name . " " . $user->last_name;
+        $jk_name = $jk[0]->name;
+        $duty_name = $duty[0]->name;
+        $user_email = $user->email;
+                $message = $content;
+//         $message = str_ireplace("USER-FULLNAME",$name ,$content);
+//         $message = str_ireplace("JK-NAME",$jk_name ,$message);
+//         $message = str_ireplace("WAARA-NAME",$duty_name ,$message);
+//         $message = str_ireplace("ASSIGN-DATE",$date ,$message);
+      
+      
+        //$message = "Ya Ali madat $name \r\n\r\nYou have been registered for $duty_name on $date at $jk_name Should you wish to change the waara assigned to you or are unable to attend, please reply to this email \r\nThank you  \r\n$jk_name  waara team";
+        $emailNotification = $this->getEmailNotificationByType($type);
+        
+                if($emailNotification[0]->notification == 'true'){
+                    
+           mail($user_email, $subject, strip_tags($message)) ;
+        }
+       
+
+    }
     public function getLastInserted() {
         return $this->db->insert_id();
     }
@@ -974,12 +1006,20 @@ class AdminModel extends CI_Model
    } 
    public function getEmailNotification( ){
       
-        $query = $this->db->query('SELECT * from emailNotification ORDER BY id DESC LIMIT 1');
+        $query = $this->db->query('SELECT * from emailNotification  where type = "assignWaara"  ORDER BY id DESC LIMIT 1');
         
         $query->result();
 
         return $query->result();
     }
+   public function getEmailNotificationByType( $type ){
+      
+        $query = $this->db->query('SELECT * from emailNotification  where type = "'.$type.'"  ORDER BY id DESC LIMIT 1');
+        
+        $query->result();
+
+        return $query->result();
+    }   
        public function getDisableUserCount(){
       
         $query = $this->db->query('SELECT count(user_id) as users from user where status != "false"');
@@ -1099,8 +1139,11 @@ class AdminModel extends CI_Model
         return $query->result();        
     }
     function getUsersByWaaraDays($date){
-        
-            $query = $this->db->query("select *, (select age_group from age_group where id = u.age_group) as age , IFNULL( (datediff('$date', (SELECT start_date FROM `assign_duty` WHERE user_id = u.user_id ORDER by start_date desc limit 1) ) ), '0' ) as daysCount from user as u where user_id = (SELECT user_id FROM `assign_duty` WHERE user_id = u.user_id ORDER by start_date desc limit 1)");
+                
+            $query = $this->db->query("select *, 
+                (select age_group from age_group where id = u.age_group) as age , 
+                IFNULL( (datediff('$date', (SELECT start_date FROM `assign_duty` WHERE user_id = u.user_id ORDER by start_date desc limit 1) ) ), '0' ) as daysCount 
+                from user as u ");
         
         $query->result();
 
@@ -1129,6 +1172,25 @@ class AdminModel extends CI_Model
         $query->result();
 
         return $query->result();        
-    }   
-    
+    }
+    public function getDuties( $jk ) {
+
+            $query = $this->db->query('SELECT distinct duty.name, duty.duty_id
+                    FROM duty, jk, duty_jk
+                    WHERE duty.duty_id = duty_jk.duty_id
+                    AND duty_jk.jk_id = jk.id
+                    AND jk.id in (' . $jk . ')' );
+
+            $query->result();
+
+            return $query->result();
+
+    } 
+    public function checkOverrideForMajalis($date){
+            $query = $this->db->query('SELECT * FROM `majalis` where `id` in (SELECT `majalis_id` FROM `majalis_date` where `date` = "'.$date.'") and `override` = 1');
+            $query->result();
+
+            return $query->result();        
+
+    }
 }

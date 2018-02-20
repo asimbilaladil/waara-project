@@ -67,13 +67,25 @@ class FestivalMajalisModel extends CI_Model {
                 FROM majalis, majalis_date
                 WHERE majalis.id = majalis_date.majalis_id');
 
-        $query->result();
-
         return $query->result();
+
     }
 
-    public function getMajalisForTable() {
-        $majalisWithDates = $this->getMajalisWithDates();
+
+    public function getMajalisForYear($year) {
+
+        $query = $this->db->query("SELECT majalis.id, majalis.token, majalis.name, majalis_date.id as dateId, majalis_date.token as dateToken, majalis_date.date as date 
+                FROM majalis, majalis_date
+                WHERE majalis.id = majalis_date.majalis_id
+                AND majalis_date.date LIKE '". $year ."-%' ");
+
+        return $query->result();
+
+       
+    }
+
+    public function getMajalisForTable($year) {
+        $majalisWithDates = $this->getMajalisForYear($year);
         $majalisArray = array();
 
         foreach ($majalisWithDates as $majalis) {

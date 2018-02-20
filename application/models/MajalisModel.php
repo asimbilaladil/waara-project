@@ -141,6 +141,17 @@ class MajalisModel extends CI_Model
 
     }
 
+
+    public function getDutiesByYear() {
+
+        $query = $this->db->query("SELECT  majalis_date.date as date, YEAR(STR_TO_DATE(majalis_date.date, '%Y-%m-%d')) as year
+                FROM majalis_date
+                GROUP BY YEAR(STR_TO_DATE(majalis_date.date, '%Y-%m-%d'))
+                ORDER BY year desc");
+
+        return $query->result();
+    }
+
     /**
      * Delete Majlis date by token
      * Created By: Moiz     

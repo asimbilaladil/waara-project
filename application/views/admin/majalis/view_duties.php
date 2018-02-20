@@ -53,34 +53,65 @@
                                 <h3 class="box-title">List Of Duties:</h3>
                             </div>
 
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
-                                </div>
-                            </div>
+                            <div class="box box-success">
+                 
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div>
+                                    <form action="<?php echo site_url('AdminMajalis/assignDuty') ?>" method="post" >
+                                        
+                                        <div class="col-sm-12">
+                                     </br>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
 
-                            <table class="table table-striped" id="table" width="80%">
-                                <thead>
-                                    <tr>
-                                        <th> Duty </th>
-                                        <th> Action </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                    
-                                <?php 
-                                
-                                foreach ($data['duties'] as $key => $item) {
-                                    echo '<tr>
-                                        <td> <a href="#" name="editDuty" data-type="text" data-pk="'. $item->id .'" data-url="editMajalisDuty" > ' . $item->name . '</a> </td>
-                                        <td> <a href="deleteMajalis?token=' . $item->token . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
-                                    </tr>';
-                                }
-                                ?> 
+                                            <input type="hidden" name="majalisDate" value="<?php echo $this->input->get('date') ?>" id="majalisDate"/>
 
-                                </tbody>
-                            </table>
+                                            <input type="hidden" name="selectedMajalisUser" id="selectedMajalisUser"/>
+                                            <input type="hidden" name="selectedMajalisDuty" id="selectedMajalisDuty"/>
+                                            <input type="hidden" name="fromViewDuties" value="true"/>                                                                  
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                   
+                                    <div class="col-sm-12">
+                                     </br>
+                                        <!--Dynamicly duty table added  -->
+                                        <div id="majalisDuty" name="majalisDuty" >
+
+                                        </div>
+                                    </div>
+
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">User History</h4>
+                                              </div>
+                                              <div class="modal-body">
+                                                <div id="userHistoryForMajalis">
+
+                                                </div>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                    </form>
+
+
+
+
+
                         </div>
                     </div>
                     <!-- /.box -->
@@ -95,7 +126,78 @@
     </div>
     </div>
 
+
+
+
 <script>
+
+ajaxGetMajalisDuties();
+
+function ajaxGetMajalisDuties() {
+
+    var date = $('#majalisDate').val();
+
+
+    $.ajax({
+        url: "<?php echo site_url('AdminMajalis/ajaxGetMajalisDuties') ?>",
+        type: "POST",
+        data: {
+            'date' : date
+        },
+        success: function(response){
+            $('#majalisDuty').html(response);
+
+
+            $("[name=users]").autocomplete({
+
+                source : '<?php echo site_url('admin/getUsers') ?>',
+                select: function(event, ui) {
+
+                    if(ui.item.value == 'NOUSER') {
+                        $('#addNewUser').modal('toggle');
+                        window.location.href = '<?php echo site_url('admin/addNewUser') ?>';
+                    }
+
+                    event.preventDefault();
+                    $('#' + this.id).val(ui.item.label);
+                    $("#selectedUser").val(ui.item.value);
+                    $("#selectedMajalisUser").val(ui.item.value);
+                },
+                focus: function(event, ui) {
+                    event.preventDefault();
+                    $('#' + this.id).val(ui.item.label);
+                }
+            });
+
+
+        },
+        error: function(){
+            
+        }
+    });
+}    
+
+function ajaxCallUserHistoryForMajalis(dutyId) {
+
+   //preferenceAjaxCall(dutyId);
+
+   $('#myModal').modal('toggle');
+   $('#selectedMajalisDuty').val(dutyId);
+
+   var state = $('#selectedMajalisUser').val();
+
+    $.post('<?php echo site_url('Admin/ajaxUserHistory') ?>', {
+        state:state
+    }, function(data) {
+
+        $('#userHistoryForMajalis').show().html(data);
+
+    }); 
+
+}
+
+
+
 $(function(){
     $.fn.editable.defaults.mode = 'inline';
 

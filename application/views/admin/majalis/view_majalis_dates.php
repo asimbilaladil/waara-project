@@ -119,15 +119,6 @@
 
 <script>
 
-
-$(function(){
-
-
-    
-
-
-    
-
     getYearDates();
 
     function onYearChange() {
@@ -172,7 +163,5 @@ $(function(){
             }
         });        
     }
-
-});
 
 </script>       
