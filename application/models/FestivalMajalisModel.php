@@ -127,6 +127,51 @@ class FestivalMajalisModel extends CI_Model {
 
         return $majalisArray;         
     }
+    
+    /**
+     * Get All Festival by token
+     */
+    public function getFestivalByToken($token){
 
+        $this->db->select('*');
+        $this->db->from('festival');
+        $this->db->where('token', $token);
+        $quary_result=$this->db->get();
+        $result=$quary_result->row();
+        return $result;
+    }
+    public function updateFestival($token, $data) {
+        $this->db->where('token', $token );
+        $result = $this->db->update( 'festival', $data);
+        if ($result) {
+            return true;
+        } 
+        return false;        
+    }
+  
+    public function deleteFestivalWithDutiesAndDates($id) {
+
+        $this->db->delete( 'festival' , array( 'id' => $id) );
+        $this->db->delete( 'festival_date' , array( 'festival_id' => $id) );
+
+        $query = $this->db->query("DELETE specfic_date_duties
+            FROM specfic_date_duties
+            INNER JOIN festival_duties
+            ON festival_duties.id = specfic_date_duties.duty_id
+            WHERE festival_duties.festival_id = " . $id);
+
+        
+
+//         $query = $this->db->query("DELETE  festival_duty_assign
+//             FROM festival_duty_assign
+//             INNER JOIN festival_duties
+//             ON festival_duties.id = festival_duty_assign.duty_id
+//             WHERE festival_duties.festival_id = " . $id);
+
+        
+
+        $this->db->delete( 'festival_duties' , array( 'festival_id' => $id) );
+
+    }  
 
 }

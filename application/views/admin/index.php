@@ -733,7 +733,7 @@ table.fc-border-separate {
                             </div>
                             <!-- /.box -->
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6 regularWaaraBox" style="display:none;">
                             <div class="box box-success">
                                 <div class="box-header with-border">
                                     
@@ -1373,5 +1373,3 @@ function addRatingForMajalisDuty(){
 
 
 </script>
-
-

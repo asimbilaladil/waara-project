@@ -211,6 +211,28 @@ class Majalis extends CI_Controller {
       }
 
     }
+  
+    /**
+     * Delete Festival
+     * Created By: Moiz
+     */  
+    function deleteFestival() {
+
+      if($this->input->get('token')) {
+        $token = $this->input->get('token');
+
+        $majalis = $this->FestivalMajalisModel->getFestivalByToken($token);
+
+        if($majalis) {
+          $this->FestivalMajalisModel->deleteFestivalWithDutiesAndDates($majalis->id);  
+        }
+
+       // redirect($this->agent->referrer());
+      } else {
+       // redirect($this->agent->referrer());
+      }
+
+    }  
 
     /**
      * Add date in Majalis
@@ -383,6 +405,22 @@ class Majalis extends CI_Controller {
       }
 
     }
+    function editFestival() {
+
+      if($this->input->post()) {
+
+        $token = $this->input->post('pk');
+
+        $data = array(
+          'name' => $this->input->post('value')
+        );
+
+        $result = $this->FestivalMajalisModel->updateMajalis($token, $data);
+        echo json_encode(array('success' => $result));        
+
+      }
+
+    }  
 
     function viewMajalisDuties() {
 

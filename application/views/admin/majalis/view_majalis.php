@@ -129,6 +129,8 @@
                                     
                                 <?php 
                                 foreach ($data['festival'] as $item) {
+                                    $deleteUrl = site_url('majalis/deleteFestival?token=' . $item["token"]);
+                                    $editMajalisUrl = site_url("majalis/editFestival");
                                     echo '<tr>
                                         <td> <a href="' . site_url("festival/viewFestivalDates?token=" . $item["token"]) . '">' . $item["festivalName"] . '</a> </td>
                                         <td> ' . printMonthFestival($item, "January") . ' </td>
@@ -143,6 +145,10 @@
                                         <td> ' . printMonthFestival($item, "October") . ' </td>
                                         <td> ' . printMonthFestival($item, "November") . ' </td>
                                         <td> ' . printMonthFestival($item, "December") . ' </td>
+                                        <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+
+                                        <td> <a href="#" name="editFestival" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["festivalName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
+                                        
                                     </tr>';
                                 }
 
@@ -223,4 +229,4 @@ function getYearDates() {
     });        
 }
 
-</script>    
+</script>
