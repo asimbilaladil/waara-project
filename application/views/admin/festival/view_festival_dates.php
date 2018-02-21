@@ -77,6 +77,9 @@
                                     echo '<tr>
                                         <td> <a href="'. site_url('festival/viewFestivalDuties?token=' . $item->token .'&date=' . $item->date) .'">' . $item->date . '</a> </td>
                                         <td> <a href="deleteFestivalDate?token=' . $item->festivalDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+
+                                        <td> <a href="#" id="date_'.$key.'" name="editDate"  data-type="date" data-pk="'. $item->dateId .'" data-url="'. site_url("majalis/editFestivalDate") .'" data-title="Select date" data-value="'. $item->date .'" >EDIT</a> </td> 
+                                                                               
                                     </tr>';
                                 }
 
@@ -99,14 +102,18 @@
     </div>
 
 <script>
-// $(function(){
-//     $("[name='editDate']").editable({
-//         format: 'yyyy-mm-dd',    
-//         viewformat: 'yyyy-mm-dd',    
-//         datepicker: {
-//                 weekStart: 1
-//            }
-//         });
-// });
+$(function(){
+    $("[name='editDate']").editable({
+        format: 'yyyy-mm-dd',    
+        viewformat: 'yyyy-mm-dd',
+        display: false,    
+        datepicker: {
+            weekStart: 1
+        },
+        success: function (data, config) {
+            location.reload();
+        }
+    });
+});
 
 </script>       

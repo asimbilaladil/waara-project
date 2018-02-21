@@ -102,7 +102,19 @@
                             <div class="box-header with-border">
                                 <h3 class="box-title">List of Festival:</h3>
                             </div>
-<!--                             <div class="form-group">
+                            <div class="col-sm-4">
+                                <select required="" name="festivalYears" id="festivalYearDropdown" onchange="onFestivalYearChange(this)" class="form-control">
+                                    <?php
+                                        $festivalYears = $data["festivalYears"];
+                                        foreach ($festivalYears as $key => $value) {
+                                            echo '<option value"'. $value->year .'"> '.$value->year.' </option>';
+                                        }
+                                    ?>
+                                </select> 
+                                    <input type="hidden" value="<?php echo $years ? $years[0]->year : 0 ?>" id="selectedFestivalYear"/>
+
+                           </div>
+                            <!-- <div class="form-group">
                                 <div class="col-sm-4">
                                     <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
                                 </div>
@@ -123,51 +135,13 @@
                                         <th> October </th>
                                         <th> November </th>
                                         <th> December </th>
+                                        <th> Actions </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="festivalData">
                                     
-                                <?php 
-                                foreach ($data['festival'] as $item) {
-                                    $deleteUrl = site_url('majalis/deleteFestival?token=' . $item["token"]);
-                                    $editMajalisUrl = site_url("majalis/editFestival");
-                                    echo '<tr>
-                                        <td> <a href="' . site_url("festival/viewFestivalDates?token=" . $item["token"]) . '">' . $item["festivalName"] . '</a> </td>
-                                        <td> ' . printMonthFestival($item, "January") . ' </td>
-                                        <td> ' . printMonthFestival($item, "February") . ' </td>
-                                        <td> ' . printMonthFestival($item, "March") . ' </td>
-                                        <td> ' . printMonthFestival($item, "April") . ' </td>
-                                        <td> ' . printMonthFestival($item, "May") . ' </td>
-                                        <td> ' . printMonthFestival($item, "June") . ' </td>
-                                        <td> ' . printMonthFestival($item, "July") . ' </td>
-                                        <td> ' . printMonthFestival($item, "August") . ' </td>
-                                        <td> ' . printMonthFestival($item, "September") . ' </td>
-                                        <td> ' . printMonthFestival($item, "October") . ' </td>
-                                        <td> ' . printMonthFestival($item, "November") . ' </td>
-                                        <td> ' . printMonthFestival($item, "December") . ' </td>
-                                        <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
 
-                                        <td> <a href="#" name="editFestival" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["festivalName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
-                                        
-                                    </tr>';
-                                }
-
-                                function printMonthFestival($item, $month) {
-                                    $str = '';
-                                    if (isset($item[$month])) {
-                                        foreach($item[$month] as $m) {
-                                            $dutyUrl = site_url('Festival/viewFestivalDates?token=' . $item["token"] .'&date='. $m['completeDate']);
-                                            $str = $str . '<a href="'. $dutyUrl .'">'. $m['date'] .'</a> <br>';        
-                                        }
-                                    } else {
-                                        $addUrl = site_url('Festival/viewFestivalDates?token=' . $item["token"]);
-                                        $str = '<a href="'. $addUrl .'"> ADD </a>';
-                                    }
-                                    return $str;
-                                }
-
-                                ?>
-                                    
+                                  
                                 </tbody>
                             </table>
                         </div>
@@ -190,6 +164,44 @@
 
 
 getYearDates();
+onFestivalYearChange();
+
+function onFestivalYearChange() {
+    var year = $('#festivalYearDropdown').val();
+    $('#selectedFestivalYear').val(year);
+    getFestivalDates();
+
+}
+
+function getFestivalDates() {
+
+    var year = $('#festivalYearDropdown').val();
+
+    $.ajax({
+        url: "<?php echo site_url('Majalis/getFestivalByYear') ?>",
+        type: "POST",
+        data: {
+            'year': year
+        },
+        success: function(response){
+            console.log(response);
+            $('#festivalData').html(response);
+
+            $.fn.editable.defaults.mode = 'inline';
+
+            $("[name='editFestival']").editable({
+                display: false,
+                success: function(data, config) {
+                    location.reload();
+                }
+            });
+
+        }, error: function(){
+            
+        }
+    });     
+
+}
 
 function onYearChange() {
     
@@ -201,8 +213,6 @@ function onYearChange() {
 function getYearDates() {
 
     var year = $('#yearDropdown').val();
-
-    console.log(year);
 
     $.ajax({
         url: "<?php echo site_url('Majalis/getMajalisByYear') ?>",

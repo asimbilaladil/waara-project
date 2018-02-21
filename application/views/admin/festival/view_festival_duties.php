@@ -63,7 +63,6 @@
                                 <thead>
                                     <tr>
                                         <th> Duty </th>
-                                        <th> User Fullname </th>
                                         <th> Action </th>
                                     </tr>
                                 </thead>
@@ -72,12 +71,13 @@
                                 <?php 
                                 
                                 foreach ($data['duties'] as $key => $item) {
+                                    $deleteDutyUrl = site_url('majalis/deleteFestivalDuty?token=' . $item->token);
+
+                                    $editDutyUrl = site_url('majalis/editFestivalDuty?token=' . $item->token);
+
                                     echo '<tr>
-                                        <td> ' . $item->duty . ' </td>
-
-                                        <td> <input type="text" id="users_'. $key .'" name="users" class="form-control  ui-autocomplete-input"> </td>
-
-                                        <td> <button class="btn btn-primary" onclick="openConfirmModal('.$key.', '.$item->id.')">SAVE</button> </td>                                        
+                                        <td> <a href="#" id="duty_'.$key.'" name="editDuty"  data-type="text" data-pk="'. $item->token .'" data-url="'. $editDutyUrl .'" >'. $item->duty .'</a> </td>
+                                        <td> <a href="'. $deleteDutyUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
 
                                     </tr>';
                                 }
@@ -128,32 +128,35 @@
 
 <script>
 
-    function openConfirmModal(key, dutyId) {
-        if($("#users_" + key).val() && $("#selectedUser").val() ) {
-            $("#selectedDuty").val(dutyId);
-            $('#myModal').modal('toggle');
-        }
-        
-    }
+$(function(){
+    $.fn.editable.defaults.mode = 'inline';
 
-$("[name=users]").autocomplete({
+    $("[name='editDuty']").editable({
+    });
 
-    source : '<?php echo site_url('admin/getUsers') ?>',
-    select: function(event, ui) {
-
-        // if(ui.item.value == 'NOUSER') {
-        //     $('#addNewUser').modal('toggle');
-        //     window.location.href = '<?php echo site_url('admin/addNewUser') ?>';
-        // }
-
-        event.preventDefault();
-        $('#' + this.id).val(ui.item.label);
-        $("#selectedUser").val(ui.item.value);
-    },
-    focus: function(event, ui) {
-        event.preventDefault();
-        $('#' + this.id).val(ui.item.label);
-    }
 });
+
+//     function openConfirmModal(key, dutyId) {
+//         if($("#users_" + key).val() && $("#selectedUser").val() ) {
+//             $("#selectedDuty").val(dutyId);
+//             $('#myModal').modal('toggle');
+//         }
+        
+//     }
+
+// $("[name=users]").autocomplete({
+
+//     source : '<?php //echo site_url('admin/getUsers') ?>',
+//     select: function(event, ui) {
+
+//         event.preventDefault();
+//         $('#' + this.id).val(ui.item.label);
+//         $("#selectedUser").val(ui.item.value);
+//     },
+//     focus: function(event, ui) {
+//         event.preventDefault();
+//         $('#' + this.id).val(ui.item.label);
+//     }
+// });
 
 </script>    

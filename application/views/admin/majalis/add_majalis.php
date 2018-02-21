@@ -139,7 +139,7 @@
       var dutyHtml = `<div id="dutyDiv_` + dutyCount + `" class="form-group">
                         <label for="" class="col-sm-2 control-label">Duty ` + dutyCount + `</label>
                         <div class="col-sm-6">
-                          <input type="text" name="duties[` + dutyCount + `]" class="form-control" placeholder="" >
+                          <input type="text" name="duties[` + dutyCount + `]" class="form-control" placeholder="" required>
                         </div>
                       </div>`;
     
@@ -154,7 +154,7 @@
         var dateHtml = `<div class="form-group" id="dateDiv_` + dateCount + `">
                             <label for="" class="col-sm-2 control-label">Date ` + dateCount + `</label>
                             <div class="col-sm-6">
-                                <input type="date" name="majalisDate[` + dateCount + `]" class="form-control"  placeholder="" required>
+                                <input type="date" name="majalisDate[` + dateCount + `]" class="form-control"  placeholder="">
                             </div>
                         </div>`;
 

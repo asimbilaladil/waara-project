@@ -18,19 +18,74 @@ class Majalis extends CI_Controller {
      */
     function index() {
 
-      //$majalisData = $this->FestivalMajalisModel->getMajalisForTable();
-      $festivalData = $this->FestivalMajalisModel->getFestivalForTable();
-
+      $festivalYears = $this->MajalisModel->getFestivalDutiesByYear();
       $years = $this->MajalisModel->getDutiesByYear();
       
       $data = array(
-        'festival' => $festivalData,
-        'years' => $years
+        'years' => $years,
+        'festivalYears' => $festivalYears
       );
       
       $this->loadView('admin/majalis/view_majalis', $data);
 
     }
+
+    /**
+     * get Festival by year
+     * Created By: Moiz
+     */
+    function getFestivalByYear() {
+      $year = $this->input->post('year');
+      $festivalData = $this->FestivalMajalisModel->getFestivalForTable($year);
+
+      $html = '';
+
+      foreach ($festivalData as $item) {
+
+        $deleteUrl = site_url('majalis/deleteFestival?token=' . $item["token"]);
+        $editMajalisUrl = site_url("majalis/editFestival");
+        $html = $html . '<tr>
+            <td> <a href="' . site_url("festival/viewFestivalDates?token=" . $item["token"]) . '">' . $item["festivalName"] . '</a> </td>
+            <td> ' . $this->printMonthFestival($item, "January") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "February") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "March") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "April") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "May") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "June") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "July") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "August") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "September") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "October") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "November") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "December") . ' </td>
+            <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+
+            <td> <a href="#" name="editFestival" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["festivalName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
+            
+        </tr>';
+      }
+
+      echo $html;
+
+    }
+
+    /**
+     * print month of festival
+     * Created By: Moiz
+     */
+    function printMonthFestival($item, $month) {
+        $str = '';
+        if (isset($item[$month])) {
+            foreach($item[$month] as $m) {
+                $dutyUrl = site_url('Festival/viewFestivalDates?token=' . $item["token"] .'&date='. $m['completeDate']);
+                $str = $str . '<a href="'. $dutyUrl .'">'. $m['date'] .'</a> <br>';        
+            }
+        } else {
+            $addUrl = site_url('Festival/viewFestivalDates?token=' . $item["token"]);
+            $str = '<a href="'. $addUrl .'"> ADD </a>';
+        }
+        return $str;
+    }    
 
     /**
      * get Majalis by year
@@ -174,6 +229,7 @@ class Majalis extends CI_Controller {
 
     }
 
+
     /**
      * Delete Majalis by date
      * Created By: Moiz
@@ -183,6 +239,22 @@ class Majalis extends CI_Controller {
       if($this->input->get('token')) {
         $token = $this->input->get('token');
         $this->MajalisModel->deleteMajalisDateByToken($token);
+        redirect($this->agent->referrer());
+      } else {
+        redirect($this->agent->referrer());
+      }
+
+    }
+
+    /**
+     * Delete Majalis by date
+     * Created By: Moiz
+     */  
+    function deleteFestivalDuty() {
+
+      if ($this->input->get('token')) {
+        $token = $this->input->get('token');
+        $this->MajalisModel->deleteFestivalDuty($token);
         redirect($this->agent->referrer());
       } else {
         redirect($this->agent->referrer());
@@ -227,9 +299,9 @@ class Majalis extends CI_Controller {
           $this->FestivalMajalisModel->deleteFestivalWithDutiesAndDates($majalis->id);  
         }
 
-       // redirect($this->agent->referrer());
+       redirect($this->agent->referrer());
       } else {
-       // redirect($this->agent->referrer());
+       redirect($this->agent->referrer());
       }
 
     }  
@@ -330,20 +402,27 @@ class Majalis extends CI_Controller {
 
               $dutyId = $this->MajalisModel->insertMajalisDuties($dutyModel);            
             }
-
           }
         }
 
-        foreach($majalisDate as $date) {
+        if ($majalisDate) {
 
-          $dateModel = array (
-              'majalis_id' => $majalis_id,
-              'date' => $date,
-              'admin_id' => $adminId,
-              'token'=> random_string('unique', 30)
-          );
+          foreach($majalisDate as $date) {
 
-          $dateId = $this->MajalisModel->insertMajalisDates($dateModel);
+            if (!empty($date)) {
+
+              $dateModel = array (
+                  'majalis_id' => $majalis_id,
+                  'date' => $date,
+                  'admin_id' => $adminId,
+                  'token'=> random_string('unique', 30)
+              );
+
+              $dateId = $this->MajalisModel->insertMajalisDates($dateModel);
+            }
+
+          }
+
         }
         
         redirect("Majalis");
@@ -367,6 +446,37 @@ class Majalis extends CI_Controller {
         echo json_encode(array('success' => $result));
       }
 
+    }
+
+
+    function editFestivalDuty() {
+
+      if ($this->input->post()) {
+
+        $data = array(
+          'duty' => $this->input->post('value')
+        );
+
+        $result = $this->MajalisModel->updateFestivalDuty($this->input->post('pk'), $data);
+        echo json_encode(array('success' => $result));
+      }
+
+    }
+
+    /**
+     * Edit Festival Date
+     * Created By: Moiz
+     */      
+    function editFestivalDate() {
+      if ($this->input->post()) {
+
+        $data = array(
+          'date' => $this->input->post('value')
+        );
+
+        $result = $this->MajalisModel->updateFestivalDate($this->input->post('pk'), $data);
+        echo json_encode(array('success' => $result));
+      }      
     }
 
     /**
@@ -405,6 +515,11 @@ class Majalis extends CI_Controller {
       }
 
     }
+
+    /**
+     * Edit Festival Name
+     * Created By: Moiz
+     */    
     function editFestival() {
 
       if($this->input->post()) {
@@ -412,10 +527,10 @@ class Majalis extends CI_Controller {
         $token = $this->input->post('pk');
 
         $data = array(
-          'name' => $this->input->post('value')
+          'festival' => $this->input->post('value')
         );
 
-        $result = $this->FestivalMajalisModel->updateMajalis($token, $data);
+        $result = $this->MajalisModel->updateFestival($token, $data);
         echo json_encode(array('success' => $result));        
 
       }

@@ -76,6 +76,36 @@ class MajalisModel extends CI_Model
         return false;        
     }
 
+
+    public function updateFestivalDuty($token, $data) {
+        $this->db->where('token', $token );
+        $result = $this->db->update( 'festival_duties', $data);
+        if ($result) {
+            return true;
+        } 
+        return false;        
+    }
+
+
+    public function updateFestivalDate($id, $data) {
+        $this->db->where('id', $id );
+        $result = $this->db->update( 'festival_date', $data);
+        if ($result) {
+            return true;
+        } 
+        return false;        
+    }
+
+
+    public function updateFestival($token, $data) {
+        $this->db->where('token', $token );
+        $result = $this->db->update( 'festival', $data);
+        if ($result) {
+            return true;
+        } 
+        return false;        
+    }    
+
     public function updateMajalisDuty($id, $data) {
         $this->db->where('id', $id );
         $result = $this->db->update( 'majalis_duties', $data);
@@ -152,6 +182,17 @@ class MajalisModel extends CI_Model
         return $query->result();
     }
 
+
+    public function getFestivalDutiesByYear() {
+
+        $query = $this->db->query("SELECT  festival_date.date as date, YEAR(STR_TO_DATE(festival_date.date, '%Y-%m-%d')) as year
+                FROM festival_date
+                GROUP BY YEAR(STR_TO_DATE(festival_date.date, '%Y-%m-%d'))
+                ORDER BY year desc");
+
+        return $query->result();
+    }
+
     /**
      * Delete Majlis date by token
      * Created By: Moiz     
@@ -160,6 +201,13 @@ class MajalisModel extends CI_Model
         $this->db->delete( 'majalis_date' , array( 'token' => $token) ); 
     }
 
+    /**
+     * Delete Festival duty
+     * Created By: Moiz     
+     */
+    public function deleteFestivalDuty($token) {
+        $this->db->delete( 'festival_duties' , array( 'token' => $token) ); 
+    }
     public function deleteMajalisWithDutiesAndDates($id) {
 
         $this->db->delete( 'majalis' , array( 'id' => $id) );

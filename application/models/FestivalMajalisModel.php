@@ -14,10 +14,23 @@ class FestivalMajalisModel extends CI_Model {
         $query->result();
 
         return $query->result();
-    } 
+    }
 
-    public function getFestivalForTable() {
-        $festivalWithDates = $this->getFestivalWithDates();
+    public function getFestivalForYears($year) {
+
+        $query = $this->db->query("SELECT festival.id, festival.token, festival.festival, festival_date.id as dateId, festival_date.token as dateToken, festival_date.date as date 
+                FROM festival, festival_date
+                WHERE festival.id = festival_date.festival_id
+                AND festival_date.date LIKE '". $year ."-%'");
+
+        $query->result();
+
+        return $query->result();
+    }    
+
+    public function getFestivalForTable($year) {
+        
+        $festivalWithDates = $this->getFestivalForYears($year);
 
         $festivalArray = array();
 
@@ -85,8 +98,9 @@ class FestivalMajalisModel extends CI_Model {
     }
 
     public function getMajalisForTable($year) {
+        
         $majalisWithDates = $this->getMajalisForYear($year);
-        $majalisArray = array();
+        $majalisArray = array();        
 
         foreach ($majalisWithDates as $majalis) {
 
