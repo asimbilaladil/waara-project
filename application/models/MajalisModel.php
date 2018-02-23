@@ -40,7 +40,7 @@ class MajalisModel extends CI_Model
 
     public function getDutiesForSpecticDate($date, $type) {
 
-        $query = $this->db->query("SELECT majalis_duties.id, majalis_duties.name, majalis_duties.token
+        $query = $this->db->query("SELECT majalis_duties.id, UPPER(majalis_duties.name) as name, majalis_duties.token
                 FROM majalis_duties, specfic_date_duties
                 WHERE specfic_date_duties.date = '". $date ."'
                 AND specfic_date_duties.duty_id = majalis_duties.id
@@ -158,7 +158,7 @@ class MajalisModel extends CI_Model
      */
     public function getDutiesYear($token) {
 
-        $query = $this->db->query("SELECT majalis_date.id, majalis_date.date as date, YEAR(STR_TO_DATE(majalis_date.date, '%Y-%m-%d')) as year
+        $query = $this->db->query("SELECT majalis.name, majalis.override, majalis_date.id, majalis_date.date as date, YEAR(STR_TO_DATE(majalis_date.date, '%Y-%m-%d')) as year
                 FROM majalis, majalis_date
                 WHERE majalis.token = '". $token ."'
                 AND majalis.id = majalis_date.majalis_id
@@ -220,14 +220,11 @@ class MajalisModel extends CI_Model
             WHERE majalis_duties.majalis_id = " . $id);
 
         
-
         $query = $this->db->query("DELETE  majalis_duty_assign
             FROM majalis_duty_assign
             INNER JOIN majalis_duties
             ON majalis_duties.id = majalis_duty_assign.duty_id
             WHERE majalis_duties.majalis_id = " . $id);
-
-        
 
         $this->db->delete( 'majalis_duties' , array( 'majalis_id' => $id) );
 
@@ -254,7 +251,7 @@ class MajalisModel extends CI_Model
      */
     public function getDutiesForMajalis($id, $date) {
 
-        $query = $this->db->query("SELECT id, token, name, majalis_id 
+        $query = $this->db->query("SELECT id, token, UPPER(name), majalis_id 
                 FROM majalis_duties
                 WHERE majalis_id = " . $id . " AND type = 'GLOBAL'");
 

@@ -74,12 +74,12 @@
 
 
                         <div id="datesDiv" >
-                            <div class="form-group" id="dateDiv_1">
+<!--                             <div class="form-group" id="dateDiv_1">
                                 <label for="" class="col-sm-2 control-label">Date 1</label>
                                 <div class="col-sm-6">
                                     <input type="date" name="majalisDate[1]" class="form-control"  placeholder="" required>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>                     
 
                         <div class="form-group">
@@ -120,7 +120,7 @@
 <script type="text/javascript">
 
     var dutyCount = 0;
-    var dateCount = 1;
+    var dateCount = 0;
     
     function removeDuty() {
       

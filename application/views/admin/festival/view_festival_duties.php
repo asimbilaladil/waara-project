@@ -35,7 +35,7 @@
 
                                     <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
-                                    <input type="hidden" name="date" value="<?php echo $this->input->get('date', TRUE); ?>"/> 
+                                    <input type="hidden" name="date" id="date" value="<?php echo $this->input->get('date', TRUE); ?>"/> 
 
                                     <div class="form-group">
                                         <div class="col-sm-offset-2 col-sm-2">
@@ -53,39 +53,96 @@
                                 <h3 class="box-title">List Of Duties:</h3>
                             </div>
 
-                            <div class="form-group">
+  <!--                           <div class="form-group">
                                 <div class="col-sm-4">
                                     <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <table class="table table-striped" id="table" width="80%">
-                                <thead>
-                                    <tr>
-                                        <th> Duty </th>
-                                        <th> Action </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                <?php 
-                                
-                                foreach ($data['duties'] as $key => $item) {
-                                    $deleteDutyUrl = site_url('majalis/deleteFestivalDuty?token=' . $item->token);
+                            <div class="box box-success">
+                 
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <div>
+                                    <form action="<?php echo site_url('Festival/assignDuty') ?>" method="post" >
+                                        
+                                        <div class="col-sm-12">
+                                     </br>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
 
-                                    $editDutyUrl = site_url('majalis/editFestivalDuty?token=' . $item->token);
+                                            <input type="hidden" name="festivalDate" value="<?php echo $this->input->get('date') ?>" id="festivalDate"/>
 
-                                    echo '<tr>
-                                        <td> <a href="#" id="duty_'.$key.'" name="editDuty"  data-type="text" data-pk="'. $item->token .'" data-url="'. $editDutyUrl .'" >'. $item->duty .'</a> </td>
-                                        <td> <a href="'. $deleteDutyUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+                                            <input type="hidden" name="selectedFestivalUser" id="selectedFestivalUser"/>
+                                            <input type="hidden" name="selectedFestivalDuty" id="selectedFestivalDuty"/>
+                                            <input type="hidden" name="fromViewDuties" value="true"/>
+                                                                  
+                                            </div>
+                                        </div>
 
-                                    </tr>';
-                                }
+                                    </div>
+                                   
+                                    <div class="col-sm-12">
+                                     </br>
+                                        <!--Dynamicly duty table added  -->
+                                        <div id="festivalDuty"  >
 
-                                ?> 
-                                    <!-- <td> <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td> -->
-                                </tbody>
-                            </table>
+                                        </div>
+                                    </div>                            
+
+
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">User History</h4>
+                                              </div>
+                                              <div class="modal-body">
+                                                <div id="userHistoryForFestival">
+
+                                                </div>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                    </form>
+
+            <!-- MAJALIS DUTY RATING START -->
+            <div id="userFestivalDutyRating" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">User Rating 1</h4>
+                        </div>
+                    <div class="modal-body">
+                        <div class="form-group" style="text-align: center;">
+                            <input type="hidden" id="assignFestivalDutyId" name="assignDuty"/>
+                            <input id="festival-duty-rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
+                        </div>
+                    </div>
+                    <div class="modal-footer"> 
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" onclick="addRatingForFestivalDuty()" class="btn btn-primary">Save</button>
+                    </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- MAJALIS DUTY RATING END -->
+
+
+                            
                         </div>
                     </div>
                     <!-- /.box -->
@@ -101,32 +158,109 @@
     </div>
 
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Confirm</h4>
-      </div>
-          <form action="<?php echo site_url('festival/assginFestivalDuty') ?>" method="POST">
-              <div class="modal-body">
-                <p> Are you sure you want to assign this duty? </p>
-              </div>
-              <input type="hidden" id="selectedUser" name="selectedUser" />
-              <input type="hidden" id="selectedDuty" name="selectedDuty" />
-              <input type="hidden" id="token" name="token" value="<?php echo $this->input->get('token') ?>"/>
-              <input type="hidden" id="date" name="date" value="<?php echo $this->input->get('date') ?>"/>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <input type="submit" class="btn btn-primary" />
-              </div>
-          </form>
-    </div>
-  </div>
-</div>
-
 
 <script>
+
+ajaxGetFestivalDuties();
+
+
+function setAssignFestivalDutyId(id,stars) {
+    
+    console.log('setAssignFestivalDutyId', id);
+
+    $('#assignFestivalDutyId').val(id);
+    $('#festival-duty-rating-system').rating('update', stars);
+    //$('#rating-system').val(stars);
+}
+
+
+function addRatingForFestivalDuty(){
+    var rating = $('#festival-duty-rating-system').val()
+    var assignDutyId = $('#assignFestivalDutyId').val()
+
+    $.ajax({
+        url: "<?php echo site_url('Festival/addRating') ?>",
+        type: "POST",
+        data: {
+            'rating' : rating,
+            'assign_duty_id' : assignDutyId
+        },
+        success: function(response){
+
+            $('[id=dutyRating_'+assignDutyId+']').hide();
+            $( '<button id="dutyRating_'+assignDutyId+'" data-toggle="modal" onclick="setAssignFestivalDutyId('+assignDutyId+','+rating+')" data-target="#userFestivalDutyRating" type="button" class="btn btn-primary btn-block"> Edit Rating</button>' ).insertAfter('#dutyRating_'+assignDutyId );
+
+            $('#userFestivalDutyRating').modal('toggle');
+
+        },
+        error: function(){
+            
+        }
+    });
+}
+
+function ajaxGetFestivalDuties() {
+
+    var date = $('#date').val();
+
+    $.ajax({
+        url: "<?php echo site_url('festival/ajaxGetFestivalDuties') ?>",
+        type: "POST",
+        data: {
+            'date' : date
+        },
+        success: function(response){
+
+            $('#festivalDuty').html(response);
+
+            $("[name=users]").autocomplete({
+
+                source : '<?php echo site_url('admin/getUsers') ?>',
+                select: function(event, ui) {
+
+                    if(ui.item.value == 'NOUSER') {
+                        $('#addNewUser').modal('toggle');
+                        window.location.href = '<?php echo site_url('admin/addNewUser') ?>';
+                    }
+
+                    event.preventDefault();
+                    $('#' + this.id).val(ui.item.label);
+
+                    $("#selectedFestivalUser").val(ui.item.value);
+                },
+                focus: function(event, ui) {
+                    event.preventDefault();
+                    $('#' + this.id).val(ui.item.label);
+                }
+            });
+
+
+        },
+        error: function(){
+            
+        }
+    });
+}    
+
+function ajaxCallUserHistoryForFestival(dutyId) {
+
+   //preferenceAjaxCall(dutyId);
+
+   $('#myModal').modal('toggle');
+   $('#selectedFestivalDuty').val(dutyId);
+
+   var state = $('#selectedFestivalUser').val();
+
+    $.post('<?php echo site_url('Admin/ajaxUserHistory') ?>', {
+        state:state
+    }, function(data) {
+
+        $('#userHistoryForFestival').show().html(data);
+
+    }); 
+
+}
+
 
 $(function(){
     $.fn.editable.defaults.mode = 'inline';
@@ -136,27 +270,6 @@ $(function(){
 
 });
 
-//     function openConfirmModal(key, dutyId) {
-//         if($("#users_" + key).val() && $("#selectedUser").val() ) {
-//             $("#selectedDuty").val(dutyId);
-//             $('#myModal').modal('toggle');
-//         }
-        
-//     }
 
-// $("[name=users]").autocomplete({
-
-//     source : '<?php //echo site_url('admin/getUsers') ?>',
-//     select: function(event, ui) {
-
-//         event.preventDefault();
-//         $('#' + this.id).val(ui.item.label);
-//         $("#selectedUser").val(ui.item.value);
-//     },
-//     focus: function(event, ui) {
-//         event.preventDefault();
-//         $('#' + this.id).val(ui.item.label);
-//     }
-// });
 
 </script>    

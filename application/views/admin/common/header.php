@@ -32,6 +32,12 @@
         <!-- jQuery 2.1.4 -->
         <script src="<?php echo base_url(); ?>includes/plugins/jQuery/jQuery-2.1.4.min.js"></script>
         <script src="https://rawgit.com/padolsey/jQuery-Plugins/master/sortElements/jquery.sortElements.js"></script>
+
+        
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.3/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
+
+
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>

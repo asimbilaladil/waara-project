@@ -178,13 +178,13 @@ function getFestivalDates() {
     var year = $('#festivalYearDropdown').val();
 
     $.ajax({
-        url: "<?php echo site_url('Majalis/getFestivalByYear') ?>",
+        url: "<?php echo site_url('Festival/getFestivalByYear') ?>",
         type: "POST",
         data: {
             'year': year
         },
         success: function(response){
-            console.log(response);
+
             $('#festivalData').html(response);
 
             $.fn.editable.defaults.mode = 'inline';

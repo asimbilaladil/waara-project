@@ -39,11 +39,17 @@
                                             </div>
                                         </div>
 
-                                        <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
+                                        <input type="hidden" id="token" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
                                     </div>
                                 </form>
 
+                            <div class="form-group">
+                                <label for="" class="col-sm-2 control-label">Override evening JK schedule</label>
+                                <div class="col-sm-6">
+                                    <input type="checkbox" id="override" name="override" value="1" <?php echo !empty($data[0]->override) ? 'checked' : '' ?> >
+                                </div>
+                            </div>  
 
                             </br> </br>
                             <div class="box-header with-border">
@@ -102,6 +108,34 @@
     </div>
 
 <script>
+
+$('#override').click(function(){
+        if($(this).is(':checked')){
+            override(1);
+        } else {
+            override(0);
+        }
+    });
+
+
+function override(override) {
+
+    var token = $('#token').val();
+
+    $.ajax({
+        url: "<?php echo site_url('Festival/editFestival') ?>",
+        type: "POST",
+        data: {
+            'override': override,
+            'token': token
+    },
+    success: function(response) {
+    }
+
+    });
+}
+
+
 $(function(){
     $("[name='editDate']").editable({
         format: 'yyyy-mm-dd',    

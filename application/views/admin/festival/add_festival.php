@@ -44,12 +44,12 @@
                         </div>
 
                         <div id="dutiesDiv">
-                            <div id="dutyDiv_1" class="form-group">
+<!--                             <div id="dutyDiv_1" class="form-group">
                                 <label for="" class="col-sm-2 control-label">Duty 1</label>
                                 <div class="col-sm-6">
                                     <input type="text" name="duties[0]" class="form-control" placeholder="" required>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-2">
@@ -74,12 +74,12 @@
 
 
                         <div id="datesDiv" >
-                            <div class="form-group" id="dateDiv_1">
+<!--                             <div class="form-group" id="dateDiv_1">
                                 <label for="" class="col-sm-2 control-label">Date 1</label>
                                 <div class="col-sm-6">
                                     <input type="date" name="festivalDate[1]" class="form-control"  placeholder="" required>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>                     
 
                         <div class="form-group">
@@ -119,8 +119,8 @@
     </div>
 <script type="text/javascript">
 
-    var dutyCount = 1;
-    var dateCount = 1;
+    var dutyCount = 0;
+    var dateCount = 0;
 
     function test() {
       console.log('inside');
@@ -141,7 +141,7 @@
       var dutyHtml = `<div id="dutyDiv_` + dutyCount + `" class="form-group">
                         <label for="" class="col-sm-2 control-label">Duty ` + dutyCount + `</label>
                         <div class="col-sm-6">
-                          <input type="text" name="duties[` + dutyCount + `]" class="form-control" placeholder="" required>
+                          <input type="text" name="duties[` + dutyCount + `]" class="form-control" placeholder="">
                         </div>
                       </div>`;
     
@@ -156,7 +156,7 @@
         var dateHtml = `<div class="form-group" id="dateDiv_` + dateCount + `">
                             <label for="" class="col-sm-2 control-label">Date ` + dateCount + `</label>
                             <div class="col-sm-6">
-                                <input type="date" name="festivalDate[` + dateCount + `]" class="form-control"  placeholder="" required>
+                                <input type="date" name="festivalDate[` + dateCount + `]" class="form-control"  placeholder="">
                             </div>
                         </div>`;
 

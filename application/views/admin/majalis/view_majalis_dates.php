@@ -22,7 +22,7 @@
                     <div class="col-md-12">
                         <div class="box box-success">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><?php echo !empty($dates) ? $dates[0]->name : '' ?> </h3>
+                                <h3 class="box-title"><?php echo !empty($years[0]) ? $years[0]->name : '' ?> </h3>
                             </div>
                             <!-- /.box-header -->
 
@@ -71,7 +71,13 @@
                                     </div>
                                 </form>
 
-
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Override evening JK schedule</label>
+                                    <div class="col-sm-6">
+                                        <input type="checkbox" id="override" name="override" value="1" <?php echo !empty($years[0]->override) ? 'checked' : '' ?> >
+                                    </div>
+                                </div>   
+                             
                             </br> </br>
                             <div class="box-header with-border">
                                 <h3 class="box-title">List Of Majalis Date:</h3>
@@ -119,6 +125,32 @@
 
 <script>
 
+    $('#override').click(function(){
+        if($(this).is(':checked')){
+            override(1);
+        } else {
+            override(0);
+        }
+    });
+
+
+    function override(override) {
+
+        var token = $('#dutyToken').val();
+        $.ajax({
+            url: "<?php echo site_url('Majalis/editMajalisOverride') ?>",
+            type: "POST",
+            data: {
+                'override': override,
+                'token': token
+        },
+        success: function(response) {
+            console.log(response);
+        }
+
+        });
+    }
+
     getYearDates();
 
     function onYearChange() {
@@ -141,7 +173,7 @@
                 'year': year,
                 'token': token
             },
-            success: function(response){
+            success: function(response) {
 
                 $('#dutiesDiv').html(response);
 
@@ -156,7 +188,6 @@
                         location.reload();
                     }
                 });
-
 
             }, error: function(){
                 

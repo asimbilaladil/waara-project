@@ -75,7 +75,7 @@ class FestivalModel extends CI_Model {
      * Created By: Moiz     
      */
     public function getFestivalAndDatesByToken($token) {
-        $query = $this->db->query("SELECT festival.id, festival.token, festival.festival, festival_date.id as dateId, festival_date.token as festivalDateToken, festival_date.date as date 
+        $query = $this->db->query("SELECT festival.id, festival.token, festival.festival, festival.override, festival_date.id as dateId, festival_date.token as festivalDateToken, festival_date.date as date 
                 FROM festival, festival_date
                 WHERE festival.token = '" . $token . "'
                 AND festival.id = festival_date.festival_id");
@@ -140,6 +140,52 @@ class FestivalModel extends CI_Model {
             'duty_id' => $dutyId,
             'type' => $type
         ));    
-    }      
+    } 
+
+
+    public function updateFestival($token, $data) {
+        $this->db->where('token', $token );
+        $result = $this->db->update( 'festival', $data);
+        if ($result) {
+            return true;
+        } 
+        return false;        
+    }  
+
+
+    public function getDutiesByDate($date) {
+
+        $query =  $this->db->query("SELECT festival_duties.id, festival_duties.token, festival_duties.duty, festival_duties.festival_id, festival_date.date, festival_duty_assign.user_id, festival_duty_assign.id as assignId
+            FROM festival_date, festival_duties
+            LEFT JOIN festival_duty_assign ON festival_duties.id = festival_duty_assign.duty_id
+            WHERE festival_duties.festival_id = festival_date.festival_id
+            AND festival_date.date = '".$date."'
+            AND festival_duties.type = 'GLOBAL'");
+        $query->result();
+
+        return $query->result();     
+    }
+
+
+    public function getDutiesFromSpecficTable($date) {
+
+        $query =  $this->db->query("SELECT festival_duties.id, festival_duties.token, festival_duties.duty, festival_duties.festival_id, specfic_date_duties.date, festival_duty_assign.user_id, festival_duty_assign.id as assignId
+            FROM specfic_date_duties, festival_duties
+            LEFT JOIN festival_duty_assign ON festival_duties.id = festival_duty_assign.duty_id
+            WHERE specfic_date_duties.date = '". $date ."'
+            AND festival_duties.id = specfic_date_duties.duty_id");
+
+        $query->result();
+
+        return $query->result();     
+    }    
+
+
+    public function insertFestivalDutyRating($data) {
+        return $this->CommonModel->insertIntoTable('festival_duty_rating', $data);
+    }    
+
+
+
 
 }

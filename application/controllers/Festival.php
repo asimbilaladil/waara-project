@@ -9,6 +9,7 @@ class Festival extends CI_Controller {
         
         if( $id != NULL  && $type != 'User' ) {
             $this->load->model('FestivalModel'); 
+            $this->load->model('UserModel'); 
             $this->load->model('FestivalMajalisModel'); 
             $this->load->library('user_agent');
             $this->load->helper('custom_helper');
@@ -30,6 +31,64 @@ class Festival extends CI_Controller {
       
       $this->loadView('admin/festival/view_festival', $data);      
     }
+
+
+    /**
+     * get Festival by year
+     * Created By: Moiz
+     */
+    function getFestivalByYear() {
+      $year = $this->input->post('year');
+      $festivalData = $this->FestivalMajalisModel->getFestivalForTable($year);
+
+      $html = '';
+
+      foreach ($festivalData as $item) {
+
+        $deleteUrl = site_url('majalis/deleteFestival?token=' . $item["token"]);
+        $editMajalisUrl = site_url("majalis/editFestival");
+        $html = $html . '<tr>
+            <td> <a href="' . site_url("festival/viewFestivalDates?token=" . $item["token"]) . '">' . $item["festivalName"] . '</a> </td>
+            <td> ' . $this->printMonthFestival($item, "January") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "February") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "March") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "April") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "May") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "June") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "July") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "August") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "September") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "October") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "November") . ' </td>
+            <td> ' . $this->printMonthFestival($item, "December") . ' </td>
+            <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+
+            <td> <a href="#" name="editFestival" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["festivalName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
+            
+        </tr>';
+      }
+
+      echo $html;
+
+    }
+
+    /**
+     * print month of festival
+     * Created By: Moiz
+     */
+    function printMonthFestival($item, $month) {
+        $str = '';
+        if (isset($item[$month])) {
+            foreach($item[$month] as $m) {
+                $dutyUrl = site_url('Festival/viewFestivalDates?token=' . $item["token"] .'&date='. $m['completeDate']);
+                $str = $str . '<a href="'. $dutyUrl .'">'. $m['date'] .'</a> <br>';        
+            }
+        } else {
+            $addUrl = site_url('Festival/viewFestivalDates?token=' . $item["token"]);
+            $str = '<a href="'. $addUrl .'"> ADD </a>';
+        }
+        return $str;
+    }            
 
     /**
      * Add festival view
@@ -62,29 +121,42 @@ class Festival extends CI_Controller {
 
             $festival_id = $this->FestivalModel->insertFestival($festivalModel);
 
-            foreach($duties as $duty) {
+            if ($duties) {
 
-                $dutyModel = array (
-                    'duty' => $duty,
-                    'festival_id' => $festival_id,
-                    'admin_id' => $adminId,
-                    'token'=> random_string('unique', 30)
-                );
+              foreach($duties as $duty) {
+ 
+                if (!empty($duty)) {
+                  $dutyModel = array (
+                      'duty' => $duty,
+                      'festival_id' => $festival_id,
+                      'admin_id' => $adminId,
+                      'token' => random_string('unique', 30),
+                      'type' => 'GLOBAL'
+                  );
 
-                $dutyId = $this->FestivalModel->insertFestivalDuties($dutyModel);
+                  $dutyId = $this->FestivalModel->insertFestivalDuties($dutyModel);
+
+                }
+
+              }
 
             }
 
-            foreach($festivalDate as $date) {
+            if ($festivalDate) {
 
-                $dateModel = array (
-                    'festival_id' => $festival_id,
-                    'date' => $date,
-                    'admin_id' => $adminId,
-                    'token'=> random_string('unique', 30)
-                );
+              foreach($festivalDate as $date) {
+                
+                if(!empty($date)) {                
+                  $dateModel = array (
+                      'festival_id' => $festival_id,
+                      'date' => $date,
+                      'admin_id' => $adminId,
+                      'token'=> random_string('unique', 30)
+                  );
 
-                $dateId = $this->FestivalModel->insertFestivalDates($dateModel);
+                  $dateId = $this->FestivalModel->insertFestivalDates($dateModel);
+                }
+              }
             }
 
             redirect("Majalis");
@@ -130,11 +202,13 @@ class Festival extends CI_Controller {
       $adminId = $this->session->userdata('user_id');
       $result = $this->FestivalModel->getFestivalByToken($token);
 
+
       $dutyModel = array (
-        'festival_id' => ($date ? '' : $result->id ),
+        'festival_id' => $result->id,
         'duty' => $duty,
         'admin_id' => $adminId,
-        'token'=> random_string('unique', 30)
+        'token'=> random_string('unique', 30),
+        'type' => ($date ? 'SPECFIC' : 'GLOBAL' )
       );
 
       if ($date) {
@@ -158,6 +232,23 @@ class Festival extends CI_Controller {
 
     }
 
+
+    function editFestival() {
+
+      if($this->input->post()) {
+
+        $token = $this->input->post('token');
+
+        $data = array(
+          'override' => $this->input->post('override')
+        );
+
+        $result = $this->FestivalModel->updateFestival($token, $data);
+        echo json_encode(array('success' => $result));        
+
+      }
+
+    } 
 
     /**
      * view festival dates
@@ -225,31 +316,11 @@ class Festival extends CI_Controller {
      * Created By: Moiz
      */
     function viewFestivalDuties() {
-      if($this->input->get('token')) {
-        $token = $this->input->get('token');
-        $date = $this->input->get('date');
-        
-        $duties = $this->FestivalModel->getDutiesForFestival($token);
 
-        if ($date) {
+      if($this->input->get('token')) {        
 
-          $dateSpecficDuties = $this->FestivalModel->getDutiesForSpecticDate($date, 'FESTIVAL');
-
-          if ($dateSpecficDuties) {
-
-            foreach ($dateSpecficDuties as $item) {
-              array_push($duties, $item);
-
-            }
-          }
-        } 
-
-        $data = array(
-          'duties' => $duties,
-        );            
-        
-        $this->loadView('admin/festival/view_festival_duties', $data);
-        
+        $this->loadView('admin/festival/view_festival_duties', null);
+      
       } else {
         redirect('festival/');
       }
@@ -275,6 +346,120 @@ class Festival extends CI_Controller {
         redirect($this->agent->referrer());
       }      
     }    
+
+
+    function ajaxGetFestivalDuties() {
+
+        $date = $this->input->post('date');
+        $majalisBoxHideShow =  '<script>$(".majalisBox").hide()</script>';
+        $userIds = array();
+
+        $html = '<table class="table table-striped" id="dutyTable">
+        <thead>
+        <tr>
+            <th> Duty </th>
+            <th> User Fullname </th>
+            <th> Action </th>
+        </tr>
+        </thead>
+        <tbody>';
+
+        $result = $this->FestivalModel->getDutiesByDate($date);
+
+        $specficDates = $this->FestivalModel->getDutiesFromSpecficTable($date);
+
+        foreach($specficDates as $item) {
+            array_push($result, $item);
+        }
+
+        foreach ($result as $value) {
+
+            if ($value->user_id) {
+                $user = $user = $this->UserModel->getUserbyId($value->user_id);    
+                $value->firstName = $user->first_name;
+                $value->lastName = $user->last_name;    
+            }
+
+        }
+
+        foreach($result as $key => $row) {
+            $majalisBoxHideShow =  '<script>$(".majalisBox").show()</script>';
+            $assigned = $row->user_id != null ? true : false;
+
+            if ($assigned) {
+
+                $name = $row->firstName . ' ' . $row->lastName;
+                $viewUrl = site_url('Festival/viewDuty?id=' . $row->id . '&date=' . $row->date );
+                $html = $html . '<tr>
+                <td> '. strtoupper($row->duty) .' </td>
+                <td> '. $name  .' </td>
+                <td> <a href="'. $viewUrl .'"> <button class="btn btn-primary">View</button> </a> </td>
+                <td><button class="btn btn-primary">Edit</button> </td>
+                <td> <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
+                onclick="setAssignFestivalDutyId('. $row->assignId .',0)" data-target="#userFestivalDutyRating" class="btn btn-primary">Rating</button> </td>';  
+
+            } else {
+                $html = $html . '<tr>
+                <td> '. strtoupper($row->duty) .' </td>
+                <td> <input type="text" id="festivalDutyUsers_'. $key .'" name="users" class="form-control  ui-autocomplete-input"> </td>
+                <td> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForFestival('. $row->id .')">SAVE</button> </td>
+                <td> '.  $assigned .' </td>';                
+            }
+
+        }
+        $html = $html .$majalisBoxHideShow;
+        echo $html;
+
+    }
+
+
+    function assignDuty() {
+
+        if ($this->input->post()) {
+
+            $fromViewDuties = $this->input->post('fromViewDuties') ? true : false;
+
+            $selectedUserId = $this->input->post('selectedFestivalUser', true);
+            $selectedDutyId = $this->input->post('selectedFestivalDuty', true);
+            $festivalDate = $this->input->post('festivalDate', true);            
+            $adminId = $this->session->userdata('user_id');
+
+            $data = array (
+                'duty_id' => $selectedDutyId,
+                'user_id' => $selectedUserId,
+                'token' => random_string('unique', 30),
+                'admin_id' => $adminId,
+                'date' =>  $festivalDate
+            );
+
+            $this->FestivalModel->insertAssignFestivalDuty($data);
+
+            if ($fromViewDuties) {
+                redirect($this->agent->referrer());
+            } else {
+                redirect('Admin/index');    
+            }
+            
+        }
+    }    
+
+
+    function addRating() {
+
+        if($this->input->post()) {
+          
+            $rating = $this->input->post('rating', TRUE);
+            $assign_duty_id = $this->input->post('assign_duty_id', TRUE);
+
+            $data = array(
+                'stars' => $rating,
+                'assign_duty_id' => $assign_duty_id,
+                'admin_id' =>  $this->session->userdata('user_id')
+            );
+
+            $this->FestivalModel->insertFestivalDutyRating($data);
+        }
+    }
 
     /**
      * Load view 

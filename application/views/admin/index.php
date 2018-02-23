@@ -643,8 +643,8 @@ table.fc-border-separate {
     
 
 </style>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.3/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.3/js/star-rating.js" type="text/javascript"></script>
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.3/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.3/js/star-rating.js" type="text/javascript"></script> -->
 <body class="hold-transition skin-green sidebar-mini">
     <div class="wrapper">
         <div class="content-wrapper">
@@ -996,7 +996,7 @@ table.fc-border-separate {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">User Rating</h4>
+                <h4 class="modal-title">User Rating 1</h4>
             </div>
         <div class="modal-body">
             <div class="form-group" style="text-align: center;">
@@ -1302,8 +1302,6 @@ function ajaxGetMajalisDuties() {
 
     var date = $('#date').val();
 
-    console.log('date', date);
-
     $.ajax({
         url: "<?php echo site_url('AdminMajalis/ajaxGetMajalisDuties') ?>",
         type: "POST",
@@ -1340,7 +1338,7 @@ function ajaxCallUserHistoryForMajalis(dutyId) {
 
 
 var setAssignMajalisDutyId = function setAssignMajalisDutyId(id,stars){
-    
+
     $('#assignMajalisDutyId').val(id);
     $('#majalis-duty-rating-system').rating('update', stars);
     //$('#rating-system').val(stars);

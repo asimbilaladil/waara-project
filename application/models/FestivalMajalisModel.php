@@ -19,9 +19,10 @@ class FestivalMajalisModel extends CI_Model {
     public function getFestivalForYears($year) {
 
         $query = $this->db->query("SELECT festival.id, festival.token, festival.festival, festival_date.id as dateId, festival_date.token as dateToken, festival_date.date as date 
-                FROM festival, festival_date
-                WHERE festival.id = festival_date.festival_id
-                AND festival_date.date LIKE '". $year ."-%'");
+                FROM festival
+                LEFT JOIN festival_date
+                ON festival.id = festival_date.festival_id
+                AND festival_date.date LIKE '". $year ."-%' ");
 
         $query->result();
 
@@ -37,10 +38,18 @@ class FestivalMajalisModel extends CI_Model {
         foreach ($festivalWithDates as $festival) {
 
             $index = getIndexOf($festivalArray, 'id', $festival->id);
-            $festivalMonth = getMonthFromDate($festival->date);
-            $date = date("d",strtotime($festival->date));
-            $completeDate = $festival->date;
-            $dateToken = $festival->dateToken;
+
+            $festivalMonth = '';
+            $date = '';
+            $completeDate = '';
+            $dateToken = '';
+
+            if ($festival->date) {            
+                $festivalMonth = getMonthFromDate($festival->date);
+                $date = date("d",strtotime($festival->date));
+                $completeDate = $festival->date;
+                $dateToken = $festival->dateToken;
+            }
 
             $dateItem = array(
                 'date' => $date,
@@ -88,8 +97,9 @@ class FestivalMajalisModel extends CI_Model {
     public function getMajalisForYear($year) {
 
         $query = $this->db->query("SELECT majalis.id, majalis.token, majalis.name, majalis_date.id as dateId, majalis_date.token as dateToken, majalis_date.date as date 
-                FROM majalis, majalis_date
-                WHERE majalis.id = majalis_date.majalis_id
+                FROM majalis
+                LEFT JOIN majalis_date
+                ON majalis.id = majalis_date.majalis_id
                 AND majalis_date.date LIKE '". $year ."-%' ");
 
         return $query->result();
@@ -105,10 +115,18 @@ class FestivalMajalisModel extends CI_Model {
         foreach ($majalisWithDates as $majalis) {
 
             $index = getIndexOf($majalisArray, 'id', $majalis->id);
-            $majalisMonth = getMonthFromDate($majalis->date);
-            $date = date("d",strtotime($majalis->date));
-            $completeDate = $majalis->date;
-            $dateToken = $majalis->dateToken;
+
+            $date = '';
+            $completeDate = '';
+            $dateToken = '';
+            $majalisMonth = '';
+
+            if ($majalis->date) {
+                $majalisMonth = getMonthFromDate($majalis->date);
+                $date = date("d",strtotime($majalis->date));
+                $completeDate = $majalis->date;
+                $dateToken = $majalis->dateToken;
+            } 
 
             $dateItem = array(
                 'date' => $date,
