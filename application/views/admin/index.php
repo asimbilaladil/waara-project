@@ -780,7 +780,7 @@ table.fc-border-separate {
 
 
                                         <!-- Modal -->
-                                        <div class="modal fade" id="majalisUserHistoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                           <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                               <div class="modal-header">
@@ -904,12 +904,12 @@ table.fc-border-separate {
 
 
                                         <!-- Modal -->
-                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal fade" id="majalisUserHistoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                           <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                               <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                <h4 class="modal-title" id="myModalLabel">User History</h4>
+                                                <h4 class="modal-title" id="myModalLabel">Majalis User History</h4>
                                               </div>
                                               <div class="modal-body">
                                                 <div id="userHistoryForMajalis">
@@ -1001,7 +1001,7 @@ table.fc-border-separate {
         <div class="modal-body">
             <div class="form-group" style="text-align: center;">
                 <input type="text" id="assignMajalisDutyId" name="assignDuty"/>
-                <input id="rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
+                <input id="majalis-duty-rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
             </div>
         </div>
         <div class="modal-footer"> 
@@ -1028,7 +1028,7 @@ table.fc-border-separate {
                  <div class="form-group" style="text-align: center;">
 
                             <input type="hidden" id="assignDutyId" name="assignDuty"/>
-                            <input id="majalis-duty-rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
+                            <input id="rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
 
 
                 
@@ -1133,6 +1133,7 @@ function ajaxCallDuty() {
                     $('#' + this.id).val(ui.item.label);
                     $("#selectedUser").val(ui.item.value);
                     $("#selectedMajalisUser").val(ui.item.value);
+                    
                 },
                 focus: function(event, ui) {
                     event.preventDefault();
@@ -1193,7 +1194,7 @@ function ajaxCallUserHistory(dutyId) {
     $.post('<?php echo site_url('Admin/ajaxUserHistory') ?>', {
         state:state
     }, function(data) {
-
+        console.log('userHistory', data);
         $('#userHistory').show().html(data);
 
     }); 
@@ -1321,10 +1322,12 @@ function ajaxCallUserHistoryForMajalis(dutyId) {
 
    //preferenceAjaxCall(dutyId);
 
-   $('#myModal').modal('toggle');
+   $('#majalisUserHistoryModal').modal('toggle');
    $('#selectedMajalisDuty').val(dutyId);
 
    var state = $('#selectedMajalisUser').val();
+
+   console.log(state);
 
     $.post('<?php echo site_url('Admin/ajaxUserHistory') ?>', {
         state:state
