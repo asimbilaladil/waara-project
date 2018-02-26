@@ -10,6 +10,7 @@ class AdminMajalis extends CI_Controller {
 
         if( $id != NULL  && $type != 'User' ) {
             $this->load->model('MajalisModel');
+            $this->load->model('MajalisSortModel');
             $this->load->model('UserModel');
             $this->load->helper('string');
             $this->load->library('user_agent');
@@ -36,37 +37,39 @@ class AdminMajalis extends CI_Controller {
         </thead>
         <tbody>';
 
+
         $result = $this->MajalisModel->getDutiesByDate($date);
 
-        $specficDates = $this->MajalisModel->getDutiesFromSpecficTable($date);
+        $specficDates = $this->MajalisModel->getDutiesFromSpecficTable($date); 
 
         foreach($specficDates as $item) {
             array_push($result, $item);
         }
 
         foreach ($result as $value) {
-
+            
             if($value->user_id) {
                 $user = $user = $this->UserModel->getUserbyId($value->user_id);    
                 $value->firstName = $user->first_name;
                 $value->lastName = $user->last_name;    
             }
-
-
         }
 
-    
+        //sorting by order
+        usort($result, function($a, $b) {
+            return strcmp($a->sort, $b->sort);
+        });
+        
         foreach($result as $key => $row) {
             $majalisBoxHideShow =  '<script>$(".majalisBox").show()</script>';
             $assigned = $row->user_id != null ? true : false;
 
             if ($assigned) {
 
-                $showEditRating = $row->rating != '0' ? true : false ;
-
                 $name = $row->firstName . ' ' . $row->lastName;
                 $viewUrl = site_url('AdminMajalis/viewDuty?id=' . $row->id . '&date=' . $row->date );
                 $html = $html . '<tr>
+                <td style="display:none;">'. $row->id .'</td>
                 <td> '. $row->name .' </td>
                 <td> '. $name  .' </td>
                 <td> <a href="'. $viewUrl .'"> <button class="btn btn-primary">View</button> </a> </td>
@@ -76,10 +79,10 @@ class AdminMajalis extends CI_Controller {
 
             } else {
                 $html = $html . '<tr>
+                <td style="display:none;">'. $row->id .'</td>
                 <td> '. $row->name .' </td>
                 <td> <input type="text" id="majalisDutyUsers_'. $key .'" name="users" class="form-control  ui-autocomplete-input"> </td>
-                <td> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForMajalis('. $row->id .')">SAVE</button> </td>
-                <td> '.  $assigned .' </td>';                
+                <td> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForMajalis('. $row->id .')">SAVE</button> </td>';                
             }
 
         }

@@ -7,9 +7,11 @@ class Majalis extends CI_Controller {
         $this->load->model('MajalisModel'); 
         $this->load->model('FestivalMajalisModel'); 
         $this->load->model('MajalisDataModel'); 
+        $this->load->model('MajalisSortModel'); 
         $this->load->helper('string');
         $this->load->helper('custom_helper');
         $this->load->library('user_agent');
+        
     }
 
     /**
@@ -597,6 +599,37 @@ class Majalis extends CI_Controller {
         $this->MajalisModel->insertAssignMajalisDuty($data);
 
         redirect('majalis/viewMajalisDuties?token=' . $token . '&date=' . $date);
+
+      }
+
+    }
+
+
+    function sortMajalisDuties() {
+
+      if($this->input->post()) {
+
+        $selectedDate = $this->input->post('selectedDate');
+        $duties = $this->input->post('duties');        
+
+        $this->MajalisSortModel->deleteSortByDate($selectedDate);
+
+        $sort = 0;
+        
+        foreach ($duties as $duty) {
+
+          $sort++;
+
+          $dutyData = array(
+            'date' => $selectedDate,
+            'duty_id' => $duty,
+            'sort' => $sort,
+            'type' => 'SPECFIC'
+          );
+
+          $this->MajalisSortModel->insert($dutyData);
+
+        }
 
       }
 

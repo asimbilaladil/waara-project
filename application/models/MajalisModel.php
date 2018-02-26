@@ -335,32 +335,72 @@ class MajalisModel extends CI_Model
     }  
 
 
-    public function getDutiesByDate($date) {
+    public function getSortCountByDate($date) {
 
-        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, majalis_date.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId
-            FROM majalis_date, majalis_duties
-            LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
-            WHERE majalis_duties.majalis_id = majalis_date.majalis_id
-            AND majalis_date.date = '". $date ."'
-            AND majalis_duties.type = 'GLOBAL'");
-        $query->result();
+        $query =  $this->db->query("SELECT count(id) as count
+            FROM majalis_sort
+            where date = '". $date ."'");
 
-        return $query->result();     
+        return $query->result()[0]->count;   
+
     }
 
+    public function getDutiesByDate($date) {
+
+        //if($this->getSortCountByDate($date) > 0) {
+
+            $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, majalis_date.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
+                FROM majalis_date, majalis_duties 
+                LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
+                LEFT JOIN majalis_sort ON majalis_duties.id = majalis_sort.duty_id
+                WHERE majalis_duties.majalis_id = majalis_date.majalis_id
+                AND majalis_date.date = '". $date ."'
+                AND majalis_duties.type = 'GLOBAL'");
+
+            return $query->result();
+            
+        // } else {
+
+        //     $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, majalis_date.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId
+        //         FROM majalis_date, majalis_duties
+        //         LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
+        //         WHERE majalis_duties.majalis_id = majalis_date.majalis_id
+        //         AND majalis_date.date = '". $date ."'
+        //         AND majalis_duties.type = 'GLOBAL'");
+
+        //     return $query->result();     
+
+        // }
+
+
+    }
 
     public function getDutiesFromSpecficTable($date) {
 
-        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId
-            FROM specfic_date_duties, majalis_duties
-            LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
-            WHERE specfic_date_duties.date = '". $date ."'
-            AND majalis_duties.id = specfic_date_duties.duty_id");
-        $query->result();
+        //if ($this->getSortCountByDate($date) > 0) {
 
-        return $query->result();     
+            $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
+                FROM specfic_date_duties, majalis_duties
+                LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
+                LEFT JOIN majalis_sort ON majalis_duties.id = majalis_sort.duty_id
+                WHERE specfic_date_duties.date = '". $date ."'
+                AND majalis_duties.id = specfic_date_duties.duty_id");
+
+            return $query->result(); 
+
+        // } else {
+            
+        //     $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId
+        //         FROM specfic_date_duties, majalis_duties
+        //         LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
+        //         WHERE specfic_date_duties.date = '". $date ."'
+        //         AND majalis_duties.id = specfic_date_duties.duty_id");
+
+        //     return $query->result();     
+
+        // }
+
     }    
-
 
     public function getAssignMajalisDutyDetail($dutyId, $date) {
 

@@ -35,7 +35,7 @@
 
                                     <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
-                                    <input type="hidden" name="date" value="<?php echo $this->input->get('date', TRUE); ?>"/> 
+                                    <input type="hidden" id="selectedDate" name="date" value="<?php echo $this->input->get('date', TRUE); ?>"/> 
 
                                     <div class="form-group">
                                         <div class="col-sm-offset-2 col-sm-2">
@@ -108,10 +108,6 @@
 
                                     </form>
 
-
-
-
-
                         </div>
                     </div>
                     <!-- /.box -->
@@ -147,6 +143,35 @@ function ajaxGetMajalisDuties() {
         success: function(response){
             $('#majalisDuty').html(response);
 
+            var selectedDate = $("#selectedDate").val()
+
+            $( "#dutyTable tbody" ).sortable( {
+
+                update: function( event, ui ) {
+                    $(this).children().each(function(index) {                    
+                        $(this).find('td').last().html(index + 1);
+                    });
+
+                    var duty_id = [];
+
+                    $("#dutyTable tbody tr").each(function() {
+                        var counter = 0;
+
+                        $.each(this.cells, function(){
+
+                            if(counter == 0 ){
+                                duty_id.push($(this).text());
+                            }
+
+                            counter++;
+                        });
+                        
+                    });  
+
+                    sortDuties(duty_id, selectedDate);
+              }
+
+            });
 
             $("[name=users]").autocomplete({
 
@@ -196,9 +221,25 @@ function ajaxCallUserHistoryForMajalis(dutyId) {
 
 }
 
+function sortDuties(duty_id, selectedDate){
+
+      $.ajax({
+         url: <?php echo '"' . site_url('Majalis/sortMajalisDuties') . '"' ?>,
+         type: "POST",
+         data: {
+             "duties" : duty_id,
+             "selectedDate" : selectedDate
+         },
+         success: function(response){
+            
+         },
+         error: function(){  
+         }
+     });
+  }
 
 
-$(function(){
+$(function() {
     $.fn.editable.defaults.mode = 'inline';
 
     $("[name='editDuty']").editable({
@@ -208,4 +249,6 @@ $(function(){
     });
 
 });
+
+
 </script>
