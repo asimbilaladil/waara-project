@@ -1311,11 +1311,54 @@ function ajaxGetMajalisDuties() {
         },
         success: function(response){
             $('#majalisDuty').html(response);
+
+            $( "#majalisDutyTable tbody" ).sortable( {
+                update: function( event, ui ) {
+
+                    // $(this).children().each(function(index) {                    
+                    //     $(this).find('td').last().html(index + 1);
+                    // });
+                    var duty_id = [];
+                    $("#majalisDutyTable tbody tr").each(function() {
+                        var counter = 0;
+                        $.each(this.cells, function(){
+                            if(counter == 0 ){
+                                duty_id.push($(this).text());
+                            }
+                            counter++;
+                        });
+                        
+                    });  
+                    sortMajalisDuties(duty_id, date);
+              }
+
+            });
+
         },
         error: function(){
             
         }
     });
+}
+
+
+function sortMajalisDuties(duty_id, selectedDate){
+
+    console.log('inside')
+
+  $.ajax({
+     url: <?php echo '"' . site_url('Majalis/sortMajalisDuties') . '"' ?>,
+     type: "POST",
+     data: {
+         "duties" : duty_id,
+         "selectedDate" : selectedDate
+     },
+     success: function(response){
+        
+     },
+     error: function(){  
+     }
+ });
 }    
 
 function ajaxCallUserHistoryForMajalis(dutyId) {

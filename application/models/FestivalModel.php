@@ -112,6 +112,34 @@ class FestivalModel extends CI_Model {
         $this->db->delete( 'festival_date' , array( 'token' => $token) ); 
     }    
 
+
+    public function deleteFestival($id) {
+        $this->db->delete( 'festival' , array( 'id' => $id) );
+        $this->db->delete( 'festival_date' , array( 'festival_id' => $id) );
+
+        $query = $this->db->query("DELETE specfic_date_duties
+            FROM specfic_date_duties
+            INNER JOIN festival_duties
+            ON festival_duties.id = specfic_date_duties.duty_id
+            WHERE festival_duties.festival_id = " . $id . " 
+            AND specfic_date_duties.type = 'FESTIVAL'");
+
+        
+        $query = $this->db->query("DELETE festival_duty_assign
+            FROM festival_duty_assign
+            INNER JOIN festival_duties
+            ON festival_duties.id = festival_duty_assign.duty_id
+            WHERE festival_duties.festival_id = " . $id);
+
+        $query = $this->db->query("DELETE festival_sort
+            FROM festival_sort
+            INNER JOIN festival_duties
+            ON festival_duties.id = festival_sort.duty_id
+            WHERE festival_duties.festival_id = " . $id );
+
+        $this->db->delete( 'festival_duties' , array( 'festival_id' => $id) );        
+    }
+
     /**
      * insert duty for specfic date
      * Created By: Moiz     
@@ -155,11 +183,12 @@ class FestivalModel extends CI_Model {
 
     public function getDutiesByDate($date) {
 
-        $query =  $this->db->query("SELECT festival_duties.id, festival_duties.token, festival_duties.duty, festival_duties.festival_id, festival_date.date, festival_duty_assign.user_id, festival_duty_assign.id as assignId
+        $query = $this->db->query("SELECT festival_duties.id, festival_duties.token, festival_duties.duty, festival_duties.festival_id, festival_date.date, festival_duty_assign.user_id, festival_duty_assign.id as assignId, festival_sort.sort
             FROM festival_date, festival_duties
             LEFT JOIN festival_duty_assign ON festival_duties.id = festival_duty_assign.duty_id
+            LEFT JOIN festival_sort ON festival_sort.duty_id = festival_duties.id
             WHERE festival_duties.festival_id = festival_date.festival_id
-            AND festival_date.date = '".$date."'
+            AND festival_date.date = '". $date ."'
             AND festival_duties.type = 'GLOBAL'");
         $query->result();
 
@@ -169,9 +198,10 @@ class FestivalModel extends CI_Model {
 
     public function getDutiesFromSpecficTable($date) {
 
-        $query =  $this->db->query("SELECT festival_duties.id, festival_duties.token, festival_duties.duty, festival_duties.festival_id, specfic_date_duties.date, festival_duty_assign.user_id, festival_duty_assign.id as assignId
+        $query =  $this->db->query("SELECT festival_duties.id, festival_duties.token, festival_duties.duty, festival_duties.festival_id, specfic_date_duties.date, festival_duty_assign.user_id, festival_duty_assign.id as assignId, festival_sort.sort
             FROM specfic_date_duties, festival_duties
             LEFT JOIN festival_duty_assign ON festival_duties.id = festival_duty_assign.duty_id
+            LEFT JOIN festival_sort ON festival_sort.duty_id = festival_duties.id
             WHERE specfic_date_duties.date = '". $date ."'
             AND festival_duties.id = specfic_date_duties.duty_id");
 

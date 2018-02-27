@@ -145,7 +145,7 @@ function ajaxGetMajalisDuties() {
 
             var selectedDate = $("#selectedDate").val()
 
-            $( "#dutyTable tbody" ).sortable( {
+            $( "#majalisDutyTable tbody" ).sortable( {
 
                 update: function( event, ui ) {
                     $(this).children().each(function(index) {                    
@@ -154,7 +154,7 @@ function ajaxGetMajalisDuties() {
 
                     var duty_id = [];
 
-                    $("#dutyTable tbody tr").each(function() {
+                    $("#majalisDutyTable tbody tr").each(function() {
                         var counter = 0;
 
                         $.each(this.cells, function(){

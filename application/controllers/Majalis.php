@@ -240,30 +240,9 @@ class Majalis extends CI_Controller {
 
     }
   
-    /**
-     * Delete Festival
-     * Created By: Moiz
-     */  
-    function deleteFestival() {
-
-      if($this->input->get('token')) {
-        $token = $this->input->get('token');
-
-        $majalis = $this->FestivalMajalisModel->getFestivalByToken($token);
-
-        if($majalis) {
-          $this->FestivalMajalisModel->deleteFestivalWithDutiesAndDates($majalis->id);  
-        }
-
-       redirect($this->agent->referrer());
-      } else {
-       redirect($this->agent->referrer());
-      }
-
-    }  
 
     /**
-     * Add date in Majalis
+     * Add duty in Majalis
      * Created By: Moiz
      */ 
     function addDuty() {
@@ -274,15 +253,18 @@ class Majalis extends CI_Controller {
       $adminId = $this->session->userdata('user_id');
       $result = $this->MajalisModel->getMajalisByToken($token);
 
+      $dutyModel = array (
+        'name' => $duty,
+        'admin_id' => $adminId,
+        'token'=> random_string('unique', 30),
+        'majalis_id' => $result->id,
+        'type' => $date ? 'SPECFIC' : 'GLOBAL'
+      );
+
       if ($date) {
 
-        $dutyModel = array (
-          'name' => $duty,
-          'admin_id' => $adminId,
-          'token'=> random_string('unique', 30),
-          'majalis_id' => $result->id,
-          'type' => 'SPECFIC'
-        );
+        // $maxSort = $this->MajalisSortModel->getMaxSort($date);
+        // $maxSort++;
 
         $dutyId = $this->MajalisModel->insertMajalisDuties($dutyModel);
 
@@ -292,17 +274,18 @@ class Majalis extends CI_Controller {
           'type' => 'MAJALIS'
         ));
 
+        // $sortDutyData = array(
+        //   'date' => $date,
+        //   'duty_id' => $dutyId,
+        //   'sort' => $maxSort,
+        //   'type' => 'SPECFIC'
+        // );
+
+        // $this->MajalisSortModel->insert($sortDutyData);        
+
         redirect('majalis/viewMajalisDuties?token=' . $token . '&date=' . $date);
 
       } else {
-
-        $dutyModel = array (
-          'majalis_id' => $result->id,
-          'name' => $duty,
-          'admin_id' => $adminId,
-          'token'=> random_string('unique', 30),
-          'type' => 'GLOBAL'
-        );
 
         $dutyId = $this->MajalisModel->insertMajalisDuties($dutyModel);
 

@@ -208,6 +208,7 @@ class MajalisModel extends CI_Model
     public function deleteFestivalDuty($token) {
         $this->db->delete( 'festival_duties' , array( 'token' => $token) ); 
     }
+    
     public function deleteMajalisWithDutiesAndDates($id) {
 
         $this->db->delete( 'majalis' , array( 'id' => $id) );
@@ -217,14 +218,21 @@ class MajalisModel extends CI_Model
             FROM specfic_date_duties
             INNER JOIN majalis_duties
             ON majalis_duties.id = specfic_date_duties.duty_id
-            WHERE majalis_duties.majalis_id = " . $id);
+            WHERE majalis_duties.majalis_id = " . $id . " 
+            AND specfic_date_duties.type = 'MAJALIS'");
 
         
-        $query = $this->db->query("DELETE  majalis_duty_assign
+        $query = $this->db->query("DELETE majalis_duty_assign
             FROM majalis_duty_assign
             INNER JOIN majalis_duties
             ON majalis_duties.id = majalis_duty_assign.duty_id
             WHERE majalis_duties.majalis_id = " . $id);
+
+        $query = $this->db->query("DELETE majalis_sort
+            FROM majalis_sort
+            INNER JOIN majalis_duties
+            ON majalis_duties.id = majalis_sort.duty_id
+            WHERE majalis_duties.majalis_id = " . $id );
 
         $this->db->delete( 'majalis_duties' , array( 'majalis_id' => $id) );
 
@@ -349,15 +357,15 @@ class MajalisModel extends CI_Model
 
         //if($this->getSortCountByDate($date) > 0) {
 
-            $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, majalis_date.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
-                FROM majalis_date, majalis_duties 
-                LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
-                LEFT JOIN majalis_sort ON majalis_duties.id = majalis_sort.duty_id
-                WHERE majalis_duties.majalis_id = majalis_date.majalis_id
-                AND majalis_date.date = '". $date ."'
-                AND majalis_duties.type = 'GLOBAL'");
+        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, majalis_date.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
+            FROM majalis_date, majalis_duties 
+            LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
+            LEFT JOIN majalis_sort ON majalis_duties.id = majalis_sort.duty_id
+            WHERE majalis_duties.majalis_id = majalis_date.majalis_id
+            AND majalis_date.date = '". $date ."'
+            AND majalis_duties.type = 'GLOBAL'");
 
-            return $query->result();
+        return $query->result();
             
         // } else {
 
@@ -379,14 +387,14 @@ class MajalisModel extends CI_Model
 
         //if ($this->getSortCountByDate($date) > 0) {
 
-            $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
-                FROM specfic_date_duties, majalis_duties
-                LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
-                LEFT JOIN majalis_sort ON majalis_duties.id = majalis_sort.duty_id
-                WHERE specfic_date_duties.date = '". $date ."'
-                AND majalis_duties.id = specfic_date_duties.duty_id");
+        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
+            FROM specfic_date_duties, majalis_duties
+            LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
+            LEFT JOIN majalis_sort ON majalis_duties.id = majalis_sort.duty_id
+            WHERE specfic_date_duties.date = '". $date ."'
+            AND majalis_duties.id = specfic_date_duties.duty_id");
 
-            return $query->result(); 
+        return $query->result(); 
 
         // } else {
             

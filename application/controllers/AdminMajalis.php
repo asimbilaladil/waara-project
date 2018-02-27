@@ -27,7 +27,7 @@ class AdminMajalis extends CI_Controller {
         $majalisBoxHideShow =  '<script>$(".majalisBox").hide()</script>';
         $userIds = array();
 
-        $html = '<table class="table table-striped" id="dutyTable">
+        $html = '<table class="table table-striped" id="majalisDutyTable">
         <thead>
         <tr>
             <th> Duty </th>
@@ -57,7 +57,7 @@ class AdminMajalis extends CI_Controller {
 
         //sorting by order
         usort($result, function($a, $b) {
-            return strcmp($a->sort, $b->sort);
+            return $a->sort > $b->sort;
         });
         
         foreach($result as $key => $row) {

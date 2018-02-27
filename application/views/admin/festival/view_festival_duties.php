@@ -213,19 +213,48 @@ function ajaxGetFestivalDuties() {
 
             $('#festivalDuty').html(response);
 
+
+            $( "#dutyTable tbody" ).sortable( {
+
+                update: function( event, ui ) {
+                    $(this).children().each(function(index) {                    
+                        $(this).find('td').last().html(index + 1);
+                    });
+
+                    var duty_id = [];
+
+                    $("#dutyTable tbody tr").each(function() {
+                        var counter = 0;
+
+                        $.each(this.cells, function(){
+
+                            if(counter == 0 ){
+                                duty_id.push($(this).text());
+                            }
+
+                            counter++;
+                        });
+                        
+                    });  
+
+                    sortDuties(duty_id, date);
+              }
+
+            });
+
+
             $("[name=users]").autocomplete({
 
                 source : '<?php echo site_url('admin/getUsers') ?>',
                 select: function(event, ui) {
 
-                    if(ui.item.value == 'NOUSER') {
-                        $('#addNewUser').modal('toggle');
-                        window.location.href = '<?php echo site_url('admin/addNewUser') ?>';
-                    }
+                    // if(ui.item.value == 'NOUSER') {
+                    //     $('#addNewUser').modal('toggle');
+                    //     window.location.href = '<?php echo site_url('admin/addNewUser') ?>';
+                    // }
 
                     event.preventDefault();
                     $('#' + this.id).val(ui.item.label);
-
                     $("#selectedFestivalUser").val(ui.item.value);
                 },
                 focus: function(event, ui) {
@@ -261,6 +290,22 @@ function ajaxCallUserHistoryForFestival(dutyId) {
 
 }
 
+function sortDuties(duty_id, selectedDate){
+
+      $.ajax({
+         url: <?php echo '"' . site_url('Festival/sortFestivalDuties') . '"' ?>,
+         type: "POST",
+         data: {
+             "duties" : duty_id,
+             "selectedDate" : selectedDate
+         },
+         success: function(response){
+            
+         },
+         error: function(){  
+         }
+     });
+  }
 
 $(function(){
     $.fn.editable.defaults.mode = 'inline';

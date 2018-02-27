@@ -11,6 +11,7 @@ class Festival extends CI_Controller {
             $this->load->model('FestivalModel'); 
             $this->load->model('UserModel'); 
             $this->load->model('FestivalMajalisModel'); 
+            $this->load->model('FestivalSortModel'); 
             $this->load->library('user_agent');
             $this->load->helper('custom_helper');
         } else {
@@ -45,8 +46,9 @@ class Festival extends CI_Controller {
 
       foreach ($festivalData as $item) {
 
-        $deleteUrl = site_url('majalis/deleteFestival?token=' . $item["token"]);
+        $deleteUrl = site_url('festival/deleteFestival?token=' . $item["token"]);
         $editMajalisUrl = site_url("majalis/editFestival");
+        $addUrl = site_url('Festival/viewFestivalDates?token=' . $item["token"]);
         $html = $html . '<tr>
             <td> <a href="' . site_url("festival/viewFestivalDates?token=" . $item["token"]) . '">' . $item["festivalName"] . '</a> </td>
             <td> ' . $this->printMonthFestival($item, "January") . ' </td>
@@ -64,6 +66,8 @@ class Festival extends CI_Controller {
             <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
 
             <td> <a href="#" name="editFestival" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["festivalName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
+
+            <td> <a href="'. $addUrl .'"> ADD </a </td>
             
         </tr>';
       }
@@ -84,8 +88,7 @@ class Festival extends CI_Controller {
                 $str = $str . '<a href="'. $dutyUrl .'">'. $m['date'] .'</a> <br>';        
             }
         } else {
-            $addUrl = site_url('Festival/viewFestivalDates?token=' . $item["token"]);
-            $str = '<a href="'. $addUrl .'"> ADD </a>';
+            $str = ' - ';
         }
         return $str;
     }            
@@ -382,6 +385,11 @@ class Festival extends CI_Controller {
 
         }
 
+        //sorting by order
+        usort($result, function($a, $b) {
+            return $a->sort > $b->sort;
+        });        
+
         foreach($result as $key => $row) {
             $majalisBoxHideShow =  '<script>$(".majalisBox").show()</script>';
             $assigned = $row->user_id != null ? true : false;
@@ -391,6 +399,7 @@ class Festival extends CI_Controller {
                 $name = $row->firstName . ' ' . $row->lastName;
                 $viewUrl = site_url('Festival/viewDuty?id=' . $row->id . '&date=' . $row->date );
                 $html = $html . '<tr>
+                <td>'. $row->id .'</td>
                 <td> '. strtoupper($row->duty) .' </td>
                 <td> '. $name  .' </td>
                 <td> <a href="'. $viewUrl .'"> <button class="btn btn-primary">View</button> </a> </td>
@@ -400,6 +409,7 @@ class Festival extends CI_Controller {
 
             } else {
                 $html = $html . '<tr>
+                <td>'. $row->id .'</td>
                 <td> '. strtoupper($row->duty) .' </td>
                 <td> <input type="text" id="festivalDutyUsers_'. $key .'" name="users" class="form-control  ui-autocomplete-input"> </td>
                 <td> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForFestival('. $row->id .')">SAVE</button> </td>
@@ -460,6 +470,58 @@ class Festival extends CI_Controller {
             $this->FestivalModel->insertFestivalDutyRating($data);
         }
     }
+
+    function sortFestivalDuties() {
+
+      if($this->input->post()) {
+
+        $selectedDate = $this->input->post('selectedDate');
+        $duties = $this->input->post('duties');        
+
+        $this->FestivalSortModel->deleteSortByDate($selectedDate);
+
+        $sort = 0;
+        
+        foreach ($duties as $duty) {
+
+          $sort++;
+
+          $dutyData = array(
+            'date' => $selectedDate,
+            'duty_id' => $duty,
+            'sort' => $sort,
+            'type' => 'SPECFIC'
+          );
+
+          $this->FestivalSortModel->insert($dutyData);
+
+        }
+
+      }
+
+    }
+
+    /**
+     * Delete Festival
+     * Created By: Moiz
+     */  
+    function deleteFestival() {
+
+      if ($this->input->get('token')) {
+        $token = $this->input->get('token');
+
+        $festival = $this->FestivalModel->getFestivalByToken($token);
+
+        if ($festival) {
+          $this->FestivalModel->deleteFestival($festival->id);  
+        }
+
+       redirect($this->agent->referrer());
+      } else {
+       redirect($this->agent->referrer());
+      }
+
+    }     
 
     /**
      * Load view 

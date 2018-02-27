@@ -1,5 +1,5 @@
 <?php if( ! defined('BASEPATH')) exit('No direct script access allowed');
-class MajalisSortModel extends CI_Model {
+class FestivalSortModel extends CI_Model {
 
 
     function __construct() {
@@ -9,7 +9,7 @@ class MajalisSortModel extends CI_Model {
 
     public function insert( $data ){
 
-        if ($this->db->insert('majalis_sort', $data) ) {
+        if ($this->db->insert('festival_sort', $data) ) {
             return $this->db->insert_id();
         } 
         return false;
@@ -18,7 +18,7 @@ class MajalisSortModel extends CI_Model {
 
     public function getSortCountByDate($date) {
         $query =  $this->db->query("SELECT count(id) as count
-            FROM majalis_sort
+            FROM festival_sort
             where date = '". $date ."'");
         return $query->result();   
     }
@@ -26,7 +26,7 @@ class MajalisSortModel extends CI_Model {
     public function getMaxSort($date) {
 
         $query =  $this->db->query("SELECT MAX(sort) max
-            FROM majalis_sort
+            FROM festival_sort
             where date = '". $date ."'");
 
         return $query->row()->max;   
@@ -34,7 +34,7 @@ class MajalisSortModel extends CI_Model {
 
 
     public function deleteSortByDate($date) {
-        $this->db->delete( 'majalis_sort' , array( 'date' => $date) );   
+        $this->db->delete( 'festival_sort' , array( 'date' => $date) );   
     }
 
 
