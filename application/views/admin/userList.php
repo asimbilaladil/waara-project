@@ -71,6 +71,7 @@
                                       </div>
                                     <div class="form-group col-sm-4">
                                        <button onclick="addNewUser()" type="button" class="btn btn-primary"> Add New User</button>
+                                      <button type="button" class="btn btn-primary toggle-vis"  data-column="0" > Merge User</button>
                                   </div>       
                                 
                                                       
@@ -85,6 +86,7 @@
                                 <table  class="table table-bordered table-hover" id="table" width="100%">
                                     <thead>
                                         <tr>
+                                            <th> Merge</th>
                                             <th> Full Name</th>
                                             <th> Days Count</th>
                                             <th> Email</th>
@@ -108,6 +110,7 @@
                                               $showColor = ( $item->type != 'User' ) ?  '<button onClick="getColorUserId(' . $item->user_id .')"type="button" data-toggle="modal" data-target="#colorModal" class="btn btn-primary btn-block" style="opacity: 1; background-color:'. $item->color .'; width: 6%;"></button>' : '' ;
                                                 $template =   
                                                     '<tr>
+                                                        <td>   <input type="checkbox" class="mergeUserList" name="mergeUsers[]" value="'.$item->user_id.'"> </td>
                                                         <td> <a href="'. site_url('profile/index?id=' . $item->user_id ) .'" >'. $item->first_name.' '. $item->last_name.' </a></td>
                                                         
                                                         <td> <a href="#">'. $item->daysCount .'
@@ -288,6 +291,10 @@
         function setId(id){
         $('#user').val(id); 
     }
+//   function mergeUser(){
+//     //$('.mergeUserList').
+//   }  
+      
   function assignWaara(){
         var user_id = $('#user').val(); 
         var date =  $('#date').val(); 
@@ -376,7 +383,7 @@
    
        $('.paginate_button', this.api().table().container())          
          .on('click', function(){
-
+              console.log("hit")
              $( "li" ).removeClass( "paginate_button" );
          }); 
    }, "scrollX": true  <?php echo $data['tableData'][0]->script; ?>  , fixedHeader: true   });
@@ -385,31 +392,38 @@
 //       $( "li" ).removeClass( "paginate_button" );
 //     } );
          
-          $( "li" ).removeClass( "paginate_button" );
-               $('#lastWaaraSearch').on( 'keyup', function () {
+        $( "li" ).removeClass( "paginate_button" );
+        $('#lastWaaraSearch').on( 'keyup', function () {
           table
-              .columns( 1 )
+              .columns( 2 )
               .search( this.value )
               .draw();
-      } );
-      $('#search').on( 'keyup', function () {
-          table
-              .columns( 0 )
-              .search( this.value )
-              .draw();
-      } );         
-    var visible = true;
-    var tableContainer = $(table.table().container());
-   
-    $('#showHideTable').on( 'click', function () {
+        });
+        $('#search').on( 'keyup', function () {
+            table
+                .columns( 1 )
+                .search( this.value )
+                .draw();
+        } );         
+        var visible = true;
+        var tableContainer = $(table.table().container());
+
+        $('#showHideTable').on( 'click', function () {
       
-        tableContainer.css( 'display', visible ? 'none' : 'block' );
-       // table.fixedHeader.adjust();
- 
-        visible = ! visible;
-    } );
+            tableContainer.css( 'display', visible ? 'none' : 'block' );
+           // table.fixedHeader.adjust();
+            visible = ! visible;
+        });
          
-        
+        $('button.toggle-vis').on( 'click', function (e) {
+            e.preventDefault();
+
+            // Get the column API object
+            var column = table.column( $(this).attr('data-column') );
+
+            // Toggle the visibility
+            column.visible( ! column.visible() );
+        });    
 } );
      
       

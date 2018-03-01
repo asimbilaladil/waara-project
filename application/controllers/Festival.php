@@ -357,7 +357,7 @@ class Festival extends CI_Controller {
         $majalisBoxHideShow =  '<script>$(".majalisBox").hide()</script>';
         $userIds = array();
 
-        $html = '<table class="table table-striped" id="dutyTable">
+        $html = '<table class="table table-striped" id="festivalDutyTable">
         <thead>
         <tr>
             <th> Duty </th>
@@ -399,7 +399,7 @@ class Festival extends CI_Controller {
                 $name = $row->firstName . ' ' . $row->lastName;
                 $viewUrl = site_url('Festival/viewDuty?id=' . $row->id . '&date=' . $row->date );
                 $html = $html . '<tr>
-                <td>'. $row->id .'</td>
+                <td style="display:none;">'. $row->id .'</td>
                 <td> '. strtoupper($row->duty) .' </td>
                 <td> '. $name  .' </td>
                 <td> <a href="'. $viewUrl .'"> <button class="btn btn-primary">View</button> </a> </td>
@@ -409,9 +409,9 @@ class Festival extends CI_Controller {
 
             } else {
                 $html = $html . '<tr>
-                <td>'. $row->id .'</td>
+                <td style="display:none;">'. $row->id .'</td>
                 <td> '. strtoupper($row->duty) .' </td>
-                <td> <input type="text" id="festivalDutyUsers_'. $key .'" name="users" class="form-control  ui-autocomplete-input"> </td>
+                <td> <input type="text" id="festivalDutyUsers_'. $key .'" name="festivalUsers" class="form-control  ui-autocomplete-input"> </td>
                 <td> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForFestival('. $row->id .')">SAVE</button> </td>
                 <td> '.  $assigned .' </td>';                
             }

@@ -981,6 +981,10 @@ table.fc-border-separate {
                         <!-- MAJALIS END -->
 
 
+                    <?php
+                      $this->load->view('admin/festival/festival_duties');
+                    ?>
+
                     </div>
                 </div>
                 <!-- /.row (main row) -->
@@ -1100,6 +1104,7 @@ function formatDate(date) {
   document.getElementById('date').value = formatDate(new Date());
    ajaxCallDuty();
    ajaxGetMajalisDuties();
+   ajaxGetFestivalDuties();
 });
 
 function ajaxCallDuty() {

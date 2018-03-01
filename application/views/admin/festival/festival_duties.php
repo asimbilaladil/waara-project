@@ -1,65 +1,19 @@
-<body class="hold-transition skin-green sidebar-mini">
-    <div class="wrapper">
-        <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
-            <section class="content-header">
-                <h1>
-                    Dashboard
-                    <small >Control panel</small>
-                </h1>
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">Dashboard</li>
-                </ol>
-            </section>
-            <!-- Main content -->
-            <section class="content">
-                <!-- Main row -->
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="box box-success">
-                            <div class="box-header with-border">
-                               
-                             </div>
-                            <!-- /.box-header -->
-
-                            <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('festival/addDuty') ?>" method="post" >
-                                <div class="box-body">
-
-                                    <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">Duty</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="duty" class="form-control"  placeholder="" required>
-                                        </div>
-                                    </div>
-
-                                    <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
-
-                                    <input type="hidden" name="date" id="date" value="<?php echo $this->input->get('date', TRUE); ?>"/> 
-
-                                    <div class="form-group">
-                                        <div class="col-sm-offset-2 col-sm-2">
-                                            <button type="submit" class="btn btn-primary btn-block">Add</button>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                            </form>
-
-
-                            </br> </br>
-                            <div class="box-header with-border">
-                                <h3 class="box-title">List Of Duties:</h3>
-                            </div>
-
-  <!--                           <div class="form-group">
-                                <div class="col-sm-4">
-                                    <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
-                                </div>
-                            </div> -->
-
+                        <div class="col-md-6 majalisBox"  style="display:none;">
                             <div class="box box-success">
+                                <div class="box-header with-border">
+                                    
+                                    <div for="" class="col-sm-4 "><h3 class="box-title">list of Festival</h3></div>
+                                    <div for="" class="col-sm-8 "><h3 id="selectedMajalisDate" class="box-title"> Selected Date is : </h3></div>
+
+                                </div>
+
+                                    <div class="col-sm-12" style="top: 20px;">
+                                        <div class="col-sm-3" >
+                                        </div>
+                                       <!--  <div class="col-sm-6" >
+                                            <button class="btn btn-primary btn-block " onclick="addDutyForDay()">Add Waara</button>
+                                        </div> -->
+                                    </div>
                  
                                 <!-- /.box-header -->
                                 <div class="box-body">
@@ -72,12 +26,11 @@
                                         <div class="form-group">
                                             <div class="col-sm-6">
 
-                                            <input type="hidden" name="festivalDate" value="<?php echo $this->input->get('date') ?>" id="festivalDate"/>
+                                            <input type="hidden" name="festivalDate" id="festivalDate"/>
 
                                             <input type="hidden" name="selectedFestivalUser" id="selectedFestivalUser"/>
                                             <input type="hidden" name="selectedFestivalDuty" id="selectedFestivalDuty"/>
-                                            <input type="hidden" name="fromViewDuties" value="true"/>
-                                                                  
+                                            <input type="hidden" name="fromViewDuties" value="false"/>                                               
                                             </div>
                                         </div>
 
@@ -86,20 +39,19 @@
                                     <div class="col-sm-12">
                                      </br>
                                         <!--Dynamicly duty table added  -->
-                                        <div id="festivalDuty"  >
+                                        <div id="festivalDuty" name="festivalDuty" >
 
                                         </div>
-                                    </div>                            
-
+                                    </div>
 
 
                                         <!-- Modal -->
-                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                        <div class="modal fade" id="festivalUserHistoryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                           <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                               <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                                <h4 class="modal-title" id="myModalLabel">User History</h4>
+                                                <h4 class="modal-title" id="myModalLabel">Festival User History</h4>
                                               </div>
                                               <div class="modal-body">
                                                 <div id="userHistoryForFestival">
@@ -116,56 +68,70 @@
 
                                     </form>
 
-            <!-- MAJALIS DUTY RATING START -->
-            <div id="userFestivalDutyRating" class="modal fade" role="dialog">
-                <div class="modal-dialog">
-                <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">User Rating 1</h4>
+                                        <!-- Modal -->
+<!--                                         <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">How do you want to notify user?</h4>
+                                              </div>
+                                              <div class="modal-body">
+
+                                                <label class="checkbox-inline"><input id="byEmail" name="byEmail" value="email" type="checkbox" value="">By Email</label>
+                                                <label class="checkbox-inline"><input id="bySms" name="bySms" value="sms" type="checkbox" value="">By Message</label>
+                                                
+
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div> -->
+
+
+
+                                        <!-- Modal -->
+<!--                                         <div class="modal fade" id="preferences" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Alert</h4>
+                                              </div>
+                                              <div class="modal-body">
+
+                                              <p> Preferences does not match </p>
+
+                                              </div>
+                                              
+                                            </div>
+                                          </div>
+                                        </div> -->
+
+                                       
+                                </div>
+                                <!-- /.box-body -->
+                                <div class="box-footer">
+                                </div>
+                                <!-- /.box-footer -->
+                            </div>
+                            <!-- /.box -->
                         </div>
-                    <div class="modal-body">
-                        <div class="form-group" style="text-align: center;">
-                            <input type="hidden" id="assignFestivalDutyId" name="assignDuty"/>
-                            <input id="festival-duty-rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
-                        </div>
-                    </div>
-                    <div class="modal-footer"> 
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" onclick="addRatingForFestivalDuty()" class="btn btn-primary">Save</button>
-                    </div>
-                    </div>
-
-                </div>
-            </div>
-            <!-- MAJALIS DUTY RATING END -->
-
-
-                            
-                        </div>
-                    </div>
-                    <!-- /.box -->
-                </div>
-                <!-- /.box-footer -->
-                </form>
-        </div>
-        <!-- /.box -->
-    </div>
-    </div><!-- /.row (main row) -->
-    </section><!-- /.content -->
-    </div>
-    </div>
-
 
 
 <script>
 
-ajaxGetFestivalDuties();
+// $(function(){
 
+//   ajaxGetFestivalDuties();
+// })
 
 function setAssignFestivalDutyId(id,stars) {
     
+    console.log('setAssignFestivalDutyId', id);
+
     $('#assignFestivalDutyId').val(id);
     $('#festival-duty-rating-system').rating('update', stars);
     //$('#rating-system').val(stars);
@@ -235,7 +201,7 @@ function ajaxGetFestivalDuties() {
                         
                     });  
 
-                    sortDuties(duty_id, date);
+                    sortFestivalDuties(duty_id, date);
               }
 
             });
@@ -273,7 +239,7 @@ function ajaxCallUserHistoryForFestival(dutyId) {
 
    //preferenceAjaxCall(dutyId);
 
-   $('#myModal').modal('toggle');
+   $('#festivalUserHistoryModal').modal('toggle');
    $('#selectedFestivalDuty').val(dutyId);
 
    var state = $('#selectedFestivalUser').val();
@@ -288,22 +254,24 @@ function ajaxCallUserHistoryForFestival(dutyId) {
 
 }
 
-function sortDuties(duty_id, selectedDate){
+function sortFestivalDuties(duty_id, selectedDate) {
 
-      $.ajax({
-         url: <?php echo '"' . site_url('Festival/sortFestivalDuties') . '"' ?>,
-         type: "POST",
-         data: {
-             "duties" : duty_id,
-             "selectedDate" : selectedDate
-         },
-         success: function(response){
-            
-         },
-         error: function(){  
-         }
-     });
-  }
+  console.log(selectedDate);
+
+  $.ajax({
+     url: <?php echo '"' . site_url('Festival/sortFestivalDuties') . '"' ?>,
+     type: "POST",
+     data: {
+         "duties" : duty_id,
+         "selectedDate" : selectedDate
+     },
+     success: function(response){
+        
+     },
+     error: function(){  
+     }
+ });
+}
 
 $(function(){
     $.fn.editable.defaults.mode = 'inline';
