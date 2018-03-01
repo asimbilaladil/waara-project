@@ -708,7 +708,7 @@ table.fc-border-separate {
                         <div class="col-md-6">
                             <div class="box box-success">
                                 <div class="box-header with-border">
-                                    <h3 class="box-title">Assigned Waara</h3>
+                                    <h3 class="box-title">ASSIGNED WAARA</h3>
                                 </div>
                                 <!-- /.box-header -->
                                 <!-- form start -->
@@ -737,7 +737,7 @@ table.fc-border-separate {
                             <div class="box box-success">
                                 <div class="box-header with-border">
                                     
-                                    <div for="" class="col-sm-4 "><h3 class="box-title">list of Waara</h3></div>
+                                    <div for="" class="col-sm-4 "><h3 class="box-title">REGULAR WAARA</h3></div>
                                     <div for="" class="col-sm-8 "><h3 id="selectedDate" class="box-title"> Selected Date is : </h3></div>
 
 
