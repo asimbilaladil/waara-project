@@ -263,4 +263,19 @@ class UserModel extends CI_Model
 
     } 
 
+    public function getUsers( $ids ) {
+
+        $query = $this->db->query('SELECT user.username, user.first_name, user.last_name, user.email, user.phone
+                    FROM user
+                    where user.user_id IN ' . $ids );
+
+        $query->result();
+
+        return $query->result();
+
+    } 
+
+
+
+
 }

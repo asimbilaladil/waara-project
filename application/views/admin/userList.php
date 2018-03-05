@@ -71,7 +71,17 @@
                                       </div>
                                     <div class="form-group col-sm-4">
                                        <button onclick="addNewUser()" type="button" class="btn btn-primary"> Add New User</button>
-                                      <button type="button" class="btn btn-primary toggle-vis"  data-column="0" > Merge User</button>
+<!--                                        <button type="button" class="btn btn-primary toggle-vis"  data-column="0" > Merge User</button> --> 
+                                    <form action="<?php echo site_url('User/mergeUser') ?>" method="POST">
+
+                                        <input type="hidden" id="mergeUserList" name="mergeUserList"/>
+
+                                        <button type="submit" onclick="mergeUsers()" class="btn btn-primary"> Merge User</button>
+
+                                        
+
+                                    </form>    
+
                                   </div>       
                                 
                                                       
@@ -110,7 +120,7 @@
                                               $showColor = ( $item->type != 'User' ) ?  '<button onClick="getColorUserId(' . $item->user_id .')"type="button" data-toggle="modal" data-target="#colorModal" class="btn btn-primary btn-block" style="opacity: 1; background-color:'. $item->color .'; width: 6%;"></button>' : '' ;
                                                 $template =   
                                                     '<tr>
-                                                        <td>   <input type="checkbox" class="mergeUserList" name="mergeUsers[]" value="'.$item->user_id.'"> </td>
+                                                        <td> <input type="checkbox" class="mergeUserList" name="mergeUsers[]" onclick="mergeCheck(this)" value="'.$item->user_id.'"> </td>
                                                         <td> <a href="'. site_url('profile/index?id=' . $item->user_id ) .'" >'. $item->first_name.' '. $item->last_name.' </a></td>
                                                         
                                                         <td> <a href="#">'. $item->daysCount .'
@@ -414,19 +424,52 @@
            // table.fixedHeader.adjust();
             visible = ! visible;
         });
-         
-        $('button.toggle-vis').on( 'click', function (e) {
-            e.preventDefault();
 
-            // Get the column API object
-            var column = table.column( $(this).attr('data-column') );
+        
+    //Merge user    
+    // $('button.toggle-vis').on( 'click', function (e) {
+    //     e.preventDefault();
 
-            // Toggle the visibility
-            column.visible( ! column.visible() );
-        });    
+    //     // Get the column API object
+    //     var column = table.column( $(this).attr('data-column') );
+
+    //     // Toggle the visibility
+    //     column.visible( ! column.visible() );
+    // });
+
+
+
+
 } );
-     
-      
+
+    var selected = [];
+
+    function mergeCheck(checkbox) {
+        if (checkbox.checked) {
+
+            if (selected.indexOf(checkbox.value) == -1) {
+                selected.push(checkbox.value);
+            }
+
+            $("#mergeUserList").val( JSON.stringify(selected) );
+
+        }
+    }
+
+    // function mergeUsers() {
+    //     var selected = [];
+    //     $("#table input:checked").each(function() {
+    //          selected.push($(this).attr('value'));
+    //     });
+
+    //     // var obj = {
+    //     //     'list': selected
+    //     // };
+
+    //     $("#mergeUserList").val( JSON.stringify(selected) );
+
+  
+    // }
 
 
     </script>
