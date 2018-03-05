@@ -33,7 +33,7 @@
                             <div class="box-header with-border">
                                 <h3 class="box-title">List Of Majalis:</h3>
                             </div>
-
+  <div class="form-group">
                                 <div class="col-sm-4">
                                     <select required="" name="years" id="yearDropdown" onchange="onYearChange(this)" class="form-control">
                                         <?php
@@ -47,8 +47,10 @@
                                     <input type="hidden" value="<?php echo $years ? $years[0]->year : 0 ?>" id="selectedYear"/>
 
                                 </div>
-
-
+    </div>
+              
+ <br> <br> <br>
+ <div style="overflow-x:auto;">
                             <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
@@ -73,6 +75,7 @@
                                                                         
                                 </tbody>
                             </table>
+                  </div>
                         </div>
                     </div>
                     <!-- /.box -->
@@ -119,6 +122,8 @@
                                     <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
                                 </div>
                             </div> -->
+                  <br> <br>
+                   <div style="overflow-x:auto;">
                             <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
@@ -144,6 +149,7 @@
                                   
                                 </tbody>
                             </table>
+                  </div>
                         </div>
                     </div>
                     <!-- /.box -->
