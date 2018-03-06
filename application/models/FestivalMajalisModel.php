@@ -29,6 +29,46 @@ class FestivalMajalisModel extends CI_Model {
         return $query->result();
     }    
 
+
+    public function getFestivalForTableV2($year) {
+        $festivalWithDates = $this->getFestivalForYears($year);
+
+        $festivalArray = array();
+
+        foreach ($festivalWithDates as $festival) {
+
+            $index = getIndexOf($festivalArray, 'id', $festival->id);
+
+            $festivalMonth = 'month';
+            $date = '';
+            $completeDate = '';
+            $dateToken = '';
+
+            if ($festival->date) {            
+                $date = date("m",strtotime($festival->date)) . '-' . date("d",strtotime($festival->date));
+            }
+
+            if ($index > -1) {
+                                
+                $festivalArray[$index]['date'] = $festivalArray[$index]['date'] . ', ' . $date;
+
+            } else {
+
+                $item['id'] = $festival->id;
+                $item['festivalName'] = $festival->festival;
+                $item['token'] = $festival->token;
+                $item['date'] = $date;
+
+                array_push($festivalArray, $item);
+                $item = null;
+            }
+
+        }
+
+        return $festivalArray;         
+
+    }
+
     public function getFestivalForTable($year) {
         
         $festivalWithDates = $this->getFestivalForYears($year);

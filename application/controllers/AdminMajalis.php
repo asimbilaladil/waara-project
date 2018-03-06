@@ -60,9 +60,20 @@ class AdminMajalis extends CI_Controller {
             return $a->sort > $b->sort;
         });
         
+
+        
+        $majalisName = '';
+
+        //TOTO: FIX
         foreach($result as $key => $row) {
-            $majalisBoxHideShow =  '<script>$(".majalisBox").show()</script>';
+
+            if (isset($row->majalisName)) {
+                $majalisName = $row->majalisName;
+            }
+
+            $majalisBoxHideShow =  '<script>$(".majalisBox").show(); $("#majalisHeading").html("'. $majalisName .'"); </script>';
             $assigned = $row->user_id != null ? true : false;
+
 
             if ($assigned) {
 
@@ -78,11 +89,15 @@ class AdminMajalis extends CI_Controller {
                 onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary">Rating</button> </td>';  
 
             } else {
-                $html = $html . '<tr>
-                <td style="display:none;">'. $row->id .'</td>
-                <td> '. $row->name .' </td>
-                <td> <input type="text" id="majalisDutyUsers_'. $key .'" name="users" class="form-control  ui-autocomplete-input"> </td>
-                <td> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForMajalis('. $row->id .')">SAVE</button> </td>';                
+
+                if ($row->id) {
+
+                    $html = $html . '<tr>
+                    <td style="display:none;">'. $row->id .'</td>
+                    <td> '. $row->name .' </td>
+                    <td> <input type="text" id="majalisDutyUsers_'. $key .'" name="users" class="form-control  ui-autocomplete-input"> </td>
+                    <td> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForMajalis('. $row->id .')">SAVE</button> </td>';
+                }                
             }
 
         }

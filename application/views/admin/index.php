@@ -76,6 +76,8 @@ function formatDate(date) {
 
                             ajaxGetMajalisDuties();
 
+                            ajaxGetFestivalDuties();
+
 
         },
         dayClick: function(date, allDay, jsEvent, view) {
@@ -92,6 +94,8 @@ function formatDate(date) {
         ajaxCallDuty();
 
         ajaxGetMajalisDuties();
+
+        ajaxGetFestivalDuties();
 
 
     }
@@ -862,7 +866,7 @@ table.fc-border-separate {
                             <div class="box box-success">
                                 <div class="box-header with-border">
                                     
-                                    <div for="" class="col-sm-4 "><h3 class="box-title">list of Majalis</h3></div>
+                                    <div for="" class="col-sm-4 "><h3 class="box-title" id="majalisHeading" >list of Majalis</h3></div>
                                     <div for="" class="col-sm-8 "><h3 id="selectedMajalisDate" class="box-title"> Selected Date is : </h3></div>
 
                                 </div>
@@ -870,9 +874,9 @@ table.fc-border-separate {
                                     <div class="col-sm-12" style="top: 20px;">
                                         <div class="col-sm-3" >
                                         </div>
-                                        <div class="col-sm-6" >
+<!--                                         <div class="col-sm-6" >
                                             <button class="btn btn-primary btn-block " onclick="addDutyForDay()">Add Waara</button>
-                                        </div>
+                                        </div> -->
                                     </div>
                  
                                 <!-- /.box-header -->
@@ -1268,6 +1272,7 @@ var eventClick = function eventClick(formatedDate){
         ajaxCallDuty();
 
         ajaxGetMajalisDuties();
+        ajaxGetFestivalDuties();
 
 
     

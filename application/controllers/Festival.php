@@ -76,6 +76,7 @@ class Festival extends CI_Controller {
 
     }
 
+
     /**
      * print month of festival
      * Created By: Moiz
@@ -91,7 +92,44 @@ class Festival extends CI_Controller {
             $str = ' - ';
         }
         return $str;
-    }            
+    } 
+
+    /**
+     * get Festival by year
+     * Created By: Moiz
+     */
+    function getFestivalByYearV2() {
+      $year = $this->input->post('year');
+      $festivalData = $this->FestivalMajalisModel->getFestivalForTableV2($year);
+
+      $html = '';
+
+      echo json_encode($festivalData);
+
+      foreach ($festivalData as $item) {
+
+        $deleteUrl = site_url('festival/deleteFestival?token=' . $item["token"]);
+        $editMajalisUrl = site_url("majalis/editFestival");
+        $addUrl = site_url('Festival/viewFestivalDates?token=' . $item["token"]);
+        $html = $html . '<tr>
+            <td> <a href="' . site_url("festival/viewFestivalDates?token=" . $item["token"]) . '">' . $item["festivalName"] . '</a> </td>
+
+            <td> <a href="'. $addUrl .'">'. $item["date"] .' </td>
+
+            <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+
+            <td> <a href="#" name="editFestival" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["festivalName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
+
+            <td> <a href="'. $addUrl .'"> ADD </a </td>
+            
+        </tr>';
+      }
+
+      echo $html;
+
+    }
+
+           
 
     /**
      * Add festival view
@@ -354,7 +392,7 @@ class Festival extends CI_Controller {
     function ajaxGetFestivalDuties() {
 
         $date = $this->input->post('date');
-        $majalisBoxHideShow =  '<script>$(".majalisBox").hide()</script>';
+        $majalisBoxHideShow =  '<script>$(".festivalBox").hide()</script>';
         $userIds = array();
 
         $html = '<table class="table table-striped" id="festivalDutyTable">
@@ -390,8 +428,17 @@ class Festival extends CI_Controller {
             return $a->sort > $b->sort;
         });        
 
+
+        //echo json_encode($result);die;
+        $festivalName = '';
+
         foreach($result as $key => $row) {
-            $majalisBoxHideShow =  '<script>$(".majalisBox").show()</script>';
+
+            if (isset($row->festivalName) ) {
+              $festivalName = $row->festivalName;
+            }           
+
+            $majalisBoxHideShow =  '<script>$(".festivalBox").show(); $("#festivalHeading").html("'. $festivalName . '"); </script></script>';
             $assigned = $row->user_id != null ? true : false;
 
             if ($assigned) {
@@ -408,12 +455,18 @@ class Festival extends CI_Controller {
                 onclick="setAssignFestivalDutyId('. $row->assignId .',0)" data-target="#userFestivalDutyRating" class="btn btn-primary">Rating</button> </td>';  
 
             } else {
-                $html = $html . '<tr>
-                <td style="display:none;">'. $row->id .'</td>
-                <td> '. strtoupper($row->duty) .' </td>
-                <td> <input type="text" id="festivalDutyUsers_'. $key .'" name="festivalUsers" class="form-control  ui-autocomplete-input"> </td>
-                <td> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForFestival('. $row->id .')">SAVE</button> </td>
-                <td> '.  $assigned .' </td>';                
+
+                if ($row->id) {
+
+                    $html = $html . '<tr>
+                    <td style="display:none;">'. $row->id .'</td>
+                    <td> '. strtoupper($row->duty) .' </td>
+                    <td> <input type="text" id="festivalDutyUsers_'. $key .'" name="festivalUsers" class="form-control  ui-autocomplete-input"> </td>
+                    <td> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForFestival('. $row->id .')">SAVE</button> </td>
+                    <td> '.  $assigned .' </td>';                
+
+                }
+
             }
 
         }

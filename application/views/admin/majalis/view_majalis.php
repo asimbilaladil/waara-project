@@ -128,18 +128,7 @@
                                 <thead>
                                     <tr>
                                         <th> Festival Name </th>
-                                        <th> January </th>
-                                        <th> February </th>
-                                        <th> March </th>
-                                        <th> April </th>
-                                        <th> May </th>
-                                        <th> June </th>
-                                        <th> July </th>
-                                        <th> August </th>
-                                        <th> September </th>
-                                        <th> October </th>
-                                        <th> November </th>
-                                        <th> December </th>
+                                        <th> Dates (Month-Day) </th>
                                         <th> Actions </th>
                                     </tr>
                                 </thead>
@@ -184,7 +173,7 @@ function getFestivalDates() {
     var year = $('#festivalYearDropdown').val();
 
     $.ajax({
-        url: "<?php echo site_url('Festival/getFestivalByYear') ?>",
+        url: "<?php echo site_url('Festival/getFestivalByYearV2') ?>",
         type: "POST",
         data: {
             'year': year

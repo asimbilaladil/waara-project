@@ -183,13 +183,13 @@ class FestivalModel extends CI_Model {
 
     public function getDutiesByDate($date) {
 
-        $query = $this->db->query("SELECT festival_duties.id, festival_duties.token, festival_duties.duty, festival_duties.festival_id, festival_date.date, festival_duty_assign.user_id, festival_duty_assign.id as assignId, festival_sort.sort
-            FROM festival_date, festival_duties
+        $query = $this->db->query("SELECT festival.id as festivalId, festival.festival as festivalName, festival_duties.id, festival_duties.token, festival_duties.duty, festival_duty_assign.user_id, festival_duty_assign.id as assignId, festival_sort.sort
+            FROM festival
+            INNER JOIN festival_date ON festival.id = festival_date.festival_id 
+            LEFT JOIN festival_duties ON festival_duties.festival_id = festival.id AND festival_duties.type = 'GLOBAL'
             LEFT JOIN festival_duty_assign ON festival_duties.id = festival_duty_assign.duty_id
-            LEFT JOIN festival_sort ON festival_sort.duty_id = festival_duties.id
-            WHERE festival_duties.festival_id = festival_date.festival_id
-            AND festival_date.date = '". $date ."'
-            AND festival_duties.type = 'GLOBAL'");
+            LEFT JOIN festival_sort ON festival_duties.id = festival_sort.duty_id
+            WHERE festival_date.date = '". $date ."' ");
         $query->result();
 
         return $query->result();     

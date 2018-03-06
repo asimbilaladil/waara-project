@@ -34,7 +34,7 @@
 
                             </br> </br>
                             <div class="box-header with-border">
-                                <h3 class="box-title">List of Festival:</h3>
+                                <h3 class="box-title" id="festivalHeading">List of Festival:</h3>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-4">
