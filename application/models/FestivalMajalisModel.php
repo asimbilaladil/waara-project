@@ -45,7 +45,7 @@ class FestivalMajalisModel extends CI_Model {
             $dateToken = '';
 
             if ($festival->date) {            
-                $date = date("m",strtotime($festival->date)) . '-' . date("d",strtotime($festival->date));
+                $date = date("M",strtotime($festival->date)) . '-' . date("d",strtotime($festival->date));
             }
 
             if ($index > -1) {

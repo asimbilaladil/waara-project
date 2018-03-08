@@ -183,8 +183,23 @@
                                         <option value="Super Admin"> Super Admin </option>
                                         <option value="JK Admin"> JK Admin </option>
                                         <option value="User"> User </option>
+                                        <option value="Majalis"> Majalis </option>
                                     </select>
                                     </br>
+
+                                    <div style="display:none" id="majalisDiv">
+                                        <select name="majalis"  class="form-control">
+                                        <?php
+                                            foreach($data['majalis'] as $item) {
+                                                echo '<option value="'. $item->id.'"> '. $item->name. '</option>';
+                                            }
+                                        ?> 
+                                        </select>
+                                        <br>
+
+                                    </div>
+
+
                                     <div style="display:none" id="jkdiv">
                                     <select style="display:none" id="jkList" name="jk_id"  class="form-control">
                                     <?php
@@ -371,16 +386,25 @@
                 document.getElementById("shiftList").style.display = "block";
                 
         
-            } else {
-                document.getElementById("jkList").style.display = "none";
-                document.getElementById("jkdiv").style.display = "none";
-                document.getElementById("shiftList").style.display = "none";
-                document.getElementById("jkList").value = "0";
-                document.getElementById("shiftList").value = "0";
+            } else if (role == "Majalis") {
 
+                document.getElementById("majalisDiv").style.display = "block";
+                //hideUserRoleDiv();
+
+            } else {
+                hideUserRoleDiv();
             }
         
         }
+
+        function hideUserRoleDiv() {
+            document.getElementById("jkList").style.display = "none";
+            document.getElementById("jkdiv").style.display = "none";
+            document.getElementById("shiftList").style.display = "none";
+            document.getElementById("jkList").value = "0";
+            document.getElementById("shiftList").value = "0";            
+        }
+
        var validateColorForm =  function validateColorForm(){
           var e = document.getElementById("assignColor");
           var assignColor = e.options[e.selectedIndex].value; 

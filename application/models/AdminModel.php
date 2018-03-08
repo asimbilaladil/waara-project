@@ -9,13 +9,16 @@ class AdminModel extends CI_Model
 
 
     public function admin_login_check_info( $data ){
-        $this->db->select('*');
-        $this->db->from('user');
-        $this->db->where('email', $data['email']);
-        $this->db->where('password', $data['password']);
-        $quary_result=$this->db->get();
-        $result=$quary_result->row();
-        return $result;
+
+        $query = $this->db->query("SELECT *
+                FROM user
+                LEFT JOIN majalis_admin ON user.user_id = majalis_admin.user_id
+                WHERE email = '". $data['email'] . "'
+                AND PASSWORD = '". $data['password'] ."'
+                GROUP BY majalis_admin.majalis_id");
+        
+        return $query->result();
+
     }
 
 

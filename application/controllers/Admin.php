@@ -12,6 +12,7 @@ class Admin extends CI_Controller {
             $this->load->model('AdminModel');
             $this->load->model('EmailModel');
             $this->load->model('ColorModel');
+            $this->load->model('MajalisModel');
 
         } else {
 
@@ -1143,6 +1144,7 @@ class Admin extends CI_Controller {
         $data['ageGroup'] = $this->AdminModel->getAllfromTable( 'age_group' );
         $data['color'] = $this->ColorModel->getUnassignColors();
         $data['duties'] = $this->AdminModel->getAllfromTable('duty');
+        $data['majalis'] = $this->MajalisModel->getAllMajalis();
 
            // $data['waara_details'] = $this->AdminModel->getWaarabyIds($data['duties']);
             //$data['excluded_waara'] = $this->AdminModel->getWaaraExcludebyIds($data['duties']);      
@@ -1197,26 +1199,46 @@ class Admin extends CI_Controller {
 
     function addUserRole() {
 
-     if($this->input->post()) {
+     if ($this->input->post()) {
+ 
+        $type = $this->input->post('type', true);
+        $userId = $this->input->post('userId', true);
+        
+        $jk_id = '';
+        $shift_id = '';
+    
 
-            $userId = $this->input->post('userId', true);
-            $type = $this->input->post('type', true);
-            $jk_id = $this->input->post('jk_id', true);
-            $shift_id = $this->input->post('shift_id', true);
+        if($type == 'Majalis') {
 
-            $data = array (
-                "type" => $type, 
-                "jk_id" => $jk_id,
-                "shift"  => $shift_id
-            );
-            if( $data["type"] == "Super Admin" ){
+          $majalisData = array (
+            'user_id' => $userId,
+            'majalis_id' => $this->input->post('majalis'),
+            'type' => $type
+          );
 
-                $data["jk_id"] = 0;
-            }
-            $this->AdminModel->update( 'user', 'user_id', $userId, $data );
-           
-            header('Location:http://waaranet.ca/index.php/Admin/userList');
+          $this->AdminModel->insert('majalis_admin', $majalisData);
+
+        } else {
+
+          $jk_id = $this->input->post('jk_id', true);
+          $shift_id = $this->input->post('shift_id', true); 
         }
+
+        $data = array (
+            "type" => $type, 
+            "jk_id" => $jk_id,
+            "shift"  => $shift_id
+        );
+
+      
+        if( $data["type"] == "Super Admin" ){
+          $data["jk_id"] = 0;
+        }
+
+        $this->AdminModel->update( 'user', 'user_id', $userId, $data );
+       
+        redirect('admin/userList');
+      }
     }
 
     /**

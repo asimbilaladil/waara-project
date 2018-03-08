@@ -15,21 +15,38 @@ class Login extends CI_Controller {
         
         if($this->input->post()) {
            
-            $data = array (
+            $loginData = array (
                 'email' => $this->input->post('email', true),
                 'password' => md5($this->input->post('password', true) )
             );
-            $result = $this->AdminModel->admin_login_check_info($data);
+            $result = $this->AdminModel->admin_login_check_info($loginData);
 
             //if query found any result i.e userfound
             if($result) {
 
-                $data['type'] = $result->type;
-                if( $data['type'] != 'User' ){
+                $item = $result[0];
 
-                    $data['user_id'] = $result->user_id;
+                $data['type'] = $item->type;
+
+                if( $data['type'] != 'User' ) {
+
+                    $data['user_id'] = $item->user_id;
                     $data['message'] = 'Your are successfully Login && your session has been start';
-                    $data['jk_id'] = $result->jk_id;
+                    $data['jk_id'] = $item->jk_id;
+
+                    $majalis = array();
+
+                    if ($item->majalis_id) {
+
+                        foreach($result as $row) { 
+                            array_push($majalis, $row->majalis_id);
+                        }
+
+                        $data['majalisId'] = $majalis;
+                        $data['majalisAdmin'] = true;
+
+                    }
+
                     $this->session->set_userdata($data);
                     redirect('admin/');
 
