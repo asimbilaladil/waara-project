@@ -69,18 +69,20 @@
                                     <div class="form-group col-sm-6">
                                          <label id="totalUser" class="control-label col-sm-6" ></label>
                                       </div>
-                                    <div class="form-group col-sm-4">
-                                       <button onclick="addNewUser()" type="button" class="btn btn-primary"> Add New User</button>
+                                    <div class="form-group col-sm-6">
+                                      <div class="col-sm-4">
+                                         <button style="width:  100%;margin-bottom: 6px;" onclick="addNewUser()" type="button" class="btn btn-primary"> Add New User</button>
+                                      </div>
+                                      <div class="col-sm-4">
+                                          <form action="<?php echo site_url('User/mergeUser') ?>" method="POST">
+
+                                            <input type="hidden" id="mergeUserList" name="mergeUserList"/>
+
+                                            <button style="width:  100%;margin-bottom: 6px;" type="submit" onclick="mergeUsers()" class="btn btn-primary"> Merge User</button>
+                                          </form> 
+                                      </div>                                      
 <!--                                        <button type="button" class="btn btn-primary toggle-vis"  data-column="0" > Merge User</button> --> 
-                                    <form action="<?php echo site_url('User/mergeUser') ?>" method="POST">
-
-                                        <input type="hidden" id="mergeUserList" name="mergeUserList"/>
-
-                                        <button type="submit" onclick="mergeUsers()" class="btn btn-primary"> Merge User</button>
-
-                                        
-
-                                    </form>    
+                       
 
                                   </div>       
                                 
@@ -128,8 +130,8 @@
                                                         <td> <a href="#">'.  $item->age.' </a></td>
                                                         <td> <button data-toggle="modal" data-target="#assignWaara"  onclick="setId('. $item->user_id .')" class="btn btn-primary"> Assign Waara</button></td>
                                                         <td> <a href="#">'. $item->type .' </a></td>
-                                                        <td> <a href="updateStatus?id='.$item->user_id.'&status='.$item->status.'" >'. ( $item->status == 'true' ? 'Active' : 'Inactive')   .' </a></td>
-                                                        <td> <a href="updateVerify?id='.$item->user_id.'&verified='.$item->verified.'" >'. ( $item->verified == 'true' ? 'Approved' : 'Pending')   .' </a></td>
+                                                        <td id="userStatus_'.$item->user_id.'"> <a style="cursor: pointer;" onclick="changeUserStatus('.( $item->status == 'true' ? 'true' : 'false') .','.$item->user_id.')"  >'. ( $item->status == 'true' ? 'Active' : 'Inactive')   .' </a></td>
+                                                        <td id="updateVerify_'.$item->user_id.'" > <a style="cursor: pointer;" onclick="changeVerifyStatus('.$item->verified.','.$item->user_id.')"  >'. ( $item->verified == 'true' ? 'Approved' : 'Pending')   .' </a></td>
                                                         <td>'; 
                                                            if($_SESSION['type'] == 'Super Admin'){
                                                              $template =   $template .'            <a href="'. site_url('admin/edituser?uid=' . $item->user_id ) .'" ><span class="glyphicon glyphicon-pencil"></span> </a>
@@ -140,7 +142,6 @@
                                                             <a onClick="getId(' . $item->user_id .')" data-toggle="modal" data-target="#myModal" > <span  class="glyphicon glyphicon-user"></span></a>
                                                         </td>
                                                         <td style="display:none;">'. ( $item->type == "Super Admin" ? "admin0admin" : ( $item->type == "JK Admin" ? "jk0jk": "usr0usr") ).' </td>
-
                                                        
                                                       
                                                     </tr>';
@@ -297,20 +298,57 @@
 
     <script type="text/javascript">
       
-
         function setId(id){
         $('#user').val(id); 
     }
 //   function mergeUser(){
 //     //$('.mergeUserList').
 //   }  
-      
+  function changeVerifyStatus(status, user_id){
+
+            $.ajax({
+            url: "<?php echo site_url('Admin/updateVerify') ?>",
+            type: "GET",
+            data: {
+                'id' : user_id,
+                'verified' : status
+            },
+            success: function(response){
+              var statusText = ( status == false ? 'Approved' : 'Pending');
+              var updatedStatus = ( status == false ? true : false);
+              $('#updateVerify_'+user_id).html(' <a style="cursor: pointer;" onclick="changeVerifyStatus('+updatedStatus+','+user_id+')"  >' +statusText+' </a>')
+             
+            },
+            error: function(){
+                
+            }
+        });    
+  }   
+  function changeUserStatus(status, user_id){
+
+            $.ajax({
+            url: "<?php echo site_url('Admin/updateStatus') ?>",
+            type: "GET",
+            data: {
+                'id' : user_id,
+                'status' : status
+            },
+            success: function(response){
+              var statusText = ( status == false ? 'Active' : 'Inactive');
+              var updatedStatus = ( status == false ? true : false);
+              $('#userStatus_'+user_id).html(' <a style="cursor: pointer;" onclick="changeUserStatus('+updatedStatus+','+user_id+')"  >' +statusText+' </a>')
+             
+            },
+            error: function(){
+                
+            }
+        });    
+  }         
   function assignWaara(){
         var user_id = $('#user').val(); 
         var date =  $('#date').val(); 
         var waara = $('#waara').val(); 
         var jk = $('#jk').val();
-
         $.ajax({
             url: "<?php echo site_url('Admin/assignWaaraToUser') ?>",
             type: "POST",
@@ -330,14 +368,12 @@
         });         
     }    
       var addNewUser = function addNewUser() {
-
         eraseCookie("first_name");
         eraseCookie("last_name");
         eraseCookie("date");
         eraseCookie("waara_id");
         
         window.location = "<?php echo site_url('admin/addNewUser') ?>";
-
       }
       function eraseCookie(name) {
         createCookie(name,"",-1);
@@ -351,10 +387,8 @@
           else var expires = "";
           document.cookie = name+"="+value+expires+"; path=/";
       }
-
         var rowCount = ( $('#table tr').length ) - 1;
         $('#totalUser').text( 'Total Users: ' +  rowCount  );
-
         var getId = function (id){
             document.getElementById("userId").value = id;
         
@@ -377,7 +411,6 @@
                 document.getElementById("shiftList").style.display = "none";
                 document.getElementById("jkList").value = "0";
                 document.getElementById("shiftList").value = "0";
-
             }
         
         }
@@ -385,10 +418,8 @@
           var e = document.getElementById("assignColor");
           var assignColor = e.options[e.selectedIndex].value; 
           return (assignColor != 'select')
-
         }
        $(document).ready(function() {
-
    var table = $('#table').DataTable({ drawCallback: function(){
    
        $('.paginate_button', this.api().table().container())          
@@ -417,61 +448,42 @@
         } );         
         var visible = true;
         var tableContainer = $(table.table().container());
-
         $('#showHideTable').on( 'click', function () {
       
             tableContainer.css( 'display', visible ? 'none' : 'block' );
            // table.fixedHeader.adjust();
             visible = ! visible;
         });
-
         
     //Merge user    
     // $('button.toggle-vis').on( 'click', function (e) {
     //     e.preventDefault();
-
     //     // Get the column API object
     //     var column = table.column( $(this).attr('data-column') );
-
     //     // Toggle the visibility
     //     column.visible( ! column.visible() );
     // });
-
-
-
-
 } );
-
     var selected = [];
-
     function mergeCheck(checkbox) {
         if (checkbox.checked) {
-
             if (selected.indexOf(checkbox.value) == -1) {
                 selected.push(checkbox.value);
             }
-
             $("#mergeUserList").val( JSON.stringify(selected) );
-
         }
     }
-
-    // function mergeUsers() {
-    //     var selected = [];
-    //     $("#table input:checked").each(function() {
-    //          selected.push($(this).attr('value'));
-    //     });
-
-    //     // var obj = {
-    //     //     'list': selected
-    //     // };
-
-    //     $("#mergeUserList").val( JSON.stringify(selected) );
-
+    function mergeUsers() {
+        var selected = [];
+        $("#table input:checked").each(function() {
+             selected.push($(this).attr('value'));
+        });
+        // var obj = {
+        //     'list': selected
+        // };
+        $("#mergeUserList").val( JSON.stringify(selected) );
   
-    // }
-
-
+    }
     </script>
 
 <style>

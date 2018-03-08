@@ -859,20 +859,52 @@ class AdminModel extends CI_Model
         //                             FROM user
         //                             LEFT JOIN assign_duty
         //                             ON user.user_id=assign_duty.user_id AND assign_duty.start_date = '". $date ."'; ");
-        $query = $this->db->query("select user_id, (select age_group from age_group where id = age_group) as age, ( SELECT phone FROM user where user.user_id = assign_duty.user_id) as phone, ( SELECT email FROM user where user.user_id = assign_duty.user_id) as email, ( SELECT CONCAT( user.first_name, ' ',user.last_name ) FROM user where user.user_id = assign_duty.user_id) as name , start_date from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .")  ORDER BY `assign_duty`.`start_date` DESC" );
-            //  die("select user_id, ( SELECT phone FROM user where user.user_id = assign_duty.user_id) as phone, ( SELECT email FROM user where user.user_id = assign_duty.user_id) as email, ( SELECT CONCAT( user.first_name, ' ',user.last_name ) FROM user where user.user_id = assign_duty.user_id) as name , start_date from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .")  ORDER BY `assign_duty`.`start_date` DESC" );
+        $query = $this->db->query("select user_id, (select age_group from age_group where id = age_group) as age, ( SELECT phone FROM user where user.user_id = assign_duty.user_id) as phone, ( SELECT email FROM user where user.user_id = assign_duty.user_id) as email, ( SELECT CONCAT( user.first_name, ' ',user.last_name ) FROM user where user.user_id = assign_duty.user_id) as name , start_date from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .") AND FIND_IN_SET( '$ids' ,(select pref_duty FROM user where user.user_id = assign_duty.user_id ))  ORDER BY `assign_duty`.`start_date` DESC" );
+        //die("select user_id, (select age_group from age_group where id = age_group) as age, ( SELECT phone FROM user where user.user_id = assign_duty.user_id) as phone, ( SELECT email FROM user where user.user_id = assign_duty.user_id) as email, ( SELECT CONCAT( user.first_name, ' ',user.last_name ) FROM user where user.user_id = assign_duty.user_id) as name , start_date from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .") AND FIND_IN_SET( '$ids' ,(select pref_duty FROM user where user.user_id = assign_duty.user_id ))  ORDER BY `assign_duty`.`start_date` DESC" );
 
                 $query->result();
         return $query->result();
     } 
     
     public function getReportDataWithoutRange ($start_date, $end_date, $duties){
-        $ids = implode(',', $duties);
+        
+                $ids = implode(',', $duties);
         // $query = $this->db->query("SELECT user.first_name, user.last_name, assign_duty.assign_id
         //                             FROM user
         //                             LEFT JOIN assign_duty
-        //                             ON user.user_id=assign_duty.user_id AND assign_duty.start_date = '". $date ."'; ");
-        $query = $this->db->query("SELECT u.user_id, (select age_group from age_group where id = u.age_group) as age, ( SELECT email FROM user where user.user_id = u.user_id) as email, ( SELECT phone FROM user where user.user_id = u.user_id) as phone, (select start_date from assign_duty as a where user_id=u.user_id AND start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .") order by start_date DESC limit 1 ) as udate, CONCAT( u.first_name, ' ',u.last_name ) as name FROM user as u where u.user_id in (select user_id from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .") ORDER BY `assign_duty`.`start_date` DESC )" );
+//         //                             ON user.user_id=assign_duty.user_id AND assign_duty.start_date = '". $date ."'; ");
+//          die("SELECT u.user_id, (select age_group from age_group where id = u.age_group) as age, 
+//          ( SELECT email FROM user where user.user_id = u.user_id) as email, 
+//          ( SELECT phone FROM user where user.user_id = u.user_id) as phone,
+//          IFNULL(
+//          (select start_date from assign_duty as a 
+//                  where user_id=u.user_id AND 
+//                  start_date >= '". $start_date . "' AND 
+//                  start_date <= '" . $end_date . "' AND 
+//                  duty_id IN (". $ids .")
+//              order by start_date DESC limit 1 ) , 
+//          (select start_date from assign_duty as a
+//                  where user_id=u.user_id AND start_date >= '". $start_date . "' AND 
+//                  start_date <= '" . $end_date . "'  order by start_date DESC limit 1) )  as udate,
+            
+//  IFNULL( (select assign_id from assign_duty as a where user_id=u.user_id AND start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id Not IN (". $ids .") order by start_date DESC limit 1 ) , 'NO') as anyOtherWaara,
+//          CONCAT( u.first_name, ' ',u.last_name ) as name FROM user as u where u.user_id in (select user_id from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .") AND FIND_IN_SET( '$ids' ,u.pref_duty)  ORDER BY `assign_duty`.`start_date` DESC )");
+            $query = $this->db->query("SELECT u.user_id, (select age_group from age_group where id = u.age_group) as age, 
+            ( SELECT email FROM user where user.user_id = u.user_id) as email, 
+            ( SELECT phone FROM user where user.user_id = u.user_id) as phone,
+            IFNULL(
+            (select start_date from assign_duty as a 
+                    where user_id=u.user_id AND 
+                    start_date >= '". $start_date . "' AND 
+                    start_date <= '" . $end_date . "' AND 
+                    duty_id IN (". $ids .")
+                order by start_date DESC limit 1 ) , 
+            (select start_date from assign_duty as a
+                    where user_id=u.user_id AND start_date >= '". $start_date . "' AND 
+                    start_date <= '" . $end_date . "'  order by start_date DESC limit 1) )  as udate,
+            
+ IFNULL( (select assign_id from assign_duty as a where user_id=u.user_id AND start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id Not IN (". $ids .") order by start_date DESC limit 1 ) , 'NO') as anyOtherWaara,
+            CONCAT( u.first_name, ' ',u.last_name ) as name FROM user as u where u.user_id in (select user_id from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .") AND FIND_IN_SET( '$ids' ,u.pref_duty)  ORDER BY `assign_duty`.`start_date` DESC )" );
             //  die("select user_id, ( SELECT phone FROM user where user.user_id = assign_duty.user_id) as phone, ( SELECT email FROM user where user.user_id = assign_duty.user_id) as email, ( SELECT CONCAT( user.first_name, ' ',user.last_name ) FROM user where user.user_id = assign_duty.user_id) as name , start_date from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .")  ORDER BY `assign_duty`.`start_date` DESC" );
 
                 $query->result();
@@ -880,8 +912,16 @@ class AdminModel extends CI_Model
     } 
     public function getUserDataWithoutWaara ($start_date, $end_date, $duties){
         $ids = implode(',', $duties);
-        $query = $this->db->query("SELECT user_id, (select age_group from age_group where id = age_group) as age , CONCAT( user.first_name, ' ',user.last_name ) as name, email, phone from user where user_id NOT IN (select user_id from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .") ) and user_id not in (SELECT user_id FROM `assign_duty`)" );
-//        die("SELECT user_id, CONCAT( user.first_name, ' ',user.last_name ) as name, email, phone from user where user_id NOT IN (select user_id from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .") ) and user_id not in (SELECT user_id FROM `assign_duty`)" );
+                       // die("SELECT user_id, (select age_group from age_group where id = age_group) as age , CONCAT( user.first_name, ' ',user.last_name ) as name, email, phone from user where user_id NOT IN (select user_id from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .") ) and user_id not in (SELECT user_id FROM `assign_duty`) AND FIND_IN_SET( '$ids' ,pref_duty)" );
+
+        $query = $this->db->query("SELECT user_id, 
+                (select age_group from age_group where id = age_group) as age , 
+                CONCAT( u.first_name, ' ',u.last_name ) as name, 
+                email, 
+                phone, 
+                IFNULL( (select assign_id from assign_duty as a where user_id=u.user_id AND start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id Not IN (". $ids .") order by start_date DESC limit 1 ) , 'NO') as anyOtherWaara
+                from user as u where user_id NOT IN (select user_id from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .") )  AND FIND_IN_SET( '$ids' ,pref_duty)" );
+        //die("SELECT user_id, (select age_group from age_group where id = age_group) as age , CONCAT( user.first_name, ' ',user.last_name ) as name, email, phone from user where user_id NOT IN (select user_id from assign_duty where start_date >= '". $start_date . "' AND start_date <= '" . $end_date . "' AND duty_id IN (". $ids .") ) and user_id not in (SELECT user_id FROM `assign_duty`) AND FIND_IN_SET( '$ids' ,pref_duty)" );
                 $query->result();
         return $query->result();
     } 

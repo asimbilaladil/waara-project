@@ -1420,7 +1420,7 @@ class Admin extends CI_Controller {
 
         $id = $this->input->get('id', TRUE);
         $this->AdminModel->delete( 'duty_id', $id, 'duty');
-        redirect('admin/addDuty');
+        //redirect('admin/addDuty');
 
     }
   
@@ -1666,6 +1666,8 @@ class Admin extends CI_Controller {
             $waara_id = $this->input->post('waara_id', TRUE);
             $date = $this->input->post('assign_date', TRUE);
             $age_group = $this->input->post('age_group', TRUE);
+            $duties = $this->input->post('duties', true);
+            $jks = $this->input->post('jks', true);
             if(empty($password)){
                 $password = "1234";
             }
@@ -1682,7 +1684,9 @@ class Admin extends CI_Controller {
                 'verified' => 'false',
                 'type' => 'User',
                 'token' => $token,
-                'age_group' => $age_group
+                'age_group' => $age_group,
+                'pref_duty' => implode(",",$duties),
+                'pref_jk' => implode(",",$jks)
             );
 
             $this->AdminModel->insert('user', $data);
@@ -1712,7 +1716,7 @@ class Admin extends CI_Controller {
 
         
         $data['ageGroup'] = $this->AdminModel->getAllfromTable( 'age_group' );
-
+  
         $this->loadView('admin/addNewUser', $data);
     }
     public function addNewUser() {
@@ -1728,6 +1732,7 @@ class Admin extends CI_Controller {
             $phone = $this->input->post('phone', TRUE);
             $waara_id = $this->input->post('waara_id', TRUE);
             $date = $this->input->post('assign_date', TRUE);
+            $duties = $this->input->post('duties', true);
             $age_group = $this->input->post('age_group', TRUE);
             if(empty($password)){
                 $password = "1234";
@@ -1745,7 +1750,8 @@ class Admin extends CI_Controller {
                 'verified' => 'false',
                 'type' => 'User',
                 'token' => $token,
-                'age_group' => $age_group
+                'age_group' => $age_group,
+                'pref_duty' => $duties
             );
 
             $this->AdminModel->insert('user', $data);
@@ -1773,7 +1779,16 @@ class Admin extends CI_Controller {
                    
         }
 
-        
+
+
+            $jkArray = $this->AdminModel->getAllfromTable('jk');
+            $jks = array();
+
+            foreach($jkArray as $item => $value) {
+                $jks[$value->id] = $value->name;
+            }            
+
+            $data['jks'] = $jks;
         $data['ageGroup'] = $this->AdminModel->getAllfromTable( 'age_group' );
 
         $this->loadView('admin/addNewUser', $data);
@@ -1803,7 +1818,7 @@ class Admin extends CI_Controller {
         $status = ($status == 'true' ? 'false' : 'true' ); 
         $data =  array('status' =>   $status );
         $this->AdminModel->update( 'user', 'user_id', $id,  $data );
-        redirect('admin/userList');
+       // redirect('admin/userList');
 
     } 
     public function waaraNotification (){
