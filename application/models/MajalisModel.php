@@ -193,6 +193,15 @@ class MajalisModel extends CI_Model
         return $query->result();
     }
 
+
+    public function getMajalisIdFromDate($token) {
+
+        $query = $this->db->query("SELECT majalis_id from majalis_date where majalis_date.token = '". $token ."'");
+
+        return $query->result()[0];
+
+    }
+
     /**
      * Delete Majlis date by token
      * Created By: Moiz     
@@ -387,7 +396,7 @@ class MajalisModel extends CI_Model
 
         //if ($this->getSortCountByDate($date) > 0) {
 
-        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
+        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id as majalisId, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
             FROM specfic_date_duties, majalis_duties
             LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
             LEFT JOIN majalis_sort ON majalis_duties.id = majalis_sort.duty_id
@@ -426,6 +435,17 @@ class MajalisModel extends CI_Model
     }    
 
 
+    function allowEditDelete($majalisId) {
+
+        $type = $this->session->userdata('type');
+        $exist = in_array($majalisId, $this->session->userdata('majalisId'));
+
+        if ($exist || $type == 'Super Admin') {
+          return true;
+        } else {
+          return false;
+        }
+    }
 
     public function insertMajalisDutyRating($data) {
         return $this->CommonModel->insertIntoTable('majalis_duty_rating', $data);

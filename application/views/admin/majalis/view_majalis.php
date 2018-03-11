@@ -23,7 +23,7 @@
                             </div>
                             <!-- /.box-header -->
                             <br>
-                            <div class="form-group">
+                            <div class="form-group majalisForm">
                                 <div class="col-sm-offset-0 col-sm-2">
                                     <button type="button" onclick="location.href='<?php echo site_url("majalis/add") ;?>'" class="btn btn-primary btn-block">Add Majalis</button>
                                 </div>
@@ -157,7 +157,6 @@
 
 <script>
 
-
 getYearDates();
 onFestivalYearChange();
 
@@ -227,6 +226,10 @@ function getYearDates() {
                     location.reload();
                 }
             });
+
+
+            isEditAllowed();
+
 
         }, error: function(){
             

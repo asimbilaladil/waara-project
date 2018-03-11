@@ -78,7 +78,7 @@
 
                                             <input type="hidden" id="mergeUserList" name="mergeUserList"/>
 
-                                            <button style="width:  100%;margin-bottom: 6px;" type="submit" onclick="mergeUsers()" class="btn btn-primary"> Merge User</button>
+                                            <button id="mergeUserBtn" style="width:  100%;margin-bottom: 6px; display:none;"type="submit" onclick="mergeUsers()" class="btn btn-primary"> Merge User</button>
                                           </form> 
                                       </div>                                      
 <!--                                        <button type="button" class="btn btn-primary toggle-vis"  data-column="0" > Merge User</button> --> 
@@ -313,119 +313,122 @@
 
     <script type="text/javascript">
       
-        function setId(id){
-        $('#user').val(id); 
-    }
-//   function mergeUser(){
-//     //$('.mergeUserList').
-//   }  
-  function changeVerifyStatus(status, user_id){
+        function setId(id) {
+            $('#user').val(id);
+        }
+        //   function mergeUser(){
+        //     //$('.mergeUserList').
+        //   }  
+        function changeVerifyStatus(status, user_id) {
 
             $.ajax({
-            url: "<?php echo site_url('Admin/updateVerify') ?>",
-            type: "GET",
-            data: {
-                'id' : user_id,
-                'verified' : status
-            },
-            success: function(response){
-              var statusText = ( status == false ? 'Approved' : 'Pending');
-              var updatedStatus = ( status == false ? true : false);
-              $('#updateVerify_'+user_id).html(' <a style="cursor: pointer;" onclick="changeVerifyStatus('+updatedStatus+','+user_id+')"  >' +statusText+' </a>')
-             
-            },
-            error: function(){
-                
-            }
-        });    
-  }   
-  function changeUserStatus(status, user_id){
+                url: "<?php echo site_url('Admin/updateVerify') ?>",
+                type: "GET",
+                data: {
+                    'id': user_id,
+                    'verified': status
+                },
+                success: function(response) {
+                    var statusText = (status == false ? 'Approved' : 'Pending');
+                    var updatedStatus = (status == false ? true : false);
+                    $('#updateVerify_' + user_id).html(' <a style="cursor: pointer;" onclick="changeVerifyStatus(' + updatedStatus + ',' + user_id + ')"  >' + statusText + ' </a>')
+
+                },
+                error: function() {
+
+                }
+            });
+        }
+
+        function changeUserStatus(status, user_id) {
 
             $.ajax({
-            url: "<?php echo site_url('Admin/updateStatus') ?>",
-            type: "GET",
-            data: {
-                'id' : user_id,
-                'status' : status
-            },
-            success: function(response){
-              var statusText = ( status == false ? 'Active' : 'Inactive');
-              var updatedStatus = ( status == false ? true : false);
-              $('#userStatus_'+user_id).html(' <a style="cursor: pointer;" onclick="changeUserStatus('+updatedStatus+','+user_id+')"  >' +statusText+' </a>')
-             
-            },
-            error: function(){
-                
-            }
-        });    
-  }         
-  function assignWaara(){
-        var user_id = $('#user').val(); 
-        var date =  $('#date').val(); 
-        var waara = $('#waara').val(); 
-        var jk = $('#jk').val();
-        $.ajax({
-            url: "<?php echo site_url('Admin/assignWaaraToUser') ?>",
-            type: "POST",
-            data: {
-                'user_id' : user_id,
-                'start_date' : date,
-                'end_date' : date,
-                'duty_id' : waara,
-                'jk' : jk
-            },
-            success: function(response){
-                alert(response);
-            },
-            error: function(){
-                
-            }
-        });         
-    }    
-      var addNewUser = function addNewUser() {
-        eraseCookie("first_name");
-        eraseCookie("last_name");
-        eraseCookie("date");
-        eraseCookie("waara_id");
-        
-        window.location = "<?php echo site_url('admin/addNewUser') ?>";
-      }
-      function eraseCookie(name) {
-        createCookie(name,"",-1);
-      }
-      function createCookie(name,value,days) {
-          if (days) {
-              var date = new Date();
-              date.setTime(date.getTime()+(days*24*60*60*1000));
-              var expires = "; expires="+date.toGMTString();
-          }
-          else var expires = "";
-          document.cookie = name+"="+value+expires+"; path=/";
-      }
-        var rowCount = ( $('#table tr').length ) - 1;
-        $('#totalUser').text( 'Total Users: ' +  rowCount  );
-        var getId = function (id){
+                url: "<?php echo site_url('Admin/updateStatus') ?>",
+                type: "GET",
+                data: {
+                    'id': user_id,
+                    'status': status
+                },
+                success: function(response) {
+                    var statusText = (status == false ? 'Active' : 'Inactive');
+                    var updatedStatus = (status == false ? true : false);
+                    $('#userStatus_' + user_id).html(' <a style="cursor: pointer;" onclick="changeUserStatus(' + updatedStatus + ',' + user_id + ')"  >' + statusText + ' </a>')
+
+                },
+                error: function() {
+
+                }
+            });
+        }
+
+        function assignWaara() {
+            var user_id = $('#user').val();
+            var date = $('#date').val();
+            var waara = $('#waara').val();
+            var jk = $('#jk').val();
+            $.ajax({
+                url: "<?php echo site_url('Admin/assignWaaraToUser') ?>",
+                type: "POST",
+                data: {
+                    'user_id': user_id,
+                    'start_date': date,
+                    'end_date': date,
+                    'duty_id': waara,
+                    'jk': jk
+                },
+                success: function(response) {
+                    alert(response);
+                },
+                error: function() {
+
+                }
+            });
+        }
+        var addNewUser = function addNewUser() {
+            eraseCookie("first_name");
+            eraseCookie("last_name");
+            eraseCookie("date");
+            eraseCookie("waara_id");
+
+            window.location = "<?php echo site_url('admin/addNewUser') ?>";
+        }
+
+        function eraseCookie(name) {
+            createCookie(name, "", -1);
+        }
+
+        function createCookie(name, value, days) {
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+            } else var expires = "";
+            document.cookie = name + "=" + value + expires + "; path=/";
+        }
+        var rowCount = ($('#table tr').length) - 1;
+        $('#totalUser').text('Total Users: ' + rowCount);
+        var getId = function(id) {
             document.getElementById("userId").value = id;
-        
+
         }
-       var getColorUserId = function (id){
+        var getColorUserId = function(id) {
             document.getElementById("color_userId").value = id;
-        
+
         }
-        var showJK = function (){
+        var showJK = function() {
             var role = document.getElementById("role").value;
-            if(role == "JK Admin"){
+            if (role == "JK Admin") {
                 document.getElementById("jkList").style.display = "block";
                 document.getElementById("jkdiv").style.display = "block";
                 document.getElementById("shiftList").style.display = "block";
-                
+
             } else if (role == "Majalis") {
                 document.getElementById("majalisDiv").style.display = "block";
                 //hideUserRoleDiv();
             } else {
                 hideUserRoleDiv();
             }
-        
+
         }
 
         function hideUserRoleDiv() {
@@ -433,79 +436,99 @@
             document.getElementById("jkdiv").style.display = "none";
             document.getElementById("shiftList").style.display = "none";
             document.getElementById("jkList").value = "0";
-            document.getElementById("shiftList").value = "0";            
+            document.getElementById("shiftList").value = "0";
         }
 
-       var validateColorForm =  function validateColorForm(){
-          var e = document.getElementById("assignColor");
-          var assignColor = e.options[e.selectedIndex].value; 
-          return (assignColor != 'select')
+        var validateColorForm = function validateColorForm() {
+            var e = document.getElementById("assignColor");
+            var assignColor = e.options[e.selectedIndex].value;
+            return (assignColor != 'select')
         }
-       $(document).ready(function() {
-   var table = $('#table').DataTable({ drawCallback: function(){
-   
-       $('.paginate_button', this.api().table().container())          
-         .on('click', function(){
-              console.log("hit")
-             $( "li" ).removeClass( "paginate_button" );
-         }); 
-   }, "scrollX": true  <?php echo $data['tableData'][0]->script; ?>  , fixedHeader: true   });
-//     $('#table').on('page', function () {
-//       console.log("PAGE CHANGE")
-//       $( "li" ).removeClass( "paginate_button" );
-//     } );
-         
-        $( "li" ).removeClass( "paginate_button" );
-        $('#lastWaaraSearch').on( 'keyup', function () {
-          table
-              .columns( 2 )
-              .search( this.value )
-              .draw();
-        });
-        $('#search').on( 'keyup', function () {
-            table
-                .columns( 1 )
-                .search( this.value )
-                .draw();
-        } );         
-        var visible = true;
-        var tableContainer = $(table.table().container());
-        $('#showHideTable').on( 'click', function () {
+        $(document).ready(function() {
+            var table = $('#table').DataTable({
+                drawCallback: function() {
+
+                    $('.paginate_button', this.api().table().container())
+                        .on('click', function() {
+
+                            $("li").removeClass("paginate_button");
+                        });
+                },
       
-            tableContainer.css( 'display', visible ? 'none' : 'block' );
-           // table.fixedHeader.adjust();
-            visible = ! visible;
+                fixedHeader: true
+            });
+            //     $('#table').on('page', function () {
+            //       console.log("PAGE CHANGE")
+            //       $( "li" ).removeClass( "paginate_button" );
+            //     } );
+
+            $("li").removeClass("paginate_button");
+            $('#lastWaaraSearch').on('keyup', function() {
+                table
+                    .columns(2)
+                    .search(this.value)
+                    .draw();
+            });
+            $('#search').on('keyup', function() {
+                table
+                    .columns(1)
+                    .search(this.value)
+                    .draw();
+            });
+            var visible = true;
+            var tableContainer = $(table.table().container());
+            $('#showHideTable').on('click', function() {
+
+                tableContainer.css('display', visible ? 'none' : 'block');
+                // table.fixedHeader.adjust();
+                visible = !visible;
+            });
+
+            //Merge user    
+            // $('button.toggle-vis').on( 'click', function (e) {
+            //     e.preventDefault();
+            //     // Get the column API object
+            //     var column = table.column( $(this).attr('data-column') );
+            //     // Toggle the visibility
+            //     column.visible( ! column.visible() );
+            // });
         });
-        
-    //Merge user    
-    // $('button.toggle-vis').on( 'click', function (e) {
-    //     e.preventDefault();
-    //     // Get the column API object
-    //     var column = table.column( $(this).attr('data-column') );
-    //     // Toggle the visibility
-    //     column.visible( ! column.visible() );
-    // });
-} );
-    var selected = [];
-    function mergeCheck(checkbox) {
-        if (checkbox.checked) {
-            if (selected.indexOf(checkbox.value) == -1) {
-                selected.push(checkbox.value);
-            }
-            $("#mergeUserList").val( JSON.stringify(selected) );
-        }
-    }
-    function mergeUsers() {
         var selected = [];
-        $("#table input:checked").each(function() {
-             selected.push($(this).attr('value'));
-        });
-        // var obj = {
-        //     'list': selected
-        // };
-        $("#mergeUserList").val( JSON.stringify(selected) );
-  
-    }
+
+        function mergeCheck(checkbox) {
+
+            var index = selected.indexOf(checkbox.value);
+
+            if (checkbox.checked) {
+                if (index == -1) {
+                    selected.push(checkbox.value);
+                }
+            } else {
+                if (index> -1) {
+                    selected.splice(index, 1);
+                }
+            }
+
+            if (selected.length > 0) {
+                $('#mergeUserBtn').show();
+            } else {
+                $('#mergeUserBtn').hide();
+            }
+
+            $("#mergeUserList").val(JSON.stringify(selected));
+
+        }
+
+        function mergeUsers() {
+            var selected = [];
+            $("#table input:checked").each(function() {
+                selected.push($(this).attr('value'));
+            });
+
+            $("#mergeUserList").val(JSON.stringify(selected));
+
+        }
+
     </script>
 
 <style>

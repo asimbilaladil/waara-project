@@ -8,6 +8,7 @@ class Majalis extends CI_Controller {
         $this->load->model('FestivalMajalisModel'); 
         $this->load->model('MajalisDataModel'); 
         $this->load->model('MajalisSortModel'); 
+        $this->load->model('MajalisDateModel'); 
         $this->load->helper('string');
         $this->load->helper('custom_helper');
         $this->load->library('user_agent');
@@ -64,9 +65,9 @@ class Majalis extends CI_Controller {
             <td> ' . $this->printMonthMajalis($item, "October") . ' </td>
             <td> ' . $this->printMonthMajalis($item, "November") . ' </td>
             <td> ' . $this->printMonthMajalis($item, "December") . ' </td>
-            <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+            <td class="majalisId_'. $item["id"] .'" > <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
 
-            <td> <a href="#" name="editMajalis" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["majalisName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
+            <td class="majalisId_'. $item["id"] .'" > <a href="#" name="editMajalis" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["majalisName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
 
         </tr>';
 
@@ -131,6 +132,8 @@ class Majalis extends CI_Controller {
 
       $dates = $this->MajalisModel->getMajalisDatesByYear($token, $year);
 
+      $majalisId = '';
+
       $html = '<thead>
                 <tr>
                     <th> Date </th>
@@ -139,23 +142,30 @@ class Majalis extends CI_Controller {
               </thead>
               <tbody>';
 
+
       foreach ($dates as $key => $item) {
 
+        $majalisId = $item->id;
         $dutiesUrl = site_url('Majalis/viewMajalisDuties?token=' . $item->token . '&date=' . $item->date);
 
         $html = $html . '<tr>
         <td> <a href="'. $dutiesUrl .'">' . $item->date . '</a> </td>
-        <td> 
+        <td class="majalisId_'. $item->id .'"> 
 
-        <a href="deleteMajalidDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+        <a href="deleteMajalisDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> 
 
-        <td> <a href="#" id="date_'.$key.'" name="editDate"  data-type="date" data-pk="'. $item->dateId .'" data-url="editMajalisDate" data-title="Select date" data-value="'. $item->date .'" >EDIT</a> </td>
-        <td> 
+        </td>
+
+        <td class="majalisId_'. $item->id .'" > <a href="#" id="date_'.$key.'" name="editDate"  data-type="date" data-pk="'. $item->dateId .'" data-url="editMajalisDate" data-title="Select date" data-value="'. $item->date .'" >EDIT</a> </td>
+        <td>
+
+        <td> <input type="hidden" id="majalisId" name="" value="'. $majalisId .'" /></td> 
 
         </tr>';
         
       }   
 
+    
       echo $html;          
 
     }
@@ -190,17 +200,27 @@ class Majalis extends CI_Controller {
      * Delete Majalis by date
      * Created By: Moiz
      */  
-    function deleteMajalidDate() {
+    function deleteMajalisDate() {
 
       if($this->input->get('token')) {
         $token = $this->input->get('token');
-        $this->MajalisModel->deleteMajalisDateByToken($token);
+
+        $majalisId = $this->MajalisDateModel->getMajalisIdFromDateByToken($token);
+
+        $allow = $this->MajalisModel->allowEditDelete($majalisId);
+        
+        if ($allow) {  
+          $this->MajalisModel->deleteMajalisDateByToken($token);
+        }
+
         redirect($this->agent->referrer());
       } else {
         redirect($this->agent->referrer());
       }
 
     }
+
+
 
     /**
      * Delete Majalis by date
@@ -375,14 +395,28 @@ class Majalis extends CI_Controller {
      */      
     function editMajalisDate() {
 
+
       if ($this->input->post()) {
 
-        $data = array(
-          'date' => $this->input->post('value')
-        );
+        $id = $this->input->post('pk');
 
-        $result = $this->MajalisModel->updateMajalisDate($this->input->post('pk'), $data);
-        echo json_encode(array('success' => $result));
+        $majalisId = $this->MajalisDateModel->getMajalisIdFromDateById($id);
+
+        $allow = $this->MajalisModel->allowEditDelete($majalisId);
+
+        if ($allow) {
+
+          $data = array(
+            'date' => $this->input->post('value')
+          );
+
+          $result = $this->MajalisModel->updateMajalisDate($id, $data);
+
+          echo json_encode(array('success' => $result));
+
+        }
+
+        
       }
 
     }
@@ -509,25 +543,6 @@ class Majalis extends CI_Controller {
         $majalis = $this->MajalisModel->getMajalisByToken($token);
         
         if ($majalis) {
-
-          // $duties = $this->MajalisModel->getDutiesForMajalis($majalis->id, $date);
-
-          // if ($date) {
-
-          //   $dateSpecficDuties = $this->MajalisModel->getDutiesForSpecticDate($date, 'MAJALIS');
-
-          //   if ($dateSpecficDuties) {
-
-          //     foreach ($dateSpecficDuties as $item) {
-          //       array_push($duties, $item);
-
-          //     }
-          //   }
-          // } 
-
-          // $data = array(
-          //   'duties' => $duties,
-          // );
 
           $this->loadView('admin/majalis/view_duties', null);
 
@@ -717,49 +732,7 @@ class Majalis extends CI_Controller {
        $this->loadView('admin/addMajalisWaara', $data);
 
     }
-  
-    /**
-     * Delete Majalis Dates
-     */  
-    function deleteMajalisDate() {   
-      
-        if($this->input->get()) {
 
-            $data = array (
-                'id' => $this->input->get('majalis_id', true)
-            );
-            $this->MajalisDataModel->delete( $data );
-            redirect("Majalis");
-        }
-
-    }
-
-    /**
-     * Add Majalis Date
-     */  
-    // function addMajalisDate() {   
-      
-    //         if($this->input->post()) {
-    //           $majalis_token= $this->input->post('majalis', true);
-    //           $majalis_data = $this->MajalisModel->getMajalisByToken($majalis_token);
-
-    //             $data = array (
-    //                 'date' => $this->input->post('majalisDate', true),
-    //                 'admin_id' => $this->session->userdata('user_id'),
-    //                 'token'=> random_string('unique', 30),
-    //                 'majalis_id' => $majalis_data->id
-    //             );
-    //           $this->MajalisDataModel->insert( $data );
-    //           redirect("Majalis/".$majalis_data->name.'/'.$majalis_token);
-    //         }
-      
-    //         $token =  $this->uri->segment(3);
-    //         $majalisName =  $this->uri->segment(2);
-    //         $data['majalis'] = $this->MajalisDataModel->getAllMajalisDates($token);
-    //         $data['token'] = $token;
-    //         $this->loadView('admin/addMajalisDates', $data );            
-
-    // }  
   
   
     /**
@@ -773,6 +746,7 @@ class Majalis extends CI_Controller {
         $this->load->view('admin/common/sidebar');
         $this->load->view($view, array('data' => $data));
         $this->load->view('admin/common/footer');
+        $this->load->view('admin/common/allow_access');
 
     }
 

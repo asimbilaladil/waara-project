@@ -26,7 +26,7 @@
                             </div>
                             <!-- /.box-header -->
 
-                                <form  class="form-horizontal" action="<?php echo site_url('majalis/addMajalisDate') ?>" method="post" >
+                                <form class="form-horizontal majalisForm" action="<?php echo site_url('majalis/addMajalisDate') ?>" method="post" >
                                     <div class="box-body">
 
                                         <div class="form-group">
@@ -47,7 +47,7 @@
                                     </div>
                                 </form>
 
-                                <form class="form-horizontal" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
+                                <form class="form-horizontal majalisForm" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
                                     <div class="box-body">
 
                                         <div class="form-group">
@@ -71,7 +71,7 @@
                                     </div>
                                 </form>
 
-                                <div class="form-group">
+                                <div class="form-group majalisForm">
                                     <label for="" class="col-sm-2 control-label">Override evening JK schedule</label>
                                     <div class="col-sm-6">
                                         <input type="checkbox" id="override" name="override" value="1" <?php echo !empty($years[0]->override) ? 'checked' : '' ?> >
@@ -176,6 +176,8 @@
             success: function(response) {
 
                 $('#dutiesDiv').html(response);
+
+                isEditAllowed();
 
                 $("[name='editDate']").editable({
                     format: 'yyyy-mm-dd',    

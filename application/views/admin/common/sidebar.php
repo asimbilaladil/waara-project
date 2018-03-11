@@ -11,7 +11,10 @@
                 <a href="<?php echo site_url('admin'); ?>">
                  <i class="fa fa-home"></i> <span>Home</span></a>  
                
-            
+               
+               
+     
+               
             </li>
              <li class="treeview">
 
@@ -39,16 +42,11 @@
                
             </li>
 
-      
-        
-          <?php if($_SESSION['type'] == 'Super Admin'){ ?>
+     
              <li class="treeview">
                 <a href="<?php echo site_url('majalis'); ?>"><i class="fa  fa-list-alt"></i> <span>Majalis</span></a>                
             </li>
           
-          <?php } ?>
-
-
           <?php if($_SESSION['type'] == 'Super Admin'){ ?>
              <li class="treeview">
                 <a href="<?php echo site_url('Administrator/samar'); ?>"><i class="fa  fa-list-alt"></i> <span>Samar</span></a>                

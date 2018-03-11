@@ -23,7 +23,7 @@
  -->                            </div>
                             <!-- /.box-header -->
 
-                            <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
+                            <form id="defaultForm" class="form-horizontal majalisForm" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
                                 <div class="box-body">
 
                                     <div class="form-group">
@@ -143,6 +143,8 @@ function ajaxGetMajalisDuties() {
         success: function(response){
             $('#majalisDuty').html(response);
 
+            isEditAllowed();
+
             var selectedDate = $("#selectedDate").val()
 
             $( "#majalisDutyTable tbody" ).sortable( {
@@ -249,6 +251,5 @@ $(function() {
     });
 
 });
-
 
 </script>

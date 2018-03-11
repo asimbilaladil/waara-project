@@ -1051,6 +1051,12 @@ table.fc-border-separate {
 
   </div>
 </div>
+
+<?php
+  $this->load->view('admin/common/allow_access');
+?>
+
+
 <script>
 function addRating(){
             var rating = $('#rating-system').val()
@@ -1254,7 +1260,7 @@ $('#shift').on('change', function() {
 var addDutyForDay = function addDutyForDay (){
     var date = $('#date').val();
     createCookie("addDutyDate",  date , 1 );
-    window.location = "/index.php/admin/addDuty";
+    window.location = "<?php echo site_url('admin/addDuty') ?>";
 }
 var eventClick = function eventClick(formatedDate){
 
@@ -1321,6 +1327,8 @@ function ajaxGetMajalisDuties() {
         },
         success: function(response){
             $('#majalisDuty').html(response);
+
+            isEditAllowed();
 
             $( "#majalisDutyTable tbody" ).sortable( {
                 update: function( event, ui ) {

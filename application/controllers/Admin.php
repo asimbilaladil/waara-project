@@ -765,13 +765,11 @@ class Admin extends CI_Controller {
             $data['JK'] = $this->AdminModel->getJamatKhana();
             $this->loadView('admin/addJK', $data);
 
-      }
+        }
 
     }
-
-    function addDuty() {   
-    
-        if($this->input->post()) {
+function addNewDuty(){
+         if($this->input->post()) {
 
             $beforeDuty = $this->input->post('beforeDuty', true);
             
@@ -913,6 +911,12 @@ class Admin extends CI_Controller {
             );
 
         }
+  
+   redirect("Admin/addDuty");
+}
+    function addDuty() {   
+
+      
 
         $jamatKhanas = $this->AdminModel->getJamatKhana();
 
@@ -1441,7 +1445,8 @@ class Admin extends CI_Controller {
     function deleteDuty() {
 
         $id = $this->input->get('id', TRUE);
-        $this->AdminModel->delete( 'duty_id', $id, 'duty');
+        return $this->AdminModel->delete( 'duty_id', $id, 'duty');
+        
         //redirect('admin/addDuty');
 
     }
