@@ -916,7 +916,7 @@ function addNewDuty(){
 }
     function addDuty() {   
 
-      
+ 
 
         $jamatKhanas = $this->AdminModel->getJamatKhana();
 
@@ -1290,7 +1290,8 @@ function addNewDuty(){
                 "email" => $this->input->post('email', true),
                 "phone" => $this->input->post('phone', true),
                 "age_group"=>$this->input->post('age_group', true),
-                "pref_duty" =>implode(",", $selected_duties)
+                "pref_duty" =>implode(",", $selected_duties),
+                "admin_id" => $this->session->userdata('user_id')
             );
             $password = $this->input->post('password', true);
             if( isset( $password ) ){
@@ -1778,7 +1779,8 @@ function addNewDuty(){
                 'type' => 'User',
                 'token' => $token,
                 'age_group' => $age_group,
-                'pref_duty' => $duties
+                'pref_duty' => $duties,
+                "admin_id" => $this->session->userdata('user_id')
             );
 
             $this->AdminModel->insert('user', $data);

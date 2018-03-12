@@ -1,5 +1,6 @@
-
 <script >
+
+
 
 var events =  <?php  echo json_encode( $data['events']); ?> ;
     $.getScript('http://waaranet.ca/includes/plugins/fullcalendar/1.6.4/fullcalendar.min.js',function(){
@@ -26,13 +27,13 @@ function formatDate(date) {
   document.getElementById('selectDate').value = formatDate(new Date());
 
   $('#calendar').fullCalendar({
-    		header: {
-				left: 'prev,next today',
-				center: 'title',
-				right: 'month,basicWeek'
-			},events: events,
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,basicWeek'
+            },events: events,
 
-			defaultView: 'basicWeek',
+            defaultView: 'basicWeek',
         dayClick: function(date, allDay, jsEvent, view) {
 
         var formatedDate = formatDate(date);
@@ -40,17 +41,33 @@ function formatDate(date) {
         document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatedDate;
 
         $('#selectdate').val( formatedDate );
-				document.getElementById('selectDate').value = formatedDate;
+                document.getElementById('selectDate').value = formatedDate;
         ajaxCallDuty();
-
+                
 
     }
   });
 
 })
+    
 
+    setTimeout(function(){
+
+        $( ".fc-button-month" ).after( "<br>" );
+
+}, 2000);
+    
 </script>
 <style type="text/css">
+    @media only screen and (max-width: 576px) {
+        #duty{
+                position: relative; 
+                overflow-x: scroll;
+        }
+
+
+    } 
+
     .fc {
     direction: ltr;
     text-align: left;
@@ -84,7 +101,7 @@ html .fc,
     }
 
 .fc-header-left {
-    width: 25%;
+    width: 20%;
     text-align: left;
     }
     
@@ -93,7 +110,7 @@ html .fc,
     }
     
 .fc-header-right {
-    width: 25%;
+    width: 20%;
     text-align: right;
     }
     
@@ -119,12 +136,13 @@ html .fc,
 /* buttons edges butting together */
 
 .fc-header .fc-button {
-    margin-right: -1px;
+    margin-right: -7px;
     }
     
 .fc-header .fc-corner-right,  /* non-theme */
 .fc-header .ui-corner-right { /* theme */
-    margin-right: 0; /* back to normal */
+    padding-left: 15px;
+    margin-right: -6px; /* back to normal */
     }
     
 /* button layering (for border precedence) */
@@ -604,42 +622,42 @@ table.fc-border-separate {
                         <!-- form start -->
                         <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('admin/addDuty') ?>" method="post" >
                             <div class="box-body">
-															<div class="col-sm-6">
-																
-																	<div style="text-align: right;" class="col-sm-4">
+                                                            <div class="col-sm-6">
+                                                                
+                                                                    <div style="text-align: right;" class="col-sm-4">
                                     <label > Select JK: </label>
-																	</div>
-																	<div class="col-sm-3">
+                                                                    </div>
+                                                                    <div class="col-sm-3">
 
-                                   	<select  class="form-control" name="jk" id="selectJK">
-																		<?php
-																				foreach($data['jk'] as $jk) {
-																					
-																						echo '<option value="'. $jk->id .'"> '. $jk->name .' </option>';
-																				}
+                                    <select  class="form-control" name="jk" id="selectJK">
+                                                                        <?php
+                                                                                foreach($data['jk'] as $jk) {
+                                                                                    
+                                                                                        echo '<option value="'. $jk->id .'"> '. $jk->name .' </option>';
+                                                                                }
                                                         
                                      ?>   
-																		</select>
-																	</div>
-																
-																</div>
-															<div for="" class="col-sm-6 "><h3 id="selectedDate" class="box-title"> Selected Date is : </h3></div>
-															</div>
+                                                                        </select>
+                                                                    </div>
+                                                                
+                                                                </div>
+                                                            <div for="" class="col-sm-6 "><h3 id="selectedDate" class="box-title"> Selected Date is : </h3></div>
+                                                            </div>
 
-															 <div class="col-sm-6">
-																 <div id="calendar"></div>
-															
+                                                             <div class="col-sm-6">
+                                                                 <div id="calendar"></div>
+                                                            
 
-																
+                                                                
 
                                     <input type='hidden' class="form-control" id='selectDate' name="selectDate" />
 
-																
+                                                                
 
                              
                       
                             </div>
-													 <div class="col-sm-6">
+                                                     <div class="col-sm-6">
                                      </br>
                                         <!--Dynamicly duty table added  -->
                                         <div id="duty" name="duty" >
@@ -656,11 +674,11 @@ table.fc-border-separate {
 
 
                             </div><!-- /.box-body -->
-											<div class="col-sm-12">    
-											<button class="btn btn-primary" style="display:none;" id="assignWaaraButton" onclick="assignWaara()">
+                                            <div class="col-sm-12">    
+                                            <button class="btn btn-primary" style="display:none;" id="assignWaaraButton" onclick="assignWaara()">
                             Assign All Waara
                           </button>
-											</div>
+                                            </div>
                             <div class="box-footer">
                                 
                             </div><!-- /.box-footer -->
@@ -746,7 +764,7 @@ table.fc-border-separate {
 </div>
 
 <script>
-	ajaxCallDuty();
+
     
 function ajaxCallDuty() {
 
@@ -756,20 +774,20 @@ function ajaxCallDuty() {
 var date = $('#selectDate').val();
 
     $.ajax({
-        url: "<?php echo site_url('Admin/assignMultipleDutyFromJk') ?>",
+        url: "<?php echo site_url('Admin/ajaxGetMultipleAssignDutyFromJk') ?>",
         type: "POST",
         data: {
             'state' : state,
             'date' : date
         },
         success: function(response){
-
+                        
             $('#duty').html(response);
-						$('#assignWaaraButton').show();
+                        $('#assignWaaraButton').show();
             $("[name=users]").autocomplete({
 
                 source : '<?php echo site_url('admin/getUsers') ?>',
-								minLength:2,
+                                minLength:2,
                 select: function(event, ui) {
 
                     if(ui.item.value == 'NOUSER') {
@@ -781,9 +799,9 @@ var date = $('#selectDate').val();
 
                     event.preventDefault();
                     $('#' + this.id).val(ui.item.label);
-										var userid = this.id.split("_");
-									 	$('#userid_' +userid[1] ).val(ui.item.value);
-										waaraData.push(this.id);
+                                        var userid = this.id.split("_");
+                                        $('#userid_' +userid[1] ).val(ui.item.value);
+                                        waaraData.push(this.id);
                 },
                 focus: function(event, ui) {
                     event.preventDefault();
@@ -793,7 +811,7 @@ var date = $('#selectDate').val();
 
 
         },
-        error: function(){
+        error: function(err){
             
         }
     });
@@ -805,7 +823,7 @@ var getCookie = function getCookie(name) {
   var parts = value.split("; " + name + "=");
   if (parts.length == 2) return parts.pop().split(";").shift();
 }    
-	var waaraData = [];
+    var waaraData = [];
 function getUserName(arg) {
 
 var id = arg.getAttribute('id');
@@ -814,7 +832,7 @@ var waara = id.split("_");
 waara = 'waara_' + waara[1];
 var waara_id = $('#' + waara).val();
 var date = $('#date').val();
-	
+    
 var d = new Date();
 d.setTime(d.getTime() + (24*60*60*1000));
 var expires =  d.toUTCString();
@@ -825,48 +843,49 @@ var name = value.split(" ");
     $('#lastName').val(name[1]);
     $('#waara_id').val(waara_id);
     $('#assign_date').val(date);
-// 	createCookie("first_name",  name[0] , 1 );
-// 	createCookie("last_name",  name[1] , 1 );
-// 	createCookie("waara_id", waara_id , 1 );
-// 	createCookie("date", date , 1 );
-	
+//  createCookie("first_name",  name[0] , 1 );
+//  createCookie("last_name",  name[1] , 1 );
+//  createCookie("waara_id", waara_id , 1 );
+//  createCookie("date", date , 1 );
+    
 
 }
     function assignWaara(){
 
 
-			for(var i = 0; i < waaraData.length; i++){
+            for(var i = 0; i < waaraData.length; i++){
 
-				var id = waaraData[i].split("_");
-				var waara_id = 'waara_' + id[1];
-				var user_id = 'userid_' + id[1];
+                var id = waaraData[i].split("_");
+                var waara_id = 'waara_' + id[1];
+                var user_id = 'userid_' + id[1];
 
-				waara_id =  $('#'+waara_id).val();
-				user_id =  $('#'+user_id).val();
-				
-				var date = $('#selectDate').val();
-				var state = $('#selectJK').val();;
+                waara_id =  $('#'+waara_id).val();
+                user_id =  $('#'+user_id).val();
+                
+                var date = $('#selectDate').val();
+                var state = $('#selectJK').val();;
 
-				$.ajax({
-        	url: "<?php echo site_url('Admin/assign_multiple_duty') ?>",
-        	type: "POST",
-        	data: {
+                $.ajax({
+            url: "<?php echo site_url('Admin/assign_multiple_duty') ?>",
+            type: "POST",
+            data: {
             'jk' : state,
             'startDate' : date,
-						'endDate' : date,
-						'duty' : waara_id,
-						'userid' : user_id
-						
-        	},
-	        success: function(response){
-					},
-					error: function( err ){
-					}
-					
-    	});
-		}
-			alert("All Waara Assigned Successfully");
-			location.reload();			
+                        'endDate' : date,
+                        'duty' : waara_id,
+                        'userid' : user_id
+                        
+            },
+            success: function(response){
+                    },
+                    error: function( err ){
+                    }
+                    
+        });
+        }
+            alert("All Waara Assigned Successfully");
+            //location.reload();
+            ajaxCallDuty();
   }
 function createCookie(name,value,days) {
     if (days) {
@@ -886,10 +905,10 @@ var saveUser = function saveUser() {
     var password = $('#password').val();
     var age_group = $('#age_group').val();
 
-	    $.ajax({
-        	url: "<?php echo site_url('Admin/saveUser') ?>",
-        	type: "POST",
-        	data: {
+        $.ajax({
+            url: "<?php echo site_url('Admin/saveUser') ?>",
+            type: "POST",
+            data: {
                 'firstName' : firstName,
                 'lastName' : lastName,
                 'email' : email,
@@ -898,7 +917,7 @@ var saveUser = function saveUser() {
                 'age_group' : age_group
                 
             },
-	        success: function(response){
+            success: function(response){
                var id = getCookie('input_id');
                var userid = id.split("_");
              
@@ -911,12 +930,16 @@ var saveUser = function saveUser() {
                $('#age_group').val("");                
                $('#modal-addNewUser').modal('hide');
                
-			},
+            },
             error: function( err ){
                 console.log(err)
             }
-					
-    	});    
+                    
+        });    
 }
+setTimeout(function(){  ajaxCallDuty(); }, 1000);
+
+
+
 </script>
 
