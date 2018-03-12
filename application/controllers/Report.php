@@ -125,10 +125,10 @@ class Report extends CI_Controller {
          
             if($runQuery == 'true' ){
 
-                $date_start =  $past14 = date('Y-m-d', strtotime($start_date. ' - 1 days'));
+                //$date_start =  $past14 = date('Y-m-d', strtotime($start_date. ' - 1 days'));
                 $date_end = "1901-01-01";
-
-               $user_data_without_date_range  = $this->AdminModel->getReportDataWithoutRange($date_end, $date_start, $duties);
+  
+               $user_data_without_date_range  = $this->AdminModel->getReportDataWithoutRange($end_date ,$start_date, $duties);
               
             }
             $data  = $this->AdminModel->getReportData($end_date, $start_date, $duties);
@@ -141,26 +141,28 @@ class Report extends CI_Controller {
           
             foreach ($user_data as $key => $value) {
 
-               $html = $html . '<tr id="tr'. $value->user_id  .'" > <td onClick="showInfo(tr'. $value->user_id  .')" style="cursor: pointer;" >'. $value->name  .'</td> <td style="display:none;">'. $value->age .' </td> <td style="display:none;">'. $value->email .' </td> <td style="display:none;"> '. $value->email .' </td> <td style="display:none;"> '. $value->phone .' </td>  <td> <div class="col-sm-6"> <button type="button" data-toggle="modal" data-target="#assignWaara" class="col-sm-2 btn btn-primary btn-block" onclick="setId('. $value->user_id .')"  >Assign Waara </button> </div> </td> <td> <i class="glyphicon glyphicon-remove" ></i> </td> </tr> ';
+               $html = $html . '<tr id="tr'. $value->user_id  .'" > <td onClick="showInfo(tr'. $value->user_id  .')" style="cursor: pointer;" >'. $value->name  .'</td> <td style="display:none;">'. $value->age .' </td> <td style="display:none;">'. $value->email .' </td> <td style="display:none;"> '. $value->email .' </td> <td style="display:none;"> '. $value->phone .' </td>  <td> <div class="col-sm-6 waaraDuty"> <button type="button" data-toggle="modal" data-target="#assignWaara" class="col-sm-2 btn btn-primary btn-block" onclick="setId('. $value->user_id .')"  >Assign Waara </button> </div> </td> <td> '.( $value->anyOtherWaara == "NO" ? "<button type=button style =opacity:1;background-color:green;width:3%;height:15px;   ></button>" :" <a onclick=ajaxCallUserHistory($value->user_id) ><button type=button style =opacity:1;background-color:#ff0000;width:3%;height:15px; ></button> </a>" ).' <i class="glyphicon glyphicon-remove" ></i> </td> </tr> ';
             }
             if($runQuery == 'true' ){
                 foreach ($user_data_without_date_range as $key => $value) {
 
-                    $html = $html . '<tr id="tr'. $value->user_id  .'" > <td onClick="showInfo(tr'. $value->user_id  .')" style="cursor: pointer;" >'. $value->name  .'</td>  <td style="display:none;">'. $value->age .' </td> <td style="display:none;">'. $value->email .' </td> <td style="display:none;"> '. $value->email .' </td> <td style="display:none;"> '. $value->phone .' </td>  <td> <div class="col-sm-6"> <button type="button" data-toggle="modal" data-target="#assignWaara" class="col-sm-2 btn btn-primary btn-block" onclick="setId('. $value->user_id .')"  >Assign Waara </button> </div> </td> <td> <i class="glyphicon glyphicon-remove" ></i> </td> </tr> ';
+                    $html = $html . '<tr id="tr'. $value->user_id  .'" > <td onClick="showInfo(tr'. $value->user_id  .')" style="cursor: pointer;" >'. $value->name  .'</td>  <td style="display:none;">'. $value->age .' </td> <td style="display:none;">'. $value->email .' </td> <td style="display:none;"> '. $value->email .' </td> <td style="display:none;"> '. $value->phone .' </td>  <td> <div class="col-sm-6 waaraDuty"> <button type="button" data-toggle="modal" data-target="#assignWaara" class="col-sm-2 btn btn-primary btn-block" onclick="setId('. $value->user_id .')"  >Assign Waara </button> </div> </td> <td> '.( $value->anyOtherWaara == "NO" ? "<button  type=button style =opacity:1;background-color:green;width:3%;height:15px;></button>" :"<a onclick=ajaxCallUserHistory($value->user_id) > <button type=button style =opacity:1;background-color:#ff0000;width:3%;height:15px; ></button> </a>" ).'  <i class="glyphicon glyphicon-remove" ></i> </td> </tr> ';
                 }
             }
             foreach ($data as $key => $value) {
                 if( !empty($value->name) ){
                     if ( ( ( strtotime( $value->start_date ) <= $future14 )  && (  strtotime( $value->start_date) >= $past14  ) ) && $highlight == 'true')  {
-                       $html = $html . '<tr id="tr'. $value->user_id  .'" > <td onClick="showInfo(tr'. $value->user_id  .')" style="cursor: pointer;" >'. $value->name  .'</td>  <td style="display:none;">'. $value->age .' </td><td> <mark>'. $value->start_date .'</mark> </td> <td style="display:none;"> '. $value->email .' </td> <td style="display:none;"> '. $value->phone .' </td> <td> <i  class="glyphicon glyphicon-ok" ></i> </td> </tr> ';
+                       $html = $html . '<tr id="tr'. $value->user_id  .'" > <td onClick="showInfo(tr'. $value->user_id  .')" style="cursor: pointer;" >'. $value->name  .'</td>  <td style="display:none;">'. $value->age .' </td><td> <mark>'. $value->start_date .'</mark> </td> <td style="display:none;"> '. $value->email .' </td> <td style="display:none;"> '. $value->phone .' </td> <td><button type=button style =visibility:hidden; ></button> <i  class="glyphicon glyphicon-ok" ></i> </td> </tr> ';
 
                     } else {
-                       $html = $html . '<tr id="tr'. $value->user_id  .'" > <td onClick="showInfo(tr'. $value->user_id  .')"  style="cursor: pointer;"  >'. $value->name  .'</td>  <td style="display:none;">'. $value->age .' </td> <td> '. $value->start_date .' </td> <td style="display:none;"> '. $value->email .' </td> <td style="display:none;"> '. $value->phone .' </td> <td> <i  class="glyphicon glyphicon-ok" ></i> </td> </tr> ';
+                       $html = $html . '<tr id="tr'. $value->user_id  .'" > <td onClick="showInfo(tr'. $value->user_id  .')"  style="cursor: pointer;"  >'. $value->name  .'</td>  <td style="display:none;">'. $value->age .' </td> <td> '. $value->start_date .' </td> <td style="display:none;"> '. $value->email .' </td> <td style="display:none;"> '. $value->phone .' </td> <td><button type=button style =visibility:hidden; ></button>  <i  class="glyphicon glyphicon-ok" ></i> </td> </tr> ';
 
                     }
                 }
             }                   
-            echo $html;    
+           
+          echo $html;  
+            
         }        
         
     } 
@@ -220,6 +222,7 @@ class Report extends CI_Controller {
         $this->load->view('admin/common/sidebar');
         $this->load->view($view, array('data' => $data));
         $this->load->view('admin/common/footer');
+        $this->load->view('admin/common/allow_access');
 
     }
 

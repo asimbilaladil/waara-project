@@ -214,12 +214,12 @@ class Admin extends CI_Controller {
 
                 $user =  $result[0]->first_name . " " . $result[0]->last_name ;
                 $assignId =  $result[0]->assign_id;  
-                $ratingHtml = ($result[0]->rating == 'not exists') ? ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .',0)" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Rating</button> </td>' : ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .','.$result[0]->rating.')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button> </td>';
+                $ratingHtml = ($result[0]->rating == 'not exists') ? ' <td class="waaraDuty">  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .',0)" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Rating</button> </td>' : ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .','.$result[0]->rating.')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button> </td>';
                 $html = $html . '<tr>
                                 <td> '. $row->name .' </td>
                                 <td>  <a href="'. site_url('userHistory/index?id=' .$result[0]->user_id ) .'" >'. $user . '</a></td>     
                                 <td> <a href= " ' . site_url("Welcome/waara?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >View</button> </td>
-                                <td> <a href= " ' . site_url("admin/editAssignDuty?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >Edit</button></a></td>
+                                <td class="waaraDuty"> <a href= " ' . site_url("admin/editAssignDuty?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >Edit</button></a></td>
                                 '.$ratingHtml.'
 
                                 </tr>';
@@ -578,14 +578,14 @@ class Admin extends CI_Controller {
 
                     $user =  $result[0]->first_name . " " . $result[0]->last_name ;
                     $assignId =  $result[0]->assign_id;  
-                    $ratingHtml = ($result[0]->rating == 'not exists') ? ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .',0)" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Rating</button> </td> <td  style="display:none;">'.$row->unionsorting.'</td>  <td style="display:none;"></td>' : ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .','.$result[0]->rating.')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button> </td><td  style="display:none;">'.$row->unionsorting.'</td> <td style="display:none;"></td>';
+                    $ratingHtml = ($result[0]->rating == 'not exists') ? ' <td class="waaraDuty">  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .',0)" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Rating</button> </td> <td  style="display:none;">'.$row->unionsorting.'</td>  <td style="display:none;"></td>' : ' <td>  <button id="rating_'. $assignId.'" data-toggle="modal" onclick="setAssignDutyId('. $assignId .','.$result[0]->rating.')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button> </td><td  style="display:none;">'.$row->unionsorting.'</td> <td style="display:none;"></td>';
                     $rowCount = 7;
                     $html = $html . '<tr>
                                     <td style="display:none;"> '. $row->duty_id .' </td>
                                     <td> '. $row->name .' </td>
                                     <td>  <a href="'. site_url('userHistory/index?id=' .$result[0]->user_id ) .'" >'. $user . '</a></td>     
                                     <td> <a href= " ' . site_url("Welcome/waara?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >View</button> </td>
-                                    <td> <a href= " ' . site_url("admin/editAssignDuty?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >Edit</button></a></td>
+                                    <td class="waaraDuty"> <a href= " ' . site_url("admin/editAssignDuty?id=" . $assignId ) . ' " <button type="button" class="btn btn-primary btn-block"  >Edit</button></a></td>
                                     '.$ratingHtml.'
 
                                    </tr>';
@@ -598,7 +598,7 @@ class Admin extends CI_Controller {
                                     <td style="display:none;"> '. $row->duty_id .' </td>
                                     <td> '. $row->name .' </td>
                                     <td> <input  onkeyup="getUserName(this)" type="text" name="users" id="users_'. $count .'" class="form-control " placeholder="Search User.." required> <input type="hidden" value="'. $row->duty_id .'" id="waara_'. $count .'"></td>     
-                                    <td> <button type="button" class="btn btn-primary btn-block"   onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
+                                    <td class="waaraDuty"> <button type="button" class="btn btn-primary btn-block"   onclick="ajaxCallUserHistory('. $row->duty_id .')">Save</button> </td>
                                     <td style="display:none;"></td>
                                     <td style="display:none;"></td>
                                     <td  style="display:none;">'.$row->unionsorting.'</td>
@@ -1107,6 +1107,7 @@ function addNewDuty(){
         $this->load->view('admin/common/sidebar');
         $this->load->view($view, array('data' => $data));
         $this->load->view('admin/common/footer');
+        $this->load->view('admin/common/allow_access');
 
     }
 

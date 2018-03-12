@@ -11,14 +11,15 @@
         var majalis = session["majalis"];
         var majalisIdPage = $("#majalisId").val();
 
-        // console.log('type', type);
-        // console.log('majalisAdminIds', majalisAdminIds);
-        // console.log('isMajalisAdmin', isMajalisAdmin);
-        // console.log('majalis', majalis);
-        // console.log('majalisIdPage', majalisIdPage);
+        console.log('type', type);
+        console.log('majalisAdminIds', majalisAdminIds);
+        console.log('isMajalisAdmin', isMajalisAdmin);
+        console.log('majalis', majalis);
+        console.log('majalisIdPage', majalisIdPage);
     
         isAllowed(majalisAdminIds, majalisIdPage, type, '.majalisForm');
-        
+
+        isAllowed(null, null, type, '.waaraDuty');
 
         for (var item in majalis) {
 
@@ -33,7 +34,7 @@
             return true;
         } else {
 
-            if (array.indexOf(id) > -1) {
+            if (array && array.indexOf(id) > -1) {
                 $(viewClass).show();
             } else {
                 $(viewClass).hide();

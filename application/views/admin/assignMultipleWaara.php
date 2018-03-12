@@ -656,7 +656,7 @@ table.fc-border-separate {
 
 
                             </div><!-- /.box-body -->
-											<div class="col-sm-12">    
+											<div class="col-sm-12 waaraDuty">    
 											<button class="btn btn-primary" style="display:none;" id="assignWaaraButton" onclick="assignWaara()">
                             Assign All Waara
                           </button>
@@ -765,7 +765,10 @@ var date = $('#selectDate').val();
         success: function(response){
 
             $('#duty').html(response);
-						$('#assignWaaraButton').show();
+
+            isEditAllowed();
+
+			$('#assignWaaraButton').show();
             $("[name=users]").autocomplete({
 
                 source : '<?php echo site_url('admin/getUsers') ?>',
