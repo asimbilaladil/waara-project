@@ -21,8 +21,10 @@ class EmailNotification extends CI_Controller {
 
     function index(){
 
-        $data['emailNotification'] = $this->EmailModel->getEmailContent();
-        $data['emailNotificationSwitch'] = $this->EmailModel->getEmailNotification();
+        $data['emailNotification'] = $this->EmailModel->getEmailContentByType('assignWaara');
+        $data['emailNotificationSwitch'] = $this->EmailModel->getEmailNotificationByType('assignWaara');
+        $data['emailUserApprovalNotification'] = $this->EmailModel->getEmailContentByType('userApproval');
+        $data['emailUserApprovalNotificationSwitch'] = $this->EmailModel->getEmailNotificationByType('userApproval');      
         $this->loadView('admin/emailNotification', $data );
     }
 
@@ -32,21 +34,42 @@ class EmailNotification extends CI_Controller {
         $data = array(
           'content' => $this->input->post('content', true),
           'date' => date("d-m-Y"),
-          'user_id' => $this->session->userdata('user_id')
+          'user_id' => $this->session->userdata('user_id'),
+          'type' => 'assignWaara'
         );
         $this->EmailModel->insert( $data );
         redirect("emailNotification");
 
 
     }
-
+  function addUserApproval(){
+      $data = array(
+        'content' => $this->input->post('content', true),
+        'date' => date("d-m-Y"),
+        'user_id' => $this->session->userdata('user_id'),
+        'type' => 'userApproval'
+      );
+      $this->EmailModel->insert( $data );
+      redirect("emailNotification");
+  }
 
     function setNotification(){
 
         $data = array(
           'notification' => $this->input->post('emailNotification', true),
           'date' => date("d-m-Y"),
-          'admin_id' => $this->session->userdata('user_id')
+          'admin_id' => $this->session->userdata('user_id'),
+          'type' => 'assignWaara'
+        );
+        $this->EmailModel->setNotification( $data );
+    }
+    function setUserApprovalNotification(){
+
+        $data = array(
+          'notification' => $this->input->post('emailNotification', true),
+          'date' => date("d-m-Y"),
+          'admin_id' => $this->session->userdata('user_id'),
+          'type' => 'userApproval'
         );
         $this->EmailModel->setNotification( $data );
     }  

@@ -468,13 +468,14 @@ class Welcome extends CI_Controller {
 
         $duties = $this->UserModel->getDuties( $jksStr );
         
-        $html = '<select name="duties[]" id="duties" multiple="multiple"  class="form-control">';
-
+       // $html = '<select name="duties[]" id="duties" multiple="multiple"  class="form-control">';
+				 $html = '<h2>Select Your Preferred Waara</h2>';
         foreach($duties as $value){
-            $html = $html . '<option value="'. $value->duty_id .'"> '. $value->name .'</option>';
+					$html = $html . '<div class="checkbox col-xs-6"> <label><input name="duties[]"  type="checkbox" value="'. $value->duty_id .'">'. $value->name .'</label></div>';
+          //  $html = $html . '<option value="'. $value->duty_id .'"> '. $value->name .'</option>';
         }
 
-        $html = $html . '</select>';
+       // $html = $html . '</select>';
 
         echo $html ;
 

@@ -2,7 +2,7 @@
                             <div class="box box-success">
                                 <div class="box-header with-border">
                                     
-                                    <div for="" class="col-sm-4 "><h3 class="box-title" id="festivalHeading">list of Festival</h3></div>
+                                    <div for="" class="col-sm-4 "><h3 class="box-title">list of Festival</h3></div>
                                     <div for="" class="col-sm-8 "><h3 id="selectedMajalisDate" class="box-title"> Selected Date is : </h3></div>
 
                                 </div>

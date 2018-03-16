@@ -27,16 +27,32 @@ class EmailModel extends CI_Model
   
     public function getEmailContent( ){
       
-        $query = $this->db->query('SELECT * from email ORDER BY id DESC LIMIT 1');
+        $query = $this->db->query('SELECT * from email where type = "assignWaara"  ORDER BY id DESC LIMIT 1');
         
         $query->result();
 
         return $query->result();
     }
+    public function getEmailContentByType( $type ){
+      
+        $query = $this->db->query('SELECT * from email where type = "'.$type.'" ORDER BY id DESC LIMIT 1');
+        
+        $query->result();
+
+        return $query->result();
+    }  
   
     public function getEmailNotification( ){
       
-        $query = $this->db->query('SELECT * from emailNotification ORDER BY id DESC LIMIT 1');
+        $query = $this->db->query('SELECT * from emailNotification  where type = "assignWaara"   ORDER BY id DESC LIMIT 1');
+        
+        $query->result();
+
+        return $query->result();
+    }
+    public function getEmailNotificationByType( $type ){
+      
+        $query = $this->db->query('SELECT * from emailNotification where type = "'.$type.'" ORDER BY id DESC LIMIT 1');
         
         $query->result();
 

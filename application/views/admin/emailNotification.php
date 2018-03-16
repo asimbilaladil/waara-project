@@ -24,8 +24,20 @@
         <section class="content">
             <!-- Main row -->
             <div class="row">
+    
                 <div class="col-md-12">
-
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#waaraAssign" data-toggle="tab" aria-expanded="true">Waara Assign</a></li>
+							<li class=""><a href="#userApproval" data-toggle="tab" aria-expanded="false">User Approval</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="waaraAssign">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="box">
+                 
+                  <!-- /.box-header -->
                     <div class="box box-success">
                         <div class="box-header with-border">
                             <h3 class="box-title">Add Email Notification Content</h3>
@@ -39,7 +51,7 @@
                                  <div class="col-sm-8">
                                    
                                   <label class="switch">
-                                    <input id="emailNotificationSwitch" type="checkbox" onChange="toggleEmailNotification()">
+                                    <input id="emailNotificationSwitch" type="checkbox" onChange="toggleEmailNotification('assignWaara')">
                                       <div class="slider round"></div>
                                   </label>
                                  </div>
@@ -71,7 +83,79 @@
                             </div><!-- /.box-footer -->
                         </form>
                     </div><!-- /.box -->
+                  <!-- /.box-body -->
                 </div>
+                <!-- /.box -->
+              </div>
+            </div>
+              </div>
+              <!-- /.tab-pane -->
+
+
+              <div class="tab-pane" id="userApproval">
+                 <div class="row">
+                   <div class="col-xs-12">
+                <div class="box">
+                 
+                  <!-- /.box-header -->
+                    <div class="box box-success">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">User Approval Notification Content</h3>
+                        </div><!-- /.box-header -->
+                        <!-- form start -->
+                        <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('EmailNotification/addUserApproval') ?>" method="post" >
+                            <div class="box-body">
+                               <div class="form-group">
+                                  <input type="hidden" value="<?php echo $data['emailUserApprovalNotificationSwitch'][0]->notification; ?>" id="currentEmailNotificationUserApproval" > 
+                                 <label for="" class="col-sm-2 control-label">Email Notification:</label>
+                                 <div class="col-sm-8">
+                                   
+                                  <label class="switch">
+                                    <input id="emailNotificationUserApprovalSwitch" type="checkbox" onChange="toggleEmailNotification('UserApproval')">
+                                      <div class="slider round"></div>
+                                  </label>
+                                 </div>
+                               </div>
+                             
+
+                               <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Keywords</label>
+                                    <div class="col-sm-8">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="" class="col-sm-2 control-label">Content</label>
+                                    <div class="col-sm-8">
+                                      <textarea name="content"><?php echo $data['emailUserApprovalNotification'][0]->content; ?></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-2">
+
+                                        <button type="submit" class="btn btn-primary btn-block">Save</button>
+                                    </div>
+                                </div>
+                            </div><!-- /.box-body -->
+                            <div class="box-footer">
+
+                            </div><!-- /.box-footer -->
+                        </form>
+                    </div><!-- /.box -->
+                  <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+              </div> 
+                </div>
+
+              </div>
+       
+							<!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          <!-- /.nav-tabs-custom -->
+        </div>              
 
             </div><!-- /.row (main row) -->
 
@@ -82,24 +166,44 @@
    var currentEmailNotification =document.getElementById("currentEmailNotification").value;
 
     document.getElementById("emailNotificationSwitch").checked = (currentEmailNotification == 'true');
+var currentEmailNotificationUserApproval =document.getElementById("currentEmailNotificationUserApproval").value;
 
-    var toggleEmailNotification = function toggleEmailNotification(){
+    document.getElementById("emailNotificationUserApprovalSwitch").checked = (currentEmailNotificationUserApproval == 'true');    
 
-      var emailNotification = document.getElementById("emailNotificationSwitch").checked;
+    var toggleEmailNotification = function toggleEmailNotification(type){
+      if(type == 'assignWaara'){
+          var emailNotification = document.getElementById("emailNotificationSwitch").checked;
 
-      $.ajax({
-          url: "<?php echo site_url('EmailNotification/setNotification') ?>",
-          type: "POST",
-          data: {
-              'emailNotification' : emailNotification
-          },
-          success: function(response){
+          $.ajax({
+              url: "<?php echo site_url('EmailNotification/setNotification') ?>",
+              type: "POST",
+              data: {
+                  'emailNotification' : emailNotification
+              },
+              success: function(response){
 
-          },
-          error: function(){
+              },
+              error: function(){
 
-          }
-      });
+              }
+          });
+        } else {
+            var emailNotification = document.getElementById("emailNotificationUserApprovalSwitch").checked;
+            $.ajax({
+                url: "<?php echo site_url('EmailNotification/setUserApprovalNotification') ?>",
+                type: "POST",
+                data: {
+                    'emailNotification' : emailNotification
+                },
+                success: function(response){
+
+                },
+                error: function(){
+
+                }
+            }); 
+        }
+
 
     }
     

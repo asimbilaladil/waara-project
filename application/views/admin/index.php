@@ -822,7 +822,7 @@ table.fc-border-separate {
 
                                               </div>
                                               <div class="modal-footer">
-                                                <button type="submit" class="btn btn-primary">Save</button>
+                                                <button data-dismiss="modal" onclick="homeAssignWaara()" type="button" class="btn btn-primary">Save</button>
                                               </div>
                                             </div>
                                           </div>
@@ -1079,6 +1079,23 @@ function addRating(){
 
 </script>
 <script>
+var homeAssignWaara = function homeAssignWaara(){
+     $.ajax({
+           type: "POST",
+           url: "<?php echo site_url('Admin/home_assign_waara') ?>",
+           data: $("#defaultForm").serialize(), // serializes the form's elements.
+           success: function(data)
+           {
+              
+             $("#confirmModal").toggle();
+             ajaxCallDuty();
+             ajaxGetMajalisDuties();
+             ajaxGetFestivalDuties();
+
+             
+           }
+         });
+} 
 var type =  <?php echo json_encode($data['users'][0]->type); ?>;
 if(type == 'JK Admin'){
     var selectJKList = document.getElementById("selectJKList").style.display= "none";
@@ -1205,7 +1222,7 @@ function ajaxCallUserHistory(dutyId) {
     $.post('<?php echo site_url('Admin/ajaxUserHistory') ?>', {
         state:state
     }, function(data) {
-        console.log('userHistory', data);
+        //console.log('userHistory', data);
         $('#userHistory').show().html(data);
 
     }); 

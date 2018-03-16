@@ -91,8 +91,17 @@ function getBody(element) {
     var tds = $(originalTable).children('tbody').children('tr').children('td').length;
     return tds;
 }
+	
 </script>
+
 <style type="text/css">
+	/* @media only screen and (max-width: 576px) {
+		#duty{
+			 	position: relative; 
+				overflow-x: scroll;
+		}
+
+	} */
     .fc {
     direction: ltr;
     text-align: left;
@@ -657,79 +666,165 @@ table.fc-border-separate {
 
                     </li> 
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">Global Sort</li>
+                    <li class="active">Dashboard</li>
                 </ol>
                 </br>
                  </br>
             </section>
             <!-- Main content -->
             <section class="content">
-
-				
+							<?php if($data['user_count'][0]->users != 0) { ?>
+							<div class="row">
+								<div style="padding: 20px 30px;background: #dd4b39;z-index: 999999;font-size: 16px;font-weight: 600;">
+									
+									<a href="https://themequarry.com" style="color: rgba(255, 255, 255, 0.9); display: inline-block; margin-right: 10px; text-decoration: none;">
+										New Notification ! There are total <?php echo $data['user_count'][0]->users; ?> new users signup. Waiting for your approval.</a>
+									<a class="btn btn-default btn-sm" href="<?php echo site_url('Admin/userList') ?>" style="margin-top: -5px; border: 0px; box-shadow: none; color: rgb(243, 156, 18); font-weight: 600; background: rgb(255, 255, 255);">
+										Let's Do It!</a>
+								</div>
+							</div>
+							<?php  } ?>
+							<br>
 								<div class="row">
                     <div class="col-md-12">
-     
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="box box-success">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Assigned Waara</h3>
+                                </div>
+                                <!-- /.box-header -->
+                                <!-- form start -->
                                 
+                                    <div class="box-body">
+																			<div>
+																				<p>
+																					Default <button   style="opacity: 1; background-color:#3a87ad; width: 3%; height: 15px;"></button>
+																				  <?php foreach($data['color'] as $item) { ?>
+																				<?php echo $item->username; ?> <button   style="opacity: 1; background-color:<?php echo $item->colorCode; ?>; width: 3%; height: 15px;"></button>
+																				
+																				<?php } ?>
+																			</p>
+																			</div>
+                                      <div id="calendar"></div>
+                                    </div>
+                                    <!-- /.box-body -->
+                                    <div class="box-footer">
+                                    </div>
+                                    <!-- /.box-footer -->
+                                
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <div class="col-md-6">
+                            <div class="box box-success">
+                                <div class="box-header with-border">
+                                    
+                                    <div for="" class="col-sm-4 "><h3 class="box-title">list of Waara</h3></div>
+                                    <div for="" class="col-sm-8 "><h3 id="selectedDate" class="box-title"> Selected Date is : </h3></div>
+
+
+                                </div>
+															<div class="col-sm-12" style="top: 20px;">
+																<div class="col-sm-3" >
+																</div>
+																<div class="col-sm-6" >
+																	<button class="btn btn-primary btn-block " onclick="addDutyForDay()">Add Waara</button>
+																</div>
+															</div>
                  
                                 <!-- /.box-header -->
                                 <div class="box-body">
-                                
+                                    <div>
+                                    <form id="defaultForm" action="<?php echo site_url('Admin/index') ?>" method="post" >
+                                        
+                                        <div class="col-sm-12">
+                                     </br>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-6">
+                                                <input type="hidden" name="selectedShift" id="selectedShift">
+                                                <input type="hidden" name="selectedUser" id="selectedUser"/>
+                                                <input type="hidden" name="selectedDuty" id="selectedDuty"/>
+                                                <input type="hidden" id="jkId" name="jk">
+                                                <input type="hidden" id="date" name="date"  />                                                
+                                            </div>
+                                        </div>
+
+                                    </div>
                                    
                                     <div class="col-sm-12">
-																			<form action="<?php echo site_url('Admin/addGlobalTemplateDuty') ?>" method="POST">
-																				
-																			
-																				<div class="col-sm-10">
-																					<br>
-																						 <div class="form-group ">
-																								<label for="" class="col-sm-2 control-label">Duties</label>
-																								<div class="col-sm-3">
-																									<select class="form-control" name="duty_id">
-																										
-																											<?php foreach($data['duties'] as $duty) {
-                                                            echo '<option value="'. $duty->duty_id .'"> '. $duty->name .' </option>';
-                                                        }
-																											?>
-																									</select>
-																								</div>
-																						</div>
-																						<div class="form-group">
-																								<div class="col-sm-offset-1 col-sm-2">
-
-																										<button type="submit" class="btn btn-primary btn-block" style="margin-top: -11px;">Add</button>
-																								</div>
-																						</div>
-																					<div class="form-group">
-																								<div class="col-sm-offset-1 col-sm-2">
-
-																										<button data-toggle="modal" data-target="#add-waara-modal" type="button"  class="btn btn-primary btn-block" style="margin-top: -11px;">Add Duty</button>
-																								</div>
-																					</div>
-																				</div>
-																				</form>
                                      </br>
-                                  <input type="hidden" name="selectDate" id="date" value="<?php echo date('Y-m-d');?>"/>
                                         <!--Dynamicly duty table added  -->
-                                        <div id="duty" name="duty" >
+                                        <div id="duty" name="duty"  >
 
                                         </div>
                                     </div>
 
 
                                         <!-- Modal -->
+                                        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">User History</h4>
+                                              </div>
+                                              <div class="modal-body">
+                                                <div id="userHistory">
 
+                                                </div>
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#confirmModal" >Save</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
 
 
 
                                         <!-- Modal -->
+                                        <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">How do you want to notify user?</h4>
+                                              </div>
+                                              <div class="modal-body">
 
+                                                <label class="checkbox-inline"><input id="byEmail" name="byEmail" value="email" type="checkbox" value="">By Email</label>
+                                                <label class="checkbox-inline"><input id="bySms" name="bySms" value="sms" type="checkbox" value="">By Message</label>
+                                                
+
+                                              </div>
+                                              <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
 
 
 
                                         <!-- Modal -->
+                                        <div class="modal fade" id="preferences" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                          <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                              <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">Alert</h4>
+                                              </div>
+                                              <div class="modal-body">
 
+                                              <p> Preferences does not match </p>
+
+                                              </div>
+                                              
+                                            </div>
+                                          </div>
+                                        </div>
 
                                        
                                 </div>
@@ -748,86 +843,92 @@ table.fc-border-separate {
         </div>
     </div>
 
-<div class="modal fade" id="add-waara-modal" role="dialog">
-    <div class="modal-dialog">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"> </h4>
-            </div>
-            <form method="Post" action="<?php echo site_url('admin/addDuty') ?>">
-                                <div class="form-group col-sm-12">
-                                    <label for="" class="col-sm-2 control-label">Name</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" name="duty_name" class="form-control" id="duty_name" placeholder="" required>
-                                    </div>
-                                </div>
+<div id="userRating" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">User Rating</h4>
+      </div>
+      <div class="modal-body">
+				 <div class="form-group" style="text-align: center;">
+
+						 	<input type="hidden" id="assignDutyId" name="assignDuty"/>
+					 		<input id="rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
 
 
-                                <div class="form-group col-sm-12">
-                                    <label for="" class="col-sm-2 control-label">Add Before</label>
-                                    <div class="col-sm-6">
-                                        
-                                        <select id="beforeDuty" name="beforeDuty" class="form-control">
-                                            
-                                            <?php
-                                                $lastPriority = end($data['duty'])->priority + 1 ;
-
-                                                //$lastPriority = array_pop($data['duty'])->priority + 1;
-
-                                                echo '<option value="'. $lastPriority  .'" selected> </option>'; 
-
-                                                foreach( $data['duty'] as $row ) {
-                                                    echo '<option value="'. $row->priority .'" > '. $row->name .' </option>';
-                                                }
-
-
-
-                                            ?>
-
-                                        </select>
-
-                                    </div>
-                                </div>
-
-
-                                <div class="form-group col-sm-12">
-                                    <label for="" class="col-sm-2 control-label">Description</label>
-                                    <div class="col-sm-6">
-                                        <textarea type="text" name="description" class="form-control" id="" placeholder="" required >  
-                                        </textarea>
-                                    </div>
-                                </div>   
-
-                                <div class="form-group col-sm-12">
-                                    <label for="" class="col-sm-2 control-label">Select JK</label>
-                                    <div class="col-sm-6">
-                                      <select name="jk[]" multiple id="jk" class="form-control">                              
-                                      <?php foreach($data['jkDb'] as $category):?>                                              
-                                          <?php $selected = in_array($category->id,$jkArray) ? " selected " : null;?>
-                                              <option value="<?=$category->id?>"
-                                                  <?=$selected?> ><?=$category->name?>
-                                              </option>
-                                      <?php endforeach?>
-                                      </select>                                   
-                                    </div>
-                                </div>
-                                <input type="hidden" name="addDutyDate" value="all"/>
-																<input type="hidden" name="refresh" value="globalSort"/>
-                                <div class="form-group col-sm-12">
-                                    <div class="col-sm-offset-2 col-sm-2">
-
-                                        <button type="submit" class="btn btn-primary btn-block">Save</button>
-                                    </div>
-                                </div>
-           	</form>
-            <div class="modal-footer">
-            </div>
-        </div>
+				
+  			</div>
+      </div>
+      <div class="modal-footer">
+				 
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button"  onclick="addRating()" class="btn btn-primary " >Save</button>
+      </div>
     </div>
+
+  </div>
 </div>
 <script>
+function addRating(){
+			var rating = $('#rating-system').val()
+			var assignDutyId = $('#assignDutyId').val()
+
+	    $.ajax({
+        url: "<?php echo site_url('Admin/addRating') ?>",
+        type: "POST",
+        data: {
+            'rating' : rating,
+            'assign_duty_id' : assignDutyId
+        },
+        success: function(response){
+
+						$('[id=rating_'+assignDutyId+']').hide();
+						$( '<button id="rating_'+assignDutyId+'" data-toggle="modal" onclick="setAssignDutyId('+assignDutyId+','+rating+')" data-target="#userRating" type="button" class="btn btn-primary btn-block"  >Edit Rating</button>' ).insertAfter( '#rating_'+assignDutyId );
+
+					  $('#userRating').modal('toggle');
+
+        },
+        error: function(){
+            
+        }
+    });
+}
+
+</script>
+<script>
+var type =  <?php echo json_encode($data['users'][0]->type); ?>;
+if(type == 'JK Admin'){
+    var selectJKList = document.getElementById("selectJKList").style.display= "none";
+}
+var getJK = function getJK (){
+        var jk = document.getElementById("jk").value;
+        var jkHidden = document.getElementById("jkId");
+        jkHidden.value = jk;
+
+
+}
+
+$(function(){
+
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+  document.getElementById('date').value = formatDate(new Date());
+   ajaxCallDuty();
+});
+
 function ajaxCallDuty() {
 
    var state=$('#jk').val();
@@ -835,7 +936,7 @@ function ajaxCallDuty() {
    var date = $('#date').val(); 
 
     $.ajax({
-        url: "<?php echo site_url('Admin/getGlobalSortDutyFromJk') ?>",
+        url: "<?php echo site_url('Admin/ajaxGetDutyFromJk') ?>",
         type: "POST",
         data: {
             'state' : state,
@@ -874,111 +975,146 @@ function ajaxCallDuty() {
 
 getJK();
 }
-  ajaxCallDuty();
-	function setDaysChecklist(id, d1, d2, d3, d4, d5, d6, d7){
-		
-		$('#waara_id').val(id);
-		
-				if(d1 == 'Monday'){
-			 			$('#d1').prop('checked', true);
-						$('#d1').val(1);
-				} else {
-					  $('#d1').prop('checked', false);
-					$('#d1').val(0);
-				}
-				if(d2 == 'Tuesday'){
-			 			$('#d2').prop('checked', true);
-					$('#d2').val(1);
-				} else {
-						$('#d2').prop('checked', false);
-					$('#d2').val(0);
-				}
-				if(d3 == 'Wednesday'){
-			 			$('#d3').prop('checked', true);
-					$('#d3').val(1);
-				} else {
-						$('#d3').prop('checked', false);
-					$('#d3').val(0);
-				}
-				if(d4 == 'Thursday'){
-			 			$('#d4').prop('checked', true);
-					$('#d4').val(1);
-				} else {
-						$('#d4').prop('checked', false);
-					$('#d4').val(0);
-				}
-				if(d5 == 'Friday'){
-			 			$('#d5').prop('checked', true);
-					$('#d5').val(1);
-				} else {
-						$('#d5').prop('checked', false);
-					$('#d5').val(0);
-				}
-				if(d6 == 'Saturday'){
-			 			$('#d6').prop('checked', true);
-					$('#d6').val(1);
-				} else {
-						$('#d6').prop('checked', false);
-					$('#d6').val(0);
-				}
-				if(d7 == 'Sunday'){
-			 			$('#d7').prop('checked', true);
-					$('#d7').val(1);
-				} else {
-						$('#d7').prop('checked', false);
-					$('#d7').val(0);
-				}		
-		
 
+function getUserName(arg) {
+
+var id = arg.getAttribute('id');
+var waara = id.split("_");
+waara = 'waara_' + waara[1];
+var waara_id = $('#' + waara).val();
+var date = $('#date').val();
+	
+var d = new Date();
+d.setTime(d.getTime() + (24*60*60*1000));
+var expires =  d.toUTCString();
+
+var value = $('#' + id).val();
+var name = value.split(" ");
+	createCookie("first_name",  name[0] , 1 );
+	createCookie("last_name",  name[1] , 1 );
+	createCookie("waara_id", waara_id , 1 );
+	createCookie("date", date , 1 );
+
+
+}
+	
+function createCookie(name,value,days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+}
+	
+function ajaxCallUserHistory(dutyId) {
+
+   preferenceAjaxCall(dutyId);
+
+   var state=$('#selectedUser').val();
+
+   $('#selectedDuty').val(dutyId);
+   
+    $.post('<?php echo site_url('Admin/ajaxUserHistory') ?>', {
+        state:state
+    }, function(data) {
+
+        $('#userHistory').show().html(data);
+
+    }); 
+
+}
+
+
+function preferenceAjaxCall(dutyId) {
+
+    var userId = $('#selectedUser').val();
+    var jkId = $('#jkId').val();
+    var duty = dutyId
+
+    var state = {
+        'userId': userId,
+        'jkId': jkId,
+        'duty': dutyId
+    }
+   
+    $.post('<?php echo site_url('Admin/getUser') ?>', {
+        state: state
+    }, function(data) {
+        /*
+         *   0 = NO PREFERENCES SET
+         *  -1 = PREFERENCES NOT MATCH
+         *   1 = PREFERENCES MATCHED
+         */
+
+        if(data == "0") {
+            $('#myModal').modal('toggle');
+        } else if( data == "-1") {
+            $('#preferences').modal('toggle');
+        } else if( data == "1" ) {
+            $('#myModal').modal('toggle');
+        }
+    });     
+
+}
+
+
+var shift = $('#shift').val();
+
+$('#selectedShift').val(shift);
+
+$('#shift').on('change', function() {
+    $('#selectedShift').val(this.value);  
+});
+var addDutyForDay = function addDutyForDay (){
+	var date = $('#date').val();
+	createCookie("addDutyDate",  date , 1 );
+	window.location = "/index.php/admin/addDuty";
+}
+var eventClick = function eventClick(formatedDate){
+
+
+        var formatedDate = formatDate(date);
+
+        document.getElementById('selectedDate').innerHTML = 'Selected Date is ' + formatedDate;
+
+        $('#date').val( formatedDate );
+
+        ajaxCallDuty();
+
+
+    
+}
+function convertDate(d) {
+  var p = d.split("-");
+
+  return (p[0]+p[1]+p[2]);
+}
+
+function sortByDate() {
+
+  var tbody = document.querySelector("#userHistoryt tbody");
+  // get trs as array for ease of use
+  var rows = [].slice.call(tbody.querySelectorAll("tr"));
+  
+  rows.sort(function(a,b) {
+    return convertDate(b.cells[3].innerHTML) - convertDate(a.cells[3].innerHTML);
+  });
+  
+  rows.forEach(function(v) {
+
+    tbody.appendChild(v); // note that .appendChild() *moves* elements
+  });
+}
+
+	var setAssignDutyId = function setAssignDutyId(id,stars){
+		$('#assignDutyId').val(id);
+		$('#rating-system').rating('update', stars);
+		//$('#rating-system').val(stars);
+		
 	}
+
 </script>
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Enable Days</h4>
-      </div>
-      <div class="modal-body">
-     <form method="POST" action="<?php echo site_url('Admin/enableDisableDays') ?>">
-			 
-			
-				<div class="checkbox col-12">
-      		<label><input id="d1" type="checkbox" name="Monday">Monday</label>
-				</div>
-       	<div class="checkbox col-12">
-      		<label><input id="d2" type="checkbox" name="Tuesday">Tuesday</label>
-				</div>	
-       	<div class="checkbox col-12">
-      		<label><input id="d3" type="checkbox" name="Wednesday">Wednesday</label>
-				</div>	
-       	<div class="checkbox col-12">
-      		<label><input id="d4" type="checkbox" name="Thursday">Thursday</label>
-				</div>	
-       	<div class="checkbox col-12">
-      		<label><input id="d5" type="checkbox" name="Friday">Friday</label>
-				</div>	
-       	<div class="checkbox col-12">
-      		<label><input id="d6" type="checkbox" name="Saturday">Saturday</label>
-				</div>	
-       	<div class="checkbox col-12">
-      		<label><input id="d7" type="checkbox" name="Sunday">Sunday</label>
-				</div>
-			 <input type="hidden" id="waara_id" name="id"/>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-default" >Save</button>
-      </div>
-    </div>
-	</form>
-  </div>
-</div>
-
-
-
-
 
 

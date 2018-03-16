@@ -79,27 +79,44 @@
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Password</label>
                                     <div class="col-sm-6">
-                                        <input type="text" name="password" class="form-control" id="" placeholder="" required>
+                                        <input type="text" name="password" class="form-control" id="" placeholder="" >
                                     </div>
                                 </div>
 
                                 <input type="hidden" name="userId" value="<?php echo $data['user']->user_id; ?>"/>
                                 <?php
 
-                                    foreach($data['customFields'] as $row) {
+//                                     foreach($data['customFields'] as $row) {
 
-                                        echo 
-                                        '<div class="form-group">
-                                            <label for="" class="col-sm-2 control-label">'. $row->field_lable .'</label>
-                                            <div class="col-sm-6">
-                                                <input type="'. $row->input_type .'" name="'. $row->field_name .'" class="form-control" value="'. $row->value .'" placeholder="" required>
-                                            </div>
-                                        </div>';
+//                                         echo 
+//                                         '<div class="form-group">
+//                                             <label for="" class="col-sm-2 control-label">'. $row->field_lable .'</label>
+//                                             <div class="col-sm-6">
+//                                                 <input type="'. $row->input_type .'" name="'. $row->field_name .'" class="form-control" value="'. $row->value .'" placeholder="" required>
+//                                             </div>
+//                                         </div>';
 
-                                    }
+//                                     }
 
                                 ?>
+                                <div  class="form-group" >
+                                     <div class="col-sm-2" >
+                                     </div>
+                                     <div class="col-sm-6" id="duties">
+   
+                                <?php
+                                    
+                                      foreach($data['duties'] as $value){
+                                        $html = $html . '<div class="checkbox col-xs-6"> <label><input name="duties[]" '.(in_array( $value->duty_id ,explode(",", $data['user']->pref_duty) ) ? "checked": "").' type="checkbox" value="'. $value->duty_id .'">'. $value->name .'</label></div>';
 
+                                        //$html = $html . '<div class="form-group">  <label class="col-sm-2 control-label col-sm-offset-1">'. $value->name .'</label><div class="col-sm-6"><input name="duties[]" '.(in_array( $value->duty_id ,explode(",", $data['user']->pref_duty) ) ? "checked": "").' type="checkbox" value="'. $value->duty_id .'"></div> </div>';
+                                        //  $html = $html . '<option value="'. $value->duty_id .'"> '. $value->name .'</option>';
+                                      }
+                              
+                              echo  $html; ?>
+                                       
+                                    </div>
+                                </div> 
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-2">
 

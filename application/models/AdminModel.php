@@ -720,13 +720,20 @@ class AdminModel extends CI_Model
    }
 
    //http://stackoverflow.com/questions/6333623/mysql-syntax-for-inserting-a-new-row-in-middle-rows
-   function updateDutyByOrder( $priority, $name, $description, $day ) {
+   function updateDutyByOrder(  $admin_id, $priority, $name, $description, $day ) {
 
         $query = $this->db->query('UPDATE duty SET priority = priority + 1 WHERE priority >= ' . $priority . ' order by priority DESC;');
 
-        $query = $this->db->query("INSERT INTO duty ( priority, name, description, for_day) VALUES ( ". $priority .", '". $name ."', '". $description ."', '". $day ."' )");
+        $query = $this->db->query("INSERT INTO duty ( priority, name, description, for_day, admin_id) VALUES ( ". $priority .", '". $name ."', '". $description ."', '". $day ."' ,". $admin_id ." )");
 
    }
+   function getAssignLogId($id){
+        $query = $this->db->query("SELECT log_id FROM `assign_duty_logs` where `assign_id` = ".$id." ORDER BY `log_id` Desc limit 1" );
+
+        $query->result();
+
+        return $query->row();
+   } 
 
    function updatePriority( $priority, $name, $description, $id ) {
 

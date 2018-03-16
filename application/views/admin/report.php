@@ -1,3 +1,13 @@
+<style>
+ @media only screen and (max-width: 576px) {
+		.enableScroll{
+			 	position: relative; 
+				overflow-x: scroll;
+		}
+
+	} 
+</style>
+
 <body class="hold-transition skin-green sidebar-mini">
 <div class="wrapper">
     <div class="content-wrapper">
@@ -39,6 +49,7 @@
                                         </div>                                    
                                     </div>
                                 </div>
+                              <div class="enableScroll">
                             <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
@@ -60,6 +71,7 @@
                                 ?>                                
                                 </tbody>
                             </table> 
+                              </div>
 
 <!-- /.box-body -->
                              </div> 

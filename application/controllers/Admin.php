@@ -81,9 +81,8 @@ class Admin extends CI_Controller {
         }
     }
 
-    function index()
-    {   
-        //ASSIGN DUTY
+  function home_assign_waara(){
+            //ASSIGN DUTY
         if($this->input->post()) {
 
             //if email is checked send email to the assigned user
@@ -112,6 +111,23 @@ class Admin extends CI_Controller {
         $this->AdminModel->waaraNotificationEmail($assign['user_id'], $assign['jk_id'], $assign['duty_id'], $date , $emailMessage[0]->content );
 
         }
+        $data['events'] = $this->AdminModel->get_calendar_duties(); 
+            $events = [];
+            foreach( $data['events']  as $row ) {
+                 $subevent['title'] = $row->duty_name;
+                 $subevent['start'] = $row->start_date;
+                 $subevent['end'] = $row->end_date;
+                 //$subevent['onclick'] = 'eventClick("2010.0.02")';
+                 //$subevent['url'] = 'Welcome/waara?id='.$row->id;
+                 $subevent['color'] = ($row->color != 'NULL' ? $row->color : '#337ab7' ) ;
+
+                 array_push($events, $subevent);
+        }
+      echo  $data['events'] =json_encode( $events);    
+  }
+    function index()
+    {   
+
 
         $jkId = $this->session->userdata('jk_id');
         $type = $this->session->userdata('type');
@@ -772,7 +788,7 @@ function addNewDuty(){
          if($this->input->post()) {
 
             $beforeDuty = $this->input->post('beforeDuty', true);
-            
+            $admin_id = $this->session->userdata('user_id');
             //Date or for_all to add duty for specific day only
             $addDutyDate =  $this->input->post('addDutyDate', true);
             $selectedSpecificDate =  $this->input->post('addDutyDate', true);
@@ -787,13 +803,14 @@ function addNewDuty(){
                 $oldDutyID = $dutyExists[0]->duty_id;
                 $addDutyDate = $addDutyDate ."," . $dutyOldDate;
                 $data = array(
-                    'for_day' => $addDutyDate
+                    'for_day' => $addDutyDate,
+                    'admin_id' => $this->session->userdata('user_id')
                 );
                 $this->AdminModel->update( 'duty', 'duty_id', $oldDutyID, $data );
             } else {
               
                 //insert and update priority
-                $this->AdminModel->updateDutyByOrder($beforeDuty, $this->input->post('duty_name', true), $this->input->post('description', true), $addDutyDate );
+                $this->AdminModel->updateDutyByOrder( $admin_id,$beforeDuty, $this->input->post('duty_name', true), $this->input->post('description', true), $addDutyDate );
 
                 $selectJkIds = $this->input->post('jk', true);
 
@@ -1602,19 +1619,24 @@ function addNewDuty(){
                 "user_id" => $selectedUser
             );
             $assign_user_data = $this->AdminModel->getAssignUserData( $assignId );
-            $assign_duty_log_data = array (
-                "duty_id" =>  $assign_user_data->duty_id,
-                "user_id" => $assign_user_data->user_id,
-                "jk_id" =>  $assign_user_data->jk_id,
-                "start_date" =>  $assign_user_data->start_date,
-                "date" =>  date("Y-m-d"),
-                "shift" =>  $assign_user_data->shift,
-                "reason" => $reason,
-                "admin_id" => $this->session->userdata('user_id')
-            );
+//             $assign_duty_log_data = array (
+//                 "duty_id" =>  $assign_user_data->duty_id,
+//                 "user_id" => $assign_user_data->user_id,
+//                 "jk_id" =>  $assign_user_data->jk_id,
+//                 "start_date" =>  $assign_user_data->start_date,
+//                 "date" =>  date("Y-m-d"),
+//                 "shift" =>  $assign_user_data->shift,
+//                 "reason" => $reason,
+//                 "admin_id" => $this->session->userdata('user_id')
+//             );
           
-
-            $this->AdminModel->insert('assign_duty_logs', $assign_duty_log_data);
+            $log_data = $this->AdminModel->getAssignLogId($assignId);
+            $log_id = $log_data->log_id;
+            $assign_duty_log_data = array (
+                "reason" => $reason
+            );
+            //$this->AdminModel->insert('assign_duty_logs', $assign_duty_log_data);
+            $this->AdminModel->update( 'assign_duty_logs', 'log_id', $log_id, $assign_duty_log_data );
             $this->AdminModel->update( 'assign_duty', 'assign_id', $assignId, $data );
             $emailMessage = $this->EmailModel->getEmailContent();
             $this->AdminModel->waaraNotificationEmail($selectedUser, $assign_user_data->jk_id, $assign_user_data->duty_id, $assign_user_data->start_date , $emailMessage[0]->content );

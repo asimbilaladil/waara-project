@@ -86,7 +86,37 @@
                                 </div>
                                                                                              
 
+                                <div class="form-group">
+                                  <label for="" class="col-sm-2 control-label">Jamatkhana</label>
+                                    <div class="col-sm-6" >
 
+                                        <select name="jks[]" id="jks" multiple="multiple" class="form-control">
+                                            <?php
+                                                foreach ($data['jks'] as $key => $value) {
+                                                    echo '<option value="'. $key .'"> '. $value .' </option>';
+                                                }
+                                            ?>
+                                        </select>   
+
+                                    
+
+                                   
+                                    </div>
+                                </div> 
+                              <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-2">
+
+                                        <input class="btn btn-primary" type="button" value="Get JamatKhanas" id="getjk" onclick="getDuties();" />        
+                                    </div>
+                                </div>
+
+                                <div  class="form-group" >
+                                     <div class="col-sm-2" >
+                                     </div>
+                                     <div class="col-sm-6" id="duties">
+
+                                    </div>
+                                </div>                              
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-2">
 
@@ -104,3 +134,19 @@
         </section><!-- /.content -->
     </div>
 </div>
+    <script type="text/javascript">
+
+function getDuties() {
+    var jks = $('#jks').val();
+
+
+    $.post('<?php echo site_url('Welcome/getDuties') ?>', {
+        state: jks
+    }, function(data) {
+
+        $('#duties').show().html(data);
+
+    });     
+}
+
+    </script>
