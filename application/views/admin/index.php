@@ -1128,6 +1128,8 @@ function ajaxCallDuty() {
 
             $('#duty').html(response);
 
+            isEditAllowed();
+
             $("[name=users]").autocomplete({
 
                 source : '<?php echo site_url('admin/getUsers') ?>',

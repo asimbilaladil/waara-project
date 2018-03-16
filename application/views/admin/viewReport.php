@@ -1,5 +1,4 @@
 
-
 <script src="//cdn.jsdelivr.net/webshim/1.14.5/polyfiller.js"></script>
 <script>
     webshims.setOptions('forms-ext', {types: 'date'});
@@ -222,6 +221,64 @@
 
   </div>
 </div>
+<!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">User History</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="userHistory">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+  function convertDate(d) {
+  var p = d.split("-");
+
+  return (p[0]+p[1]+p[2]);
+}
+function sortByDate() {
+
+  var tbody = document.querySelector("#userHistoryt tbody");
+  // get trs as array for ease of use
+  var rows = [].slice.call(tbody.querySelectorAll("tr"));
+  
+  rows.sort(function(a,b) {
+    return convertDate(b.cells[3].innerHTML) - convertDate(a.cells[3].innerHTML);
+  });
+  
+  rows.forEach(function(v) {
+
+    tbody.appendChild(v); // note that .appendChild() *moves* elements
+  });
+}
+
+function ajaxCallUserHistory(dutyId) {
+
+
+   $('#selectedDuty').val(dutyId);
+   
+    $.post('<?php echo site_url('Admin/ajaxUserHistory') ?>', {
+        state:dutyId
+    }, function(data) {
+       
+        $('#userHistory').show().html(data);
+        $('#myModal').modal('toggle');
+    }); 
+
+}
+
+</script>
 <script type="text/javascript">
   
   var runQuery = true;
@@ -304,6 +361,7 @@
                 //$('#reportResult').show();
                
                 $('#tableData').html(response);  
+                isEditAllowed();
                 //sortByDate();  
 
             },
