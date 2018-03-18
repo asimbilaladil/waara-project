@@ -23,4 +23,12 @@ class MajalisDateModel extends CI_Model {
 
     }
 
+    public function getDatesByMajalisIds($ids) {
+
+        $query = $this->db->query("Select * FROM majalis_date WHERE majalis_id IN (" . $ids . ")");
+
+        return $query->result();
+        
+    }
+
 }

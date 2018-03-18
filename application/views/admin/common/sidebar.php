@@ -6,16 +6,21 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
 
+
+            <?php if($_SESSION['type'] == 'Super Admin') {
+                $homeUrl = 'admin';
+            } else if ($_SESSION['type'] == 'Majalis') {
+                $homeUrl = 'AdminMajalis';
+            }
+            ?>
              <li class="treeview">
 
-                <a href="<?php echo site_url('admin'); ?>">
+                <a href="<?php echo site_url($homeUrl); ?>">
                  <i class="fa fa-home"></i> <span>Home</span></a>  
-               
-               
-               
-     
-               
+                           
             </li>
+
+
              <li class="treeview">
 
                 <a href="<?php echo site_url('admin'); ?>">

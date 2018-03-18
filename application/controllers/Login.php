@@ -1,53 +1,78 @@
 <?php
 class Login extends CI_Controller {
-
     public function __construct(){
         parent::__construct();
-
             $this->load->model('AdminModel');
+            $this->load->model('MajalisModel');
+        error_reporting(0);
     }
-
-
-
     function index() {
         
         if($this->input->post()) {
            
-            $data = array (
+            $loginData = array (
                 'email' => $this->input->post('email', true),
                 'password' => md5($this->input->post('password', true) )
             );
-            $result = $this->AdminModel->admin_login_check_info($data);
+
+            $result = $this->AdminModel->admin_login_check_info($loginData);
+
+            $redirect = '';
+
 
             //if query found any result i.e userfound
             if($result) {
-                    
-                $data['type'] = $result->type;
-                if( $data['type'] != 'User' ){
+                $item = $result[0];
+                $data['type'] = $item->type;
 
-                    $data['user_id'] = $result->user_id;
+                if ($data['type'] != 'User' ) {
+                    $data['user_id'] = $item->user_id;
                     $data['message'] = 'Your are successfully Login && your session has been start';
-                    $data['jk_id'] = $result->jk_id;
-                    $data['type'] = $result->type;
-                    $this->session->set_userdata($data);
-                    redirect('admin/');
+                    $data['jk_id'] = $item->jk_id;
+                    $majalisAdminIds = array();
+                    $majalisArray = array();
 
+                    //get all majalis    
+                    $allMajalis = $this->MajalisModel->getAllMajalis();
+                    foreach($allMajalis as $majalis) {
+                        array_push($majalisArray, $majalis->id);
+                    }
+                    $data['majalis'] = $majalisArray;
+                    //get Admin Majalis 
+                    if ($item->majalis_id) {
+                        foreach($result as $row) { 
+                            array_push($majalisAdminIds, $row->majalis_id);
+                            
+                        }
+                        $data['isMajalisAdmin'] = true;
+                        $redirect = 'AdminMajalis';
+
+                    } else {
+                        $data['isMajalisAdmin'] = false;
+                        $redirect = 'admin/';
+                    }
+                    $data['majalisAdminIds'] = $majalisAdminIds;
+                    
+                    $this->session->set_userdata($data);
+
+                    //redirect('admin/');
+                    
                 } else{ 
                     $data['message'] = ' Your Email ID or Password is invalid  !!!!! ';
-                    redirect('login/');                    
+                    $redirect = 'login/';
+                    //redirect('login/');                    
                 }
-            }else{
+            } else{
                 $data['message'] = ' Your Email ID or Password is invalid  !!!!! ';
-                redirect('login/');
+                $redirect = 'login/';
+                //redirect('login/');
             }
 
+            redirect($redirect);
 
         } else {
             $this->load->view('admin/login');
         }
-
     }
-
-
 }
 ?>
