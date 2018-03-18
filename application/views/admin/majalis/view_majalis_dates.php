@@ -26,6 +26,8 @@
                             </div>
                             <!-- /.box-header -->
 
+                            <input type="hidden" value="<?php echo $data['majalis']->id ?>" id="majalisId" name="majalisId" />
+
                                 <form class="form-horizontal majalisForm" action="<?php echo site_url('majalis/addMajalisDate') ?>" method="post" >
                                     <div class="box-body">
 

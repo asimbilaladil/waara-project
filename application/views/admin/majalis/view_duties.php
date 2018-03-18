@@ -23,6 +23,8 @@
  -->                            </div>
                             <!-- /.box-header -->
 
+                            <input type="hidden" value="<?php print_r($data['majalis']->id) ?>" id="majalisId" name="majalisId"/>
+
                             <form id="defaultForm" class="form-horizontal majalisForm" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
                                 <div class="box-body">
 

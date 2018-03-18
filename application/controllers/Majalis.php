@@ -106,11 +106,12 @@ class Majalis extends CI_Controller {
 
       if($this->input->get('token')) {
         $token = $this->input->get('token');
-        
         $years = $this->MajalisModel->getDutiesYear($token);
+        $majalis = $this->MajalisModel->getMajalisByToken($token);
 
         $data = array(
-          'years' => $years
+          'years' => $years,
+          'majalis' => $majalis
         );
 
         $this->loadView('admin/majalis/view_majalis_dates', $data);
@@ -152,14 +153,12 @@ class Majalis extends CI_Controller {
         <td> <a href="'. $dutiesUrl .'">' . $item->date . '</a> </td>
         <td class="majalisId_'. $item->id .'"> 
 
-        <a href="deleteMajalisDate?token=' . $item->majalisDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> 
+        <a href="deleteMajalisDate?token=' . $item->token . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> 
 
         </td>
 
         <td class="majalisId_'. $item->id .'" > <a href="#" id="date_'.$key.'" name="editDate"  data-type="date" data-pk="'. $item->dateId .'" data-url="editMajalisDate" data-title="Select date" data-value="'. $item->date .'" >EDIT</a> </td>
         <td>
-
-        <td> <input type="hidden" id="majalisId" name="" value="'. $majalisId .'" /></td> 
 
         </tr>';
         
@@ -541,10 +540,10 @@ class Majalis extends CI_Controller {
         $token = $this->input->get('token');
         $date = $this->input->get('date');
         $majalis = $this->MajalisModel->getMajalisByToken($token);
-        
+
         if ($majalis) {
 
-          $this->loadView('admin/majalis/view_duties', null);
+          $this->loadView('admin/majalis/view_duties', array('majalis' => $majalis ));
 
         } else {
           redirect('majalis/');

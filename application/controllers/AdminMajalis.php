@@ -106,7 +106,7 @@ class AdminMajalis extends CI_Controller {
                 <td><button class="btn btn-primary">Edit</button> </td>
                 <td> <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
                 onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary">Rating</button> </td>
-                <td> <input type="hidden" id="majalisId" name="" value="'. $row->majalisId .'" /></td> 
+                
                 ';  
 
             } else {
@@ -118,7 +118,7 @@ class AdminMajalis extends CI_Controller {
                     <td> '. $row->name .' </td>
                     <td> <input type="text" id="majalisDutyUsers_'. $key .'" name="users" class="form-control  ui-autocomplete-input"> </td>
                     <td class="majalisId_'. $row->majalisId .'"> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForMajalis('. $row->id .')">SAVE</button> </td>
-                    <td> <input type="hidden" id="majalisId" name="" value="'. $row->majalisId .'" /></td> 
+                     
                     ';
                 }                
             }
