@@ -29,16 +29,59 @@ class AdminMajalis extends CI_Controller {
      * Created By: Moiz
      */
     function index() {
-        
-        $majalisAdminIds = $this->session->userdata('majalisAdminIds');
-        
-        $ids = implode(', ', $majalisAdminIds);
+                
+        $years = $this->MajalisModel->getDutiesByYear();
 
-        $majalisDates = $this->MajalisDateModel->getDatesByMajalisIds($ids);
-
-        $this->loadView('admin/majalis_admin', array('majalisDates' => $majalisDates) );
+        $this->loadView('admin/majalis_admin', array(
+            'years' => $years
+        ));
 
     }    
+
+    function getMajalisDatesByYear() {
+
+        $year = $this->input->get('year');
+        $majalisAdminIds = $this->session->userdata('majalisAdminIds');
+        $ids = implode(', ', $majalisAdminIds);        
+        $majalisDates = $this->MajalisDateModel->getDatesByMajalisIds($ids, $year);
+
+
+        $html = '<div class="box-header with-border">
+                    <h3 class="box-title">'. $majalisDates[0]->name .'</h3>
+                </div>
+                <table class="table table-striped" id="table" width="80%">
+                    <thead>
+                        <tr>
+                            <th> Date </th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody >';
+
+        foreach ($majalisDates as $row) {
+
+            $rowMonth = date('m', strtotime($row->date));
+            $currentMonth =  date('m', strtotime(date("Y-m-d")));
+
+            $rowYear = date('Y', strtotime($row->date));
+            $currentYear =  date('Y', strtotime(date("Y-m-d")));
+
+            $date = $row->date;
+
+            if ($rowMonth == $currentMonth && $rowYear == $currentYear) {
+                $date = '<mark>'. $date .'</mark>';
+            }
+
+            $html = $html . '<tr> 
+                <td> <a onclick="ajaxGetMajalisDuties(`'. $row->date .'`)">'. $date .' </a></td>
+            </tr>';
+        }
+
+        $html = $html . '</tbody></table>';
+
+        echo $html;        
+
+    }
 
     function ajaxGetMajalisDuties() {
 
@@ -168,11 +211,9 @@ class AdminMajalis extends CI_Controller {
         }
                 
     
-        // echo json_encode($majalisArray); die;
+        // echo json_encode($result); die;
 
-        $html = '<input type="hidden" name="selectedMajalisUser" id="selectedMajalisUser"/>
-                <input type="hidden" name="selectedMajalisDuty" id="selectedMajalisDuty"/>
-                <input type="hidden" id="majalisDate" name="majalisDate"  /> ';
+        $html = '';
 
         foreach ($majalisArray as $majalis) {
             $html = $html . '

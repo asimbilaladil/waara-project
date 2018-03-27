@@ -366,7 +366,7 @@ class MajalisModel extends CI_Model
 
         //if($this->getSortCountByDate($date) > 0) {
 
-        $query =  $this->db->query("SELECT majalis.id as majalisId, majalis.name as majalisName, majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
+        $query =  $this->db->query("SELECT majalis.id as majalisId, majalis.name as majalisName, majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort, majalis_date.date
             FROM majalis
             INNER JOIN majalis_date ON majalis.id = majalis_date.majalis_id 
             LEFT JOIN majalis_duties ON majalis_duties.majalis_id = majalis.id AND majalis_duties.type = 'GLOBAL'

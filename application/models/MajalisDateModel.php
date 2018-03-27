@@ -23,9 +23,13 @@ class MajalisDateModel extends CI_Model {
 
     }
 
-    public function getDatesByMajalisIds($ids) {
+    public function getDatesByMajalisIds($ids, $year) {
 
-        $query = $this->db->query("Select * FROM majalis_date WHERE majalis_id IN (" . $ids . ")");
+        $query = $this->db->query("Select majalis_date.id, majalis_date.date, majalis_date.token, majalis.name 
+            FROM majalis_date, majalis
+            WHERE majalis_id IN (". $ids .")
+            AND majalis_date.majalis_id = majalis.id
+            AND majalis_date.date LIKE '". $year ."-%'");
 
         return $query->result();
         
