@@ -49,6 +49,7 @@
                                     </div>
                                 </form>
 
+
                                 <form class="form-horizontal majalisForm" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
                                     <div class="box-body">
 
@@ -79,6 +80,13 @@
                                         <input type="checkbox" id="override" name="override" value="1" <?php echo !empty($years[0]->override) ? 'checked' : '' ?> >
                                     </div>
                                 </div>   
+
+
+                            <div class="box-body">
+                                <div class="col-sm-offset-0 col-sm-2">
+                                    <button type="button" onclick="location.href='<?php echo site_url("Majalis/viewGlobalDuties?token=" . $this->input->get('token') ) ;?>'" class="btn btn-primary btn-block">Global Duties</button>
+                                </div> 
+                            </div>                                
                              
                             </br> </br>
                             <div class="box-header with-border">

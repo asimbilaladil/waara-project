@@ -33,6 +33,55 @@ class Majalis extends CI_Controller {
 
     }
 
+    /**
+     * View global duties
+     * Created By: Moiz
+     */
+    function viewGlobalDuties() {
+
+      $token = $this->input->get('token');
+
+      if ($token) {
+
+        $result = $this->MajalisModel->getGlobalDuties($token);  
+
+        $this->loadView('admin/majalis/global_duties', null);
+
+      } else {
+        redirect($this->agent->referrer());
+      }
+
+    }
+
+    function getGlobalDuties() {
+
+      $token = $this->input->get('token');
+      $result = $this->MajalisModel->getGlobalDuties($token);
+
+      $html = '';
+
+      foreach ($result as $row) { 
+        $deleteUrl = site_url('Majalis/deleteMajalisDutyById?id=' . $row->dutyid);
+        $editDutyUrl = site_url('Majalis/editMajalisDuty');
+        $html = $html . '<tr>
+            <td> '. $row->name .' </td>
+            <td class="majalisId_'. $row->majalisId .'" > <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+
+            <td class="majalisId_'. $row->majalisId .'" > <a href="#" name="editDuty" data-type="text" data-pk="'. $row->dutyid .'" data-value="'. $row->name .'" data-url="'. $editDutyUrl .'"> EDIT  </a> </td>                                                
+
+        </tr>';    
+      } 
+
+      echo $html;     
+
+    }
+
+    function deleteMajalisDutyById() {
+      $id = $this->input->get('id');
+      $this->MajalisModel->deleteMajalisDuty($id);
+      redirect($this->agent->referrer());
+    }
+
 
     /**
      * get Majalis by year
@@ -267,16 +316,20 @@ class Majalis extends CI_Controller {
     function addDuty() {
 
       $token = $this->input->post('token', true);
+      $id = $this->input->post('id', true);
       $duty = $this->input->post('duty', true);
       $date = $this->input->post('date', true);
       $adminId = $this->session->userdata('user_id');
-      $result = $this->MajalisModel->getMajalisByToken($token);
+
+      if ($token) {
+        $id = $this->MajalisModel->getMajalisByToken($token)->id;  
+      }
 
       $dutyModel = array (
         'name' => $duty,
         'admin_id' => $adminId,
         'token'=> random_string('unique', 30),
-        'majalis_id' => $result->id,
+        'majalis_id' => $id,
         'type' => $date ? 'SPECFIC' : 'GLOBAL'
       );
 

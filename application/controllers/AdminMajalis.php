@@ -226,8 +226,9 @@ class AdminMajalis extends CI_Controller {
                         <h3 id="selectedMajalisDate" class="box-title"> Selected Date is : '. $date .' </h3>
                     </div>
                 </div>
-                <div class="col-sm-12" style="top: 20px;">
-                    <div class="col-sm-3" >
+                <div class="col-sm-12">
+                    <div class="col-sm-3">
+                        
                     </div>
                 </div>
                 <div class="box-body">
@@ -235,6 +236,7 @@ class AdminMajalis extends CI_Controller {
                         
                             <div class="col-sm-12">
                                 </br>
+                                <button class="btn btn-primary" onclick="addDutyModal('. $majalis[0]->majalisId .', `'. $date .'`)">Add Duty</button>
                             </div>
                             <div class="form-group">
                                 <div class="col-sm-6">
@@ -330,12 +332,16 @@ class AdminMajalis extends CI_Controller {
 
     function viewDuty() {
 
+
+
         if ($this->input->get('id') && $this->input->get('date')) {
 
             $dutyId = $this->input->get('id');
             $date = $this->input->get('date');
 
             $data = $this->MajalisModel->getAssignMajalisDutyDetail($dutyId, $date);
+            // print_r($data);
+            // die;
 
             if ($data) {
                 $this->loadView('admin/majalis/view_majalis_duty_detail', $data);

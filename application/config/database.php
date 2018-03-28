@@ -72,12 +72,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $active_group = 'default';
 $query_builder = TRUE;
+
 // $db['default'] = array(
 // 	'dsn'	=> '',
 // 	'hostname' => 'localhost',
-// 	'username' => 'root',
-// 	'password' => 'root',
-// 	'database' => 'waara',
+// 	'username' => 'waaranet_waara',
+// 	'password' => 'waaranet_waara',
+// 	'database' => 'waaranet_waara',
 // 	'dbdriver' => 'mysqli',
 // 	'dbprefix' => '',
 // 	'pconnect' => FALSE,
@@ -95,11 +96,11 @@ $query_builder = TRUE;
 // );
 
 $db['default'] = array(
-'dsn'	=> '',
+	'dsn'	=> '',
 	'hostname' => 'localhost',
-	'username' => 'waara_dev',
-	'password' => 'waara_dev',
-	'database' => 'waara_development',
+	'username' => 'root',
+	'password' => 'root',
+	'database' => 'waara',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
@@ -115,4 +116,3 @@ $db['default'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
-

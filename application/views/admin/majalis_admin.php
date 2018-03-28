@@ -89,11 +89,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">User Rating 1</h4>
+                <h4 class="modal-title">User Rating</h4>
             </div>
         <div class="modal-body">
             <div class="form-group" style="text-align: center;">
-                <input type="text" id="assignMajalisDutyId" name="assignDuty"/>
+                <input type="hidden" id="assignMajalisDutyId" name="assignDuty"/>
                 <input id="majalis-duty-rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
             </div>
         </div>
@@ -106,6 +106,34 @@
     </div>
 </div>
 <!-- MAJALIS DUTY RATING END -->
+
+
+<!-- ADD DUTY MODAL START -->
+<div id="addDutyModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Add Duty</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group col-sm-12">
+                    <label for="" class="col-sm-2 control-label">Duty</label>
+                    <div class="col-sm-6">
+                        <input type="text" name="dutyname" class="form-control" id="dutyname">
+                    </div>
+                </div>
+            </div>      
+        <div class="modal-footer"> 
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="onDutyAdd()">Save</button>
+        </div>
+        </div>
+
+    </div>
+</div>
+<!-- ADD DUTY MODAL END -->
 
 
 
@@ -227,6 +255,8 @@ function getYearDates() {
 
 var setAssignMajalisDutyId = function setAssignMajalisDutyId(id,stars){
 
+    console.log('stars', stars);
+
     $('#assignMajalisDutyId').val(id);
     $('#majalis-duty-rating-system').rating('update', stars);
     //$('#rating-system').val(stars);
@@ -256,4 +286,39 @@ function addRatingForMajalisDuty(){
         }
     });
 }
+
+var currentMajalisId;
+var currentDate;
+
+function onDutyAdd() {
+    var duty = $('#dutyname').val();
+    $('#addDutyModal').modal('toggle');
+
+    $.ajax({
+        url: "<?php echo site_url('Majalis/addDuty') ?>",
+        type: "POST",
+        data: {
+            'id': currentMajalisId,
+            'duty': duty,
+            'date': currentDate
+        },
+        success: function(response){
+
+            ajaxGetMajalisDuties(currentDate);
+
+        }, error: function(err){
+            ajaxGetMajalisDuties(currentDate);
+        }
+    }); 
+
+}
+
+function addDutyModal(majalisId, date) {
+    console.log('date',date);
+    $('#addDutyModal').modal('toggle');
+    currentMajalisId = majalisId;
+    currentDate = date
+
+}
+
 </script>

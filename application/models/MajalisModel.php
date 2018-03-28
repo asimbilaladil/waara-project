@@ -255,6 +255,14 @@ class MajalisModel extends CI_Model
         $this->db->delete( 'majalis_duties' , array( 'token' => $token) ); 
     }
 
+    /**
+     * Delete Duty date by id
+     * Created By: Moiz     
+     */
+    public function deleteMajalisDuty($id) {
+        $this->db->delete( 'majalis_duties' , array( 'id' => $id) ); 
+    }    
+
     public function deleteDutyForSpecficDate($dutyId, $type) {
         $this->db->delete( 'specfic_date_duties' , array(
             'duty_id' => $dutyId,
@@ -362,6 +370,17 @@ class MajalisModel extends CI_Model
 
     }
 
+    public function getGlobalDuties($majalisToken) {
+
+        $query =  $this->db->query("SELECT majalis_duties.name, majalis_duties.id as dutyid, majalis.name as majalisName, majalis.id as majalisId 
+                FROM majalis_duties, majalis
+                WHERE majalis.token = '". $majalisToken ."'
+                AND majalis_duties.type = 'GLOBAL'");
+
+        return $query->result();
+
+    }
+
     public function getDutiesByDate($date) {
 
         //if($this->getSortCountByDate($date) > 0) {
@@ -427,8 +446,10 @@ class MajalisModel extends CI_Model
             AND majalis.id = majalis_date.majalis_id
             AND majalis_duties.id = majalis_duty_assign.duty_id
             AND majalis_duty_assign.user_id = user.user_id
-            AND majalis_duties.id = " . $dutyId ."
-            AND majalis_date.date = '". $date ."'");
+            AND majalis_duties.id = " . $dutyId);
+
+            //." AND majalis_date.date = '". $date ."'"        
+
         $query->result();
 
         return $query->result();     

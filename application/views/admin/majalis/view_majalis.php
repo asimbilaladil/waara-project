@@ -27,6 +27,7 @@
                                 <div class="col-sm-offset-0 col-sm-2">
                                     <button type="button" onclick="location.href='<?php echo site_url("majalis/add") ;?>'" class="btn btn-primary btn-block">Add Majalis</button>
                                 </div>
+
                             </div>
 
                             </br> </br>
