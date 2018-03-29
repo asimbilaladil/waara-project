@@ -77,6 +77,16 @@ class MajalisModel extends CI_Model
     }
 
 
+    public function updateAssignedMajalisDuty($id, $data) {
+        $this->db->where('id', $id );
+        $result = $this->db->update( 'majalis_duty_assign', $data);
+        if ($result) {
+            return true;
+        } 
+        return false;        
+    }    
+
+
     public function updateFestivalDuty($token, $data) {
         $this->db->where('token', $token );
         $result = $this->db->update( 'festival_duties', $data);
@@ -211,6 +221,14 @@ class MajalisModel extends CI_Model
     }
 
     /**
+     * Delete Assigned Majalis Duty
+     * Created By: Moiz     
+     */
+    public function deleteAssignedMajalisDuty($id) {
+        $this->db->delete( 'majalis_duty_assign' , array( 'id' => $id) ); 
+    }
+
+    /**
      * Delete Festival duty
      * Created By: Moiz     
      */
@@ -282,6 +300,19 @@ class MajalisModel extends CI_Model
 
         $query->result();
         return $query->result();
+    }
+
+
+    
+    public function getAssignMajalisUser($id) {
+
+        $query = $this->db->query("SELECT user.first_name, user.last_name, majalis_duty_assign.id, majalis_duty_assign.duty_id, majalis_duty_assign.user_id, majalis_duty_assign.token, majalis_duty_assign.date
+            FROM user, majalis_duty_assign
+            WHERE majalis_duty_assign.user_id = user.user_id
+            AND majalis_duty_assign.id = " . $id);
+
+        $query->result();
+        return $query->result();        
     }
     
     /**

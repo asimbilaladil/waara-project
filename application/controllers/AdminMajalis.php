@@ -293,6 +293,8 @@ class AdminMajalis extends CI_Controller {
 
             if ($assigned) {
 
+                $editUrl = site_url('AdminMajalis/editMajalisDuty?id=' . $row->assignId );
+
                 $name = $row->firstName . ' ' . $row->lastName;
                 $viewUrl = site_url('AdminMajalis/viewDuty?id=' . $row->id . '&date=' . $row->date );
                 $html = $html . '<tr>
@@ -300,7 +302,7 @@ class AdminMajalis extends CI_Controller {
                 <td> '. $row->name .' </td>
                 <td> '. $name  .' </td>
                 <td> <a href="'. $viewUrl .'"> <button class="btn btn-primary">View</button> </a> </td>
-                <td><button class="btn btn-primary">Edit</button> </td>
+                <td> <a href="'. $editUrl .'"> <button class="btn btn-primary">Edit</button> </a> </td>
                 <td> <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
                 onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary">Rating</button> </td>
                 <td> <input type="hidden" id="majalisId" name="" value="'. $row->majalisId .'" /></td>
@@ -383,6 +385,39 @@ class AdminMajalis extends CI_Controller {
 //            }
             
         }
+
+    }
+
+    function editMajalisDuty() {
+
+        $id = $this->input->get('id');
+
+        $result =$this->MajalisModel->getAssignMajalisUser($id);
+
+        $this->loadView('admin/majalis/edit_assigned_majalis_duty', $result);
+    }
+
+    function editAssignedDuty() {
+
+        $selectedUser = $this->input->post('selectedUser');
+        $assignId = $this->input->post('assignId');
+
+        $data = array(
+            'user_id' => $selectedUser
+        );
+
+        $this->MajalisModel->updateAssignedMajalisDuty($assignId, $data);
+        redirect($this->agent->referrer());
+
+    }
+
+    function deleteAssignDuty() {
+    
+        $id = $this->input->post('id');
+
+        $this->MajalisModel->deleteAssignedMajalisDuty($id);
+
+        redirect('AdminMajalis');
 
     }
 
