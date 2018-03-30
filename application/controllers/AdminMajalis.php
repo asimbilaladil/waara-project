@@ -46,9 +46,7 @@ class AdminMajalis extends CI_Controller {
         $majalisDates = $this->MajalisDateModel->getDatesByMajalisIds($ids, $year);
 
 
-        $html = '<div class="box-header with-border">
-                    <h3 class="box-title">'. $majalisDates[0]->name .'</h3>
-                </div>
+        $html = '<input type="hidden" id="majalisName" value="'. $majalisDates[0]->name .'" />
                 <table class="table table-striped" id="table" width="80%">
                     <thead>
                         <tr>

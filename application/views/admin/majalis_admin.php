@@ -11,12 +11,15 @@
                 <div class="row">
                     <div class="col-md-12">
                         <!-- TABLE DIV -->
+                      <div class="col-md-1"></div>
 
-
-                        <div class="col-md-6">
+                        <div class="col-md-4">
 
                             <div class="box box-success">
-
+                               <div class="col-md-12">
+                              <h4 id="majalisNameHeading">CHAANDRAAT MAJALIS</h4>
+                              </div>
+                            <div class="col-md-6">
                             <!-- Year dropdown Start -->                                    
                                 <select required="" name="years" id="yearDropdown" onchange="onYearChange(this)" class="form-control">
                                     <?php
@@ -26,6 +29,7 @@
                                         }
                                     ?>
                                 </select>
+                              </div>
 
                                 <input type="hidden" value="<?php echo $years ? $years[0]->year : 0 ?>" id="selectedYear"/>
                             <!-- Year dropdown End -->
@@ -162,8 +166,6 @@ function ajaxGetMajalisDuties(date) {
 
             var selectedDate = $("#selectedDate").val()
 
-    
-
             $("[name=users]").autocomplete({
 
                 source : '<?php echo site_url('admin/getUsers') ?>',
@@ -233,6 +235,10 @@ function getYearDates() {
         success: function(response){
 
             $('#majalisDates').html(response);
+
+            var majalisName = $('#majalisName').val();
+
+            $('#majalisNameHeading').html(majalisName + " Majalis");
 
             // $.fn.editable.defaults.mode = 'inline';
 

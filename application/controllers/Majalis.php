@@ -131,7 +131,7 @@ class Majalis extends CI_Controller {
         if (isset($item[$month])) {
             foreach($item[$month] as $m) {
                 if(!empty($m['date'])) {
-                  $dutyUrl = site_url('majalis/viewMajalisDates?token=' . $item["token"] .'&date='. $m['completeDate']);
+                  $dutyUrl = site_url('majalis/viewMajalisDuties?token=' . $item["token"] .'&date='. $m['completeDate']);
                   $str = $str . '<a href="'. $dutyUrl .'">'. $m['date'] .'</a> <br>';                  
                 } else {
                   $addUrl = site_url('majalis/viewMajalisDates?token=' . $item["token"]);
