@@ -1,12 +1,17 @@
+<style>
+  .labelAlign{
+     text-align:  left;
+    padding-left: 20px;
+
+  }
+
+</style>
 <body class="hold-transition skin-green sidebar-mini">
     <div class="wrapper">
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <h1>
-                    Dashboard
-                    <small >Control panel</small>
-                </h1>
+      
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                     <li class="active">Dashboard</li>
@@ -27,17 +32,16 @@
                                     <div class="box-body">
 
                                         <div class="form-group">
-                                            <label for="" class="col-sm-2 control-label">Date</label>
-                                            <div class="col-sm-6">
+                                            <label for="" class="col-sm-2  labelAlign">Date</label>
+                                            <div class="col-sm-3">
                                                 <input type="date" name="date" class="form-control"  placeholder="" required>
                                             </div>
+                                         <div class=" col-sm-2">
+                                                <button type="submit" class="btn btn-primary btn-block">Add</button>
+                                            </div>                                            
                                         </div>
 
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-2">
-                                                <button type="submit" class="btn btn-primary btn-block">Add</button>
-                                            </div>
-                                        </div>
+                                 
 
                                         <input type="hidden" id="token" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
@@ -51,21 +55,19 @@
                                 </div>
                             </div>  
 
-                            </br> </br>
+                          
                             <div class="box-header with-border">
+                  </br> </br>
+                            </br> </br>                                
                                 <h3 class="box-title">List Of Festival Date:</h3>
                             </div>
 
-                            <div class="form-group">
-                                <div class="col-sm-4">
-                                    <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
-                                </div>
-                            </div>
+                        
 
                             <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
-                                        <th> Date </th>
+                                        <th style="width: 35%;"> Date </th>
                                         <th> Action </th>
                                     </tr>
                                 </thead>
@@ -82,9 +84,14 @@
                                 foreach ($data as $key => $item) {
                                     echo '<tr>
                                         <td> <a href="'. site_url('festival/viewFestivalDuties?token=' . $item->token .'&date=' . $item->date) .'">' . $item->date . '</a> </td>
-                                        <td> <a href="deleteFestivalDate?token=' . $item->festivalDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+                                        <td> <a href="deleteFestivalDate?token=' . $item->festivalDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a>
+                                        &nbsp;&nbsp;
+                                        <a href="#" id="date_'.$key.'" name="editDate"  data-type="date" data-pk="'. $item->dateId .'" data-url="'. site_url("majalis/editFestivalDate") .'" data-title="Select date" data-value="'. $item->date .'" ><span class="glyphicon glyphicon-pencil"></span></a> 
+                                        
+                                        
+                                        </td>
 
-                                        <td> <a href="#" id="date_'.$key.'" name="editDate"  data-type="date" data-pk="'. $item->dateId .'" data-url="'. site_url("majalis/editFestivalDate") .'" data-title="Select date" data-value="'. $item->date .'" >EDIT</a> </td> 
+
                                                                                
                                     </tr>';
                                 }

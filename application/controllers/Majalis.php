@@ -114,9 +114,13 @@ class Majalis extends CI_Controller {
             <td> ' . $this->printMonthMajalis($item, "October") . ' </td>
             <td> ' . $this->printMonthMajalis($item, "November") . ' </td>
             <td> ' . $this->printMonthMajalis($item, "December") . ' </td>
-            <td class="majalisId_'. $item["id"] .'" > <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+            <td class="majalisId_'. $item["id"] .'" >
+            <a onclick="onMajalisDelete(`'. $item["token"] .'`)"> <span class="glyphicon glyphicon-trash"></span></a> &nbsp;&nbsp;
+            <a href="#" name="editMajalis" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["majalisName"] .'" data-url="'. $editMajalisUrl .'"> <span class="glyphicon glyphicon-pencil"></span>  </a>
+            
+            </td>
 
-            <td class="majalisId_'. $item["id"] .'" > <a href="#" name="editMajalis" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["majalisName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
+
 
         </tr>';
 
@@ -186,7 +190,8 @@ class Majalis extends CI_Controller {
 
       $html = '<thead>
                 <tr>
-                    <th> Date </th>
+
+                    <th style="width: 35%;"> Date </th>
                     <th> Action </th>
                 </tr>
               </thead>
@@ -199,14 +204,16 @@ class Majalis extends CI_Controller {
         $dutiesUrl = site_url('Majalis/viewMajalisDuties?token=' . $item->token . '&date=' . $item->date);
 
         $html = $html . '<tr>
+
         <td> <a href="'. $dutiesUrl .'">' . $item->date . '</a> </td>
         <td class="majalisId_'. $item->id .'"> 
 
-        <a href="deleteMajalisDate?token=' . $item->token . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> 
-
+        <a onclick="onDeleteMajalisDate(`'. $item->majalisDateToken .'`)" > <span class="glyphicon glyphicon-trash"></span></a> 
+        &nbsp;&nbsp;
+        <a href="#" id="date_'.$key.'" name="editDate"  data-type="date" data-pk="'. $item->dateId .'" data-url="editMajalisDate" data-title="Select date" data-value="'. $item->date .'" ><span class="glyphicon glyphicon-pencil"></span></a> 
         </td>
 
-        <td class="majalisId_'. $item->id .'" > <a href="#" id="date_'.$key.'" name="editDate"  data-type="date" data-pk="'. $item->dateId .'" data-url="editMajalisDate" data-title="Select date" data-value="'. $item->date .'" >EDIT</a> </td>
+
         <td>
 
         </tr>';
@@ -618,10 +625,10 @@ class Majalis extends CI_Controller {
         $this->MajalisModel->deleteMajalisDutyByToken($token);
         $this->MajalisModel->deleteDutyForSpecficDate($dutyId, 'MAJALIS');
 
-        redirect($this->agent->referrer());
+        //redirect($this->agent->referrer());
       } else {
-        redirect($this->agent->referrer());
-      }      
+        //redirect($this->agent->referrer());
+      }       
     }
     
 

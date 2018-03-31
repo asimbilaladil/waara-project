@@ -72,7 +72,7 @@
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Email</label>
                                     <div class="col-sm-6">
-                                        <input disabled type="text" name="email" class="form-control" id="" value="<?php echo $data['user']->email; ?>" placeholder="" required>
+                                        <input  type="text" name="email" class="form-control" id="" value="<?php echo $data['user']->email; ?>" placeholder="" required>
                                     </div>
                                 </div>
 

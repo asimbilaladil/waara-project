@@ -54,9 +54,21 @@
                                            </select>
                                           </div>
                                        </div> 
+                                       <div class="form-group col-sm-6">
+                                          <label class="control-label col-sm-6" >Filter By Approval</label>
+                                          <div class="col-sm-6"> 
+                                             <select id="filterByApproval" class="form-control ddlFilterTableRow">
+                                              <option  value="Select" >Select</option>  
+                                              
+                                                <option value="Pending">Pending</option>
+                                                <option value="Approved">Approved</option>
+                                             
+                                           </select>
+                                          </div>
+                                       </div>                                   
                                    <div class="form-group col-sm-6">
-                                        <label class="control-label col-sm-2" >Search: </label>
-                                          <div class="col-sm-10"> 
+                                        <label class="control-label col-sm-6" >Search: </label>
+                                          <div class="col-sm-6"> 
                                             <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
                                           </div>
                                         </div>
@@ -82,7 +94,14 @@
                                           </form> 
                                       </div>                                      
 <!--                                        <button type="button" class="btn btn-primary toggle-vis"  data-column="0" > Merge User</button> --> 
-                       
+																		 <div class="col-sm-4">
+                                          
+
+                                            <input type="hidden" id="approvedUserList" name="approvedUserList"/>
+
+                                            <button id="approveUserBtn" style="width:  100%;margin-bottom: 6px; display:none;"type="button" onclick="approveUsers()" class="btn btn-primary"> Approve User(s)</button>
+                                     
+                                      </div>                          
 
                                   </div>       
                                 
@@ -98,7 +117,7 @@
                                 <table  class="table table-bordered table-hover" id="table" width="100%">
                                     <thead>
                                         <tr>
-                                            <th> Merge</th>
+                                            <th> Multiple Action</th>
                                             <th> Full Name</th>
                                             <th> Days Count</th>
                                             <th> Email</th>
@@ -121,7 +140,7 @@
                                             foreach($data['user'] as $item) {
                                               $showColor = ( $item->type != 'User' ) ?  '<button onClick="getColorUserId(' . $item->user_id .')"type="button" data-toggle="modal" data-target="#colorModal" class="btn btn-primary btn-block" style="opacity: 1; background-color:'. $item->color .'; width: 6%;"></button>' : '' ;
                                                 $template =   
-                                                    '<tr>
+                                                    '<tr class="Row" data-approval="'.( $item->verified == 'true' ? 'Approved' : 'Pending').'" >
                                                         <td> <input type="checkbox" class="mergeUserList" name="mergeUsers[]" onclick="mergeCheck(this)" value="'.$item->user_id.'"> </td>
                                                         <td> <a href="'. site_url('profile/index?id=' . $item->user_id ) .'" >'. $item->first_name.' '. $item->last_name.' </a></td>
                                                         
@@ -178,8 +197,8 @@
                         <div  class="col-sm-12 ">
                             <div class="form-group col-sm-12">
                                 </br>
-                                <label for="email">Select User Role:</label>
-                                <div  class="col-sm-12 ">
+                                <label class="col-sm-4 " for="email">Select User Role:</label>
+                                <div  class="col-sm-5 ">
                                     <select id="role" name="type"   class="form-control" onchange="showJK()" >
                                         <option value="Super Admin"> Super Admin </option>
                                         <option value="JK Admin"> JK Admin </option>
@@ -219,14 +238,16 @@
                                     </br>                                    
                                       </div>
                                     <input name="userId"  type="hidden" id="userId">                                         
-                                    <button type="submit"  class="btn btn-primary btn-block">Save</button>
+                                  
                                 </div>
-                </form>
+          
                 </div>
                 </div>
                 </div>
-                <div class="modal-footer">
-                </div>
+								<div class="modal-footer">
+									  <button type="submit"  class="pull-right btn btn-primary col-sm-3">Save</button>
+								</div>
+      					</form>
             </div>
         </div>
     </div>
@@ -312,7 +333,66 @@
   </div>
 
     <script type="text/javascript">
-      
+
+			
+        /*
+        * Function Name : multiFilter
+        * Description:  Multiple select checkbox filter function used to filter data on table using multiple values from one or more select checkboxes
+        */
+        var multiFilter = function multiFilter(){
+
+    var ddlFilterTableRow = $('select.ddlFilterTableRow');
+   
+   
+       ddlFilterTableRow.attr('disabled', 'disabled');
+   
+       var records = $('#table').find('.Row');
+       records.hide();
+   
+       var critriaAttributes = [];
+       ddlFilterTableRow.each(function() {
+           var $this = $(this),
+               $selectedLength = $this.find(':selected').length,
+               $critriaAttribute = '';
+   
+           if ($selectedLength > 0 && $this.val() != '0') {
+               if ($selectedLength == 1) {
+                   $critriaAttribute += '[data-' + $this.data('attribute') + '*="' + $this.val() + '"]';
+               } else {
+                   var $startDataAttribute = '[data-' + $this.data('attribute') + '*="',
+                       $endDataAttribute = '"]',
+                       $selectedValues = $this.val().toString();
+					   
+
+   
+                   $critriaAttribute += $startDataAttribute + $selectedValues.replaceAll(',', ($endDataAttribute + ',' + $startDataAttribute)) + $endDataAttribute;
+				 
+               }
+               critriaAttributes.push($critriaAttribute);
+           }
+       });
+                   
+   
+       var $showRecords = records;
+       if (critriaAttributes.length > 0) {
+           $.each(critriaAttributes, function(i, filterValue) {
+               $showRecords = $showRecords.filter(filterValue);
+           });
+       }
+   
+    //   tableRecords = $showRecords.show();
+   
+       ddlFilterTableRow.removeAttr('disabled');
+    }
+				//Update multiple users status from either pending or approved to APPROVED
+	      function approveUsers(){
+					var users  = $("#approvedUserList").val();
+					users = users.split(",");
+					for(var i = 0; i< users.length; i++){
+						changeVerifyStatus(false, users[i]) 
+					}
+					
+				}
         function setId(id) {
             $('#user').val(id);
         }
@@ -461,7 +541,15 @@
             //       console.log("PAGE CHANGE")
             //       $( "li" ).removeClass( "paginate_button" );
             //     } );
-
+						//Auto filter when page load
+						var urlParams = new URLSearchParams(window.location.search);
+						var filter  = urlParams.get('filter');
+						if(filter == 'Pending'){
+                          table
+                          .columns(8)
+                          .search(filter)
+                          .draw(); 
+						}
             $("li").removeClass("paginate_button");
             $('#lastWaaraSearch').on('keyup', function() {
                 table
@@ -475,6 +563,18 @@
                     .search(this.value)
                     .draw();
             });
+            $( "#filterByApproval" ).change(function() {
+              if(this.value != 'Select'){
+                
+                          table
+                          .columns(8)
+                          .search(this.value)
+                          .draw();     
+              }  else {
+                  table.columns(8).search('').draw();
+
+              }
+            });          
             var visible = true;
             var tableContainer = $(table.table().container());
             $('#showHideTable').on('click', function() {
@@ -511,11 +611,14 @@
 
             if (selected.length > 0) {
                 $('#mergeUserBtn').show();
+							  $('#approveUserBtn').show();
             } else {
                 $('#mergeUserBtn').hide();
+							 	$('#approveUserBtn').hide();
             }
 
             $("#mergeUserList").val(JSON.stringify(selected));
+					  $("#approvedUserList").val(selected);
 
         }
 
@@ -526,6 +629,7 @@
             });
 
             $("#mergeUserList").val(JSON.stringify(selected));
+					  $("#approvedUserList").val(selected);
 
         }
 

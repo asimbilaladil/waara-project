@@ -1072,7 +1072,7 @@ class AdminModel extends CI_Model
     }   
        public function getDisableUserCount(){
       
-        $query = $this->db->query('SELECT count(user_id) as users from user where status != "false"');
+        $query = $this->db->query('SELECT count(user_id) as users from user where status = "false"');
         
         $query->result();
 

@@ -127,17 +127,14 @@ class Welcome extends CI_Controller {
 
 	    //when admin login button is click
     public function user_login_check() {
-
         $email = $this->input->post('email', true);
         $password = md5($this->input->post('password', true));
 
         $result = $this->UserModel->user_login_check_info($email, $password);
 
-        //print_r( $result ); die;
-
         //if query found any result i.e userfound
         if($result) {
-
+					
             $data['user_id'] = $result->user_id;
             $data['type'] = $result->type;
             $data['fullName'] = $result->first_name . " " . $result->last_name;

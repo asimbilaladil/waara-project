@@ -63,11 +63,16 @@ class Festival extends CI_Controller {
             <td> ' . $this->printMonthFestival($item, "October") . ' </td>
             <td> ' . $this->printMonthFestival($item, "November") . ' </td>
             <td> ' . $this->printMonthFestival($item, "December") . ' </td>
-            <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+            <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> 
+            &nbsp;&nbsp;
+            <a href="#" name="editFestival" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["festivalName"] .'" data-url="'. $editMajalisUrl .'">  <span class="glyphicon glyphicon-pencil"></span>  </a>
+           &nbsp;&nbsp;
+           <a href="'. $addUrl .'"> <span class="glyphicon glyphicon-add"></span> </a>
+           </td>
 
-            <td> <a href="#" name="editFestival" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["festivalName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
 
-            <td> <a href="'. $addUrl .'"> ADD </a </td>
+
+
             
         </tr>';
       }
@@ -116,11 +121,18 @@ class Festival extends CI_Controller {
 
             <td> <a href="'. $addUrl .'">'. $item["date"] .' </td>
 
-            <td> <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> </td>
+            <td> 
+              <a href="'. $addUrl .'">  <span class="glyphicon glyphicon-plus"></span> </a> 
+               
+            &nbsp;&nbsp;
+            <a href="#" name="editFestival" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["festivalName"] .'" data-url="'. $editMajalisUrl .'">  <span class="glyphicon glyphicon-pencil"></span>  </a> 
+                &nbsp;&nbsp;           
+            <a href="'. $deleteUrl .'" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a> 
+          
+          
+            
+            </td>
 
-            <td> <a href="#" name="editFestival" data-type="text" data-pk="'. $item["token"] .'" data-value="'. $item["festivalName"] .'" data-url="'. $editMajalisUrl .'"> EDIT  </a> </td>
-
-            <td> <a href="'. $addUrl .'"> ADD </a </td>
             
         </tr>';
       }

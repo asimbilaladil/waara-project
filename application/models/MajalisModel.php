@@ -416,7 +416,7 @@ class MajalisModel extends CI_Model
 
         //if($this->getSortCountByDate($date) > 0) {
 
-        $query =  $this->db->query("SELECT majalis.id as majalisId, majalis.name as majalisName, majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort, majalis_date.date
+        $query =  $this->db->query("SELECT majalis.id as majalisId, majalis.name as majalisName, majalis_duties.id, majalis_duties.token as dutyToken, majalis_duties.name, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort, majalis_date.date
             FROM majalis
             INNER JOIN majalis_date ON majalis.id = majalis_date.majalis_id 
             LEFT JOIN majalis_duties ON majalis_duties.majalis_id = majalis.id AND majalis_duties.type = 'GLOBAL'
@@ -446,7 +446,7 @@ class MajalisModel extends CI_Model
 
         //if ($this->getSortCountByDate($date) > 0) {
 
-        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id as majalisId, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
+        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token as dutyToken, majalis_duties.name, majalis_duties.majalis_id as majalisId, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
             FROM specfic_date_duties, majalis_duties
             LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
             LEFT JOIN majalis_sort ON majalis_duties.id = majalis_sort.duty_id

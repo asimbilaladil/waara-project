@@ -3,10 +3,7 @@
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <h1>
-                    Dashboard
-                    <small >Control panel</small>
-                </h1>
+                
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                     <li class="active">Dashboard</li>
@@ -30,20 +27,18 @@
 
                                     <div class="form-group">
                                         <label for="" class="col-sm-2 control-label">Duty</label>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-3">
                                             <input type="text" name="duty" class="form-control"  placeholder="" required>
                                         </div>
+                                        <div class=" col-sm-2">
+                                            <button type="submit" class="btn btn-primary btn-block">Add</button>
+                                        </div>                                      
                                     </div>
 
                                     <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
                                     <input type="hidden" id="selectedDate" name="date" value="<?php echo $this->input->get('date', TRUE); ?>"/> 
 
-                                    <div class="form-group">
-                                        <div class="col-sm-offset-2 col-sm-2">
-                                            <button type="submit" class="btn btn-primary btn-block">Add</button>
-                                        </div>
-                                    </div>
 
 
                                 </div>
@@ -253,5 +248,33 @@ $(function() {
     });
 
 });
+
+
+function deleteDuty(token) {
+
+    if (confirm("Are you sure you want to delete this Duty")) {
+
+        console.log(token);
+
+        $.ajax({
+            url: "<?php echo site_url('Majalis/deleteMajalisDuty') ?>",
+            type: "GET",
+            data: {
+                'token': token
+            },
+            success: function(response){
+
+                ajaxGetMajalisDuties();
+
+            }, error: function(){
+                
+            }
+        });   
+
+    } else {
+
+    }
+
+}
 
 </script>

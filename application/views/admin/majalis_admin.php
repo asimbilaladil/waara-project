@@ -17,7 +17,7 @@
 
                             <div class="box box-success">
                                <div class="col-md-12">
-                              <h4 id="majalisNameHeading">CHAANDRAAT MAJALIS</h4>
+                              <h4 id="majalisNameHeading"> </h4>
                               </div>
                             <div class="col-md-6">
                             <!-- Year dropdown Start -->                                    
@@ -28,8 +28,9 @@
                                             echo '<option value"'. $value->year .'"> '.$value->year.' </option>';
                                         }
                                     ?>
-                                </select>
-                              </div>
+                              </select>  
+                             
+                              </div><div class="col-md-6"> <h5 style="font-size: large; margin-top: 5px;">Majalis Dates</h5></div>
 
                                 <input type="hidden" value="<?php echo $years ? $years[0]->year : 0 ?>" id="selectedYear"/>
                             <!-- Year dropdown End -->

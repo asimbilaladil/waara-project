@@ -143,11 +143,25 @@ class AdminMajalis extends CI_Controller {
                 <td style="display:none;">'. $row->id .'</td>
                 <td> '. $row->name .' </td>
                 <td> '. $name  .' </td>
-                <td> <a href="'. $viewUrl .'"> <button class="btn btn-primary">View</button> </a> </td>
-                <td><button class="btn btn-primary">Edit</button> </td>
-                <td> <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
-                onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary">Rating</button> </td>
-                
+                <td> <a href="'. $viewUrl .'"> <button class="btn btn-primary">View</button> </a> 
+
+                    &nbsp;&nbsp;
+
+                    <button class="btn btn-primary">Edit</button>
+
+                    &nbsp;&nbsp;
+
+                    <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
+                onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary">Rating</button>
+
+                    &nbsp;&nbsp;
+
+                    <button class="btn btn-danger" onclick="deleteDuty(`'. $row->dutyToken .'`)">DELETE</button>
+
+                    </td>
+
+                </td>
+
                 ';  
 
             } else {
@@ -158,7 +172,14 @@ class AdminMajalis extends CI_Controller {
                     <td style="display:none;">'. $row->id .'</td>
                     <td> '. $row->name .' </td>
                     <td> <input type="text" id="majalisDutyUsers_'. $key .'" name="users" class="form-control  ui-autocomplete-input"> </td>
-                    <td class="majalisId_'. $row->majalisId .'"> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForMajalis('. $row->id .')">SAVE</button> </td>
+                    <td class="majalisId_'. $row->majalisId .'"> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForMajalis('. $row->id .')">SAVE</button> 
+
+                    &nbsp;&nbsp;
+
+                    <button class="btn btn-danger" onclick="deleteDuty(`'. $row->dutyToken .'`)">DELETE</button> 
+
+                    </td>
+
                      
                     ';
                 }                
@@ -230,18 +251,19 @@ class AdminMajalis extends CI_Controller {
                     </div>
                 </div>
                 <div class="box-body">
-                    <div>
-                        
-                            <div class="col-sm-12">
-                                </br>
-                                <button class="btn btn-primary" onclick="addDutyModal('. $majalis[0]->majalisId .', `'. $date .'`)">Add Duty</button>
-                            </div>
-                            <div class="form-group">
-                                <div class="col-sm-6">
-                                              
-                                </div>
-                            </div>
-                    </div>
+
+<div class="col-sm-12" style="top: 20px;">
+                                                                <div class="col-sm-3">
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                <button class="btn btn-primary btn-block " onclick="addDutyModal('. $majalis[0]->majalisId .', `'. $date .'`)">Add Waara</button>
+                                                                
+<br>
+                                                                </div>
+                                                            </div>                        
+                     
+                           
+
                     <div class="col-sm-12">
                     </br>
                     <div>' . $this->renderMajalisDuties($majalis) . '</div>

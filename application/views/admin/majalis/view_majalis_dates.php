@@ -1,6 +1,14 @@
 <?php 
     $years = $data['years'];
 ?>
+<style>
+  .labelAlign{
+     text-align:  left;
+    padding-left: 20px;
+
+  }
+
+</style>
 <body class="hold-transition skin-green sidebar-mini">
     <div class="wrapper">
         <div class="content-wrapper">
@@ -32,17 +40,16 @@
                                     <div class="box-body">
 
                                         <div class="form-group">
-                                            <label for="" class="col-sm-2 control-label">Date</label>
-                                            <div class="col-sm-6">
+                                            <label for="" class="col-sm-2  labelAlign">Date</label>
+                                            <div class="col-sm-3">
                                                 <input type="date" name="date" class="form-control"  placeholder="" required>
                                             </div>
+                                        <div class=" col-sm-2">
+                                                <button type="submit" class="btn btn-primary btn-block">Add</button>
+                                            </div>                                          
                                         </div>
 
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-2">
-                                                <button type="submit" class="btn btn-primary btn-block">Add</button>
-                                            </div>
-                                        </div>
+                                 
 
                                         <input id="dutyToken" type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
@@ -54,52 +61,46 @@
                                     <div class="box-body">
 
                                         <div class="form-group">
-                                            <label for="" class="col-sm-2 control-label">Duty</label>
-                                            <div class="col-sm-6">
+                                            <label for="" class="col-sm-2  labelAlign">Duty</label>
+                                            <div class="col-sm-3">
                                                 <input type="text" name="duty" class="form-control"  placeholder="" required>
                                             </div>
+                                          
+                                             <div class="col-sm-2">
+                                                <button type="submit" class="btn btn-primary btn-block">Add</button>
+                                            </div>                                          
                                         </div>
 
                                         <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
                                         <input type="hidden" name="date" value="<?php echo $this->input->get('date', TRUE); ?>"/> 
 
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-2">
-                                                <button type="submit" class="btn btn-primary btn-block">Add</button>
-                                            </div>
-                                        </div>
+                                      
 
 
-                                    </div>
                                 </form>
-
+<br>
                                 <div class="form-group majalisForm">
-                                    <label for="" class="col-sm-2 control-label">Override evening JK schedule</label>
-                                    <div class="col-sm-6">
+                                    <label for="" class="col-sm-2 labelAlign">Override evening JK schedule</label>
+                                    <div class="col-sm-3">
                                         <input type="checkbox" id="override" name="override" value="1" <?php echo !empty($years[0]->override) ? 'checked' : '' ?> >
                                     </div>
-                                </div>   
-
-
-                            <div class="box-body">
-                                <div class="col-sm-offset-0 col-sm-2">
+                                        <div class=" col-sm-2">
                                     <button type="button" onclick="location.href='<?php echo site_url("Majalis/viewGlobalDuties?token=" . $this->input->get('token') ) ;?>'" class="btn btn-primary btn-block">Global Duties</button>
                                 </div> 
-                            </div>                                
-                             
+                                </div>   
+                          
+                                    </div>
+       
                             </br> </br>
-                            <div class="box-header with-border">
-                                <h3 class="box-title">List Of Majalis Date:</h3>
-                            </div>
+                       
 
                             <div class="form-group">
-                                <div class="col-sm-4">
-                                    <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
-
-                                </div>
-
-                                <div class="col-sm-4">
+   
+                              <div class="col-sm-2">
+                                    <label for="" class=" control-label">Majalis Dates</label>
+                              </div>
+                                <div class="col-sm-3">
                                     <select required="" name="years" id="yearDropdown" onchange="onYearChange(this)" class="form-control">
                                         <?php
                                             foreach ($years as $key => $value) {
@@ -113,12 +114,15 @@
                                 </div>
 
                             </div>
-
+ <div class="box-body">
+                               
+                
                             <table id="dutiesDiv" class="table table-striped" id="table" width="80%">
 
                                     
                                 </tbody>
                             </table>
+                    </div>
                         </div>
                     </div>
                     <!-- /.box -->
@@ -205,6 +209,32 @@
                 
             }
         });        
+    }
+
+
+    function onDeleteMajalisDate(token) {
+
+        if (confirm("Are you sure you want to delete this Date")) {
+
+            $.ajax({
+                url: "<?php echo site_url('Majalis/deleteMajalisDate') ?>",
+                type: "GET",
+                data: {
+                    'token': token
+                },
+                success: function(response){
+
+                    onYearChange();
+
+                }, error: function(){
+                    
+                }
+            });            
+
+        } else {
+
+        }
+     
     }
 
 </script>       

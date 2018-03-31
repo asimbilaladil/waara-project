@@ -3,10 +3,7 @@
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <h1>
-                    Dashboard
-                    <small >Control panel</small>
-                </h1>
+         
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                     <li class="active">Dashboard</li>
@@ -23,19 +20,14 @@
                             </div>
                             <!-- /.box-header -->
                             <br>
-                            <div class="form-group majalisForm">
-                                <div class="col-sm-offset-0 col-sm-2">
-                                    <button type="button" onclick="location.href='<?php echo site_url("majalis/add") ;?>'" class="btn btn-primary btn-block">Add Majalis</button>
-                                </div>
+                           
 
-                            </div>
 
-                            </br> </br>
                             <div class="box-header with-border">
                                 <h3 class="box-title">List Of Majalis:</h3>
                             </div>
   <div class="form-group">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <select required="" name="years" id="yearDropdown" onchange="onYearChange(this)" class="form-control">
                                         <?php
                                             $years = $data["years"];
@@ -46,8 +38,11 @@
                                     </select>
 
                                     <input type="hidden" value="<?php echo $years ? $years[0]->year : 0 ?>" id="selectedYear"/>
-
+ 
                                 </div>
+ <div class="col-sm-2">
+                                    <button type="button" onclick="location.href='<?php echo site_url("majalis/add") ;?>'" class="btn btn-primary btn-block">Add Majalis</button>
+                                </div>    
     </div>
               
  <br> <br> <br>
@@ -95,18 +90,14 @@
                             <!-- /.box-header -->
 
                             <br>
-                            <div class="form-group">
-                                <div class="col-sm-offset-0 col-sm-2">
-                                    <button type="button" onclick="location.href='<?php echo site_url("Festival/add") ;?>'" class="btn btn-primary btn-block">Add Festival</button>
-                                </div>
-                            </div>
+                         
 
 
-                            </br> </br>
+
                             <div class="box-header with-border">
                                 <h3 class="box-title">List of Festival:</h3>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <select required="" name="festivalYears" id="festivalYearDropdown" onchange="onFestivalYearChange(this)" class="form-control">
                                     <?php
                                         $festivalYears = $data["festivalYears"];
@@ -118,6 +109,9 @@
                                     <input type="hidden" value="<?php echo $years ? $years[0]->year : 0 ?>" id="selectedFestivalYear"/>
 
                            </div>
+                                <div class="col-sm-2">
+                                    <button type="button" onclick="location.href='<?php echo site_url("Festival/add") ;?>'" class="btn btn-primary btn-block">Add Festival</button>
+                                </div>                          
                             <!-- <div class="form-group">
                                 <div class="col-sm-4">
                                     <input type="text" name="name" class="form-control" id="search" placeholder="Type to search...">
@@ -128,8 +122,8 @@
                             <table class="table table-striped" id="table" width="80%">
                                 <thead>
                                     <tr>
-                                        <th> Festival Name </th>
-                                        <th> Dates (Month-Day) </th>
+                                        <th style="width:  20%;"> Festival Name </th>
+                                        <th style="width:  20%;"> Dates (Month-Day) </th>
                                         <th> Actions </th>
                                     </tr>
                                 </thead>
@@ -236,6 +230,31 @@ function getYearDates() {
             
         }
     });        
+}
+
+function onMajalisDelete(majalisToken) {
+
+    if (confirm("Are you sure you want to delete this Majalis")) {
+        
+        $.ajax({
+            url: "<?php echo site_url('Majalis/deleteMajalis') ?>",
+            type: "GET",
+            data: {
+                'token': majalisToken
+            },
+            success: function(response){
+
+                getYearDates();
+
+            }, error: function(){
+                
+            }
+        });   
+
+
+    } else {
+        
+    }    
 }
 
 </script>

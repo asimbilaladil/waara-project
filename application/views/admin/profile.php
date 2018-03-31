@@ -1,3 +1,4 @@
+
 <script >
 var events =  <?php  echo json_encode( $data['events']); ?> ;
 
@@ -78,6 +79,7 @@ var getRating = function getRating(date, title){
         }
     });
 }
+
 </script>
 <style type="text/css">
   .rating-container{
@@ -607,6 +609,7 @@ table.fc-border-separate {
 </style>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.3/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.3/js/star-rating.js" type="text/javascript"></script>
+
 <body class="hold-transition skin-green sidebar-mini">
 <div class="wrapper">
     <div class="content-wrapper">
@@ -635,19 +638,20 @@ table.fc-border-separate {
 
               <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                  <b>Email</b> <a class="pull-right"><?php echo  $data['user_info']->email; ?></a>
+                  <b>Email</b> <a class="pull-right editEmail"><?php echo  $data['user_info']->email; ?></a>
                 </li>
                 <li class="list-group-item">
-                  <b>Phone</b> <a class="pull-right"><?php echo  $data['user_info']->phone; ?></a>
+                  <b>Phone</b> <a class="pull-right editPhone"><?php echo  $data['user_info']->phone; ?></a>
                 </li>
                 <li class="list-group-item">
                   <b>Age Group</b> <a class="pull-right"><?php echo  $data['user_info']->age; ?></a>
                 </li>
                 <li class="list-group-item">
-                  <b>Approval</b> <a class="pull-right"><?php echo   ($data['user_info']->verified == true ? 'Active' : 'Inactive'); ?></a>
+									<b>Status</b> <a class="pull-right" onclick="changeUserStatus(<?php echo  ($data['user_info']->status == 'true' ? 'true' : 'false'); ?>,<?php echo $data['user_info']->user_id;?>)" ><span class="editStatus"><?php echo   ($data['user_info']->status == 'true' ? 'Active' : 'Inactive'); ?></span></a>
                 </li>
                 <li class="list-group-item">
-                  <b>Status</b> <a class="pull-right"><?php echo  ($data['user_info']->status == true ? 'Approved' : 'Pending'); ?></a>
+									
+									<b>Approval</b> <span class="editVerify"> <a class="pull-right " onclick="changeUserVerifyStatus(<?php echo  ($data['user_info']->verified == 'true' ? 'true' : 'false'); ?>,<?php echo $data['user_info']->user_id;?>)" ><?php echo  ($data['user_info']->verified == 'true' ? 'Approved' : 'Pending' ); ?></a></span>
                 </li> 
                 <li class="list-group-item">
                   <b>Type</b> <a class="pull-right"><?php echo  $data['user_info']->type; ?></a>
@@ -668,13 +672,14 @@ table.fc-border-separate {
         <div class="col-md-9">
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-              <li class="active"><a href="#activity" data-toggle="tab" aria-expanded="true">Activity</a></li>
-							<li class=""><a href="#history" data-toggle="tab" aria-expanded="false">History</a></li>
+							<li class="active"><a href="#history" data-toggle="tab" aria-expanded="false">History</a></li>
+              <li class=""><a href="#activity" data-toggle="tab" aria-expanded="true">Activity</a></li>
+							
 
               <li class=""><a href="#imageUpload" data-toggle="tab" aria-expanded="false">Image Upload</a></li>
             </ul>
             <div class="tab-content">
-              <div class="tab-pane active" id="activity">
+              <div class="tab-pane " id="activity">
 <div class="row">
         <div class="col-xs-12">
           <div class="box">
@@ -703,7 +708,7 @@ table.fc-border-separate {
               <!-- /.tab-pane -->
 
 
-              <div class="tab-pane" id="imageUpload">
+              <div class="tab-pane " id="imageUpload">
                  <div class="row">
                 <form  method="post" enctype="multipart/form-data"  action="<?php echo site_url('Profile/uploadImage'); ?>">
                   <div class="form-group">
@@ -720,7 +725,7 @@ table.fc-border-separate {
                 </div>
 
               </div>
-               <div class="tab-pane" id="history">
+               <div class="tab-pane active" id="history">
                  <div class="row">
 								 	<table class="table table-striped">
 										<thead>
@@ -783,3 +788,91 @@ table.fc-border-separate {
 
   </div>
 </div>
+	
+	<script>
+		setTimeout(function(){
+				$('.editEmail').editable({
+				type: 'text',
+
+				title: 'Enter Email',
+				success: function(response, newValue) {
+					updateData( <?php echo $_GET['id']; ?>,'email', newValue)
+           
+        }
+		});
+		$('.editPhone').editable({
+				type: 'text',
+
+				title: 'Enter Phone',
+				success: function(response, newValue) {
+					updateData( <?php echo $_GET['id']; ?>,'phone', newValue)
+           
+        }
+		});		
+			
+			
+}, 1000);
+	
+	function changeUserVerifyStatus(status, user_id) {
+
+            $.ajax({
+                url: "<?php echo site_url('Admin/updateVerify') ?>",
+                type: "GET",
+                data: {
+                    'id': user_id,
+                    'verified': status
+                },
+                success: function(response) {
+									var statusText = (status == false ? 'Approved' : 'Pending');
+                    
+                    var updatedStatus = (status == false ? true : false);
+									 $('.editVerify').html('')
+                    $('.editVerify').html(' <a class="pull-right" style="cursor: pointer;" onclick="changeUserStatus(' + updatedStatus + ',' + user_id + ')"  >' + statusText + ' </a>')
+
+                },
+                error: function() {
+
+                }
+            });
+        }
+	function changeUserStatus(status, user_id) {
+
+			$.ajax({
+					url: "<?php echo site_url('Admin/updateStatus') ?>",
+					type: "GET",
+					data: {
+							'id': user_id,
+							'status': status
+					},
+					success: function(response) {
+							var statusText = (status == false ? 'Active' : 'Inactive');
+							var updatedStatus = (status == false ? true : false);
+						 	$('.editStatus').html('')
+							$('.editStatus').html(' <a style="cursor: pointer;" onclick="changeUserStatus(' + updatedStatus + ',' + user_id + ')"  >' + statusText + ' </a>')
+
+					},
+					error: function() {
+
+					}
+			});
+	}		
+	var updateData = function updateData(id, field, value){
+	    $.ajax({
+        url: "<?php echo site_url('Admin/editProfileFields') ?>",
+        type: "POST",
+        data: {
+					'user_id' : id,
+					'field' : field,
+					'value' : value
+        },
+        success: function(response){
+
+
+        },
+        error: function(){
+            
+        }
+    });
+}
+	
+	</script>

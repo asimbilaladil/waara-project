@@ -6,10 +6,7 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1>
-                Dashboard
-                <small >Control panel</small>
-            </h1>
+         
 
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -33,13 +30,13 @@
 
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Already Assigned User:</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <input disabled type="text" value="<?php echo $item->first_name ." ". $item->last_name ?>" name="user" class="form-control" id="user" placeholder="" required>
                                     </div>
                                 </div> 
                                 <div class="form-group">
                                     <label for="" class="col-sm-2 control-label">Assign New User:</label>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
                                         <input  type="text" value="" name="user_name" class="form-control" id="user_name" placeholder="" required>
                                         <input type="hidden" id="selectedUser" name="selectedUser" value="<?php echo $data['user']->user_id?>" /> 
                                         <input type="hidden" id="assignId" name="assignId" value="<?php echo  $item->id ?>" />                                       
@@ -60,7 +57,7 @@
 
                                         <button type="submit" class="btn btn-primary btn-block">Save</button>
                                     </div>
-                                   <div class="col-sm-offset-2 col-sm-2">
+                                   <div class="col-sm-2">
 
                                         <button type="button" onclick="deleteAssignWaara(<?php echo $this->input->get('id') ?>)" class="btn btn-primary btn-block">Delete</button>
                                     </div> 

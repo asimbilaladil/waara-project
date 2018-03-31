@@ -7,6 +7,7 @@ class Admin extends CI_Controller {
 
         $id = $this->session->userdata('user_id');
         $type = $this->session->userdata('type');
+        $this->load->library('breadcrumbs');
 
         if( $id != NULL  && $type != 'User' ) {
             $this->load->model('AdminModel');
@@ -21,6 +22,16 @@ class Admin extends CI_Controller {
         }
 
     }
+    function editProfileFields(){
+        $field  =  $this->input->post('field');
+        $value  =  $this->input->post('value');
+        $id     =  $this->input->post('user_id');
+        $data = array(
+                   $field => $value 
+              );
+        $this->AdminModel->update( 'user', 'user_id', $id, $data );
+    } 
+  
     function globalSort() {   
       $data = array();
       $data['duties'] =  $this->AdminModel->getGlobalDuty();
@@ -127,7 +138,9 @@ class Admin extends CI_Controller {
   }
     function index()
     {   
-
+        $this->breadcrumbs->push('Home', '/index');
+    
+       
 
         $jkId = $this->session->userdata('jk_id');
         $type = $this->session->userdata('type');
@@ -757,7 +770,9 @@ class Admin extends CI_Controller {
       
       }
     }
-    function addJK() {   
+    function addJK() {  
+      $this->breadcrumbs->push('Home', '/Admin');
+      $this->breadcrumbs->push('Add JK', '/Admin/addJK');
         if($this->input->post()) {
 
             $data = array (
@@ -785,6 +800,7 @@ class Admin extends CI_Controller {
 
     }
 function addNewDuty(){
+
          if($this->input->post()) {
 
             $beforeDuty = $this->input->post('beforeDuty', true);
@@ -932,7 +948,8 @@ function addNewDuty(){
    redirect("Admin/addDuty");
 }
     function addDuty() {   
-
+              $this->breadcrumbs->push('Home', '/Admin');
+        $this->breadcrumbs->push('Add Duty', '/Admin/addDuty');
  
 
         $jamatKhanas = $this->AdminModel->getJamatKhana();
@@ -1315,7 +1332,6 @@ function addNewDuty(){
             if( isset( $password ) ){
                  $data["password"] = md5( $this->input->post('password', true) );
             }
-            
 
             $this->AdminModel->update('user' ,'user_id' , $id, $data);
 
@@ -1918,6 +1934,8 @@ function addNewDuty(){
         $verified = $this->input->get('verified', TRUE);
         $verified = ($verified == 'true' ? 'false' : 'true' ); 
         $data =  array('verified' =>   $verified );
+   
+      
         $this->AdminModel->update( 'user', 'user_id', $id,  $data );
         
         $emailMessage = $this->EmailModel->getEmailContentByType('userApproval');
