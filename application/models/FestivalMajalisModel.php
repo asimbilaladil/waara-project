@@ -42,22 +42,34 @@ class FestivalMajalisModel extends CI_Model {
             $festivalMonth = 'month';
             $date = '';
             $completeDate = '';
+            $completeDate = '';
             $dateToken = '';
+            $dateObj = null;
 
-            if ($festival->date) {            
+            if ($festival->date) {
+
                 $date = date("M",strtotime($festival->date)) . '-' . date("d",strtotime($festival->date));
+                $dateObj = array (
+                    'date' => $date,
+                    'completeDate' => $festival->date
+                );
+
             }
 
             if ($index > -1) {
                                 
-                $festivalArray[$index]['date'] = $festivalArray[$index]['date'] . ', ' . $date;
+                array_push($festivalArray[$index]['date'], $dateObj);
 
             } else {
 
                 $item['id'] = $festival->id;
                 $item['festivalName'] = $festival->festival;
                 $item['token'] = $festival->token;
-                $item['date'] = $date;
+                $item['date'] =  array();
+
+                if ($dateObj) {
+                    array_push($item['date'], $dateObj);
+                }
 
                 array_push($festivalArray, $item);
                 $item = null;

@@ -109,17 +109,20 @@ class Festival extends CI_Controller {
 
       $html = '';
 
-      echo json_encode($festivalData);
+
+      // echo json_encode($festivalData); die;
 
       foreach ($festivalData as $item) {
 
         $deleteUrl = site_url('festival/deleteFestival?token=' . $item["token"]);
         $editMajalisUrl = site_url("majalis/editFestival");
-        $addUrl = site_url('Festival/viewFestivalDates?token=' . $item["token"]);
+        // $addUrl = site_url('Festival/viewFestivalDuties?token=' . $item["token"] . '&date=' . $item["date"]);
+        $addUrl= '';
+
         $html = $html . '<tr>
             <td> <a href="' . site_url("festival/viewFestivalDates?token=" . $item["token"]) . '">' . $item["festivalName"] . '</a> </td>
 
-            <td> <a href="'. $addUrl .'">'. $item["date"] .' </td>
+            <td>' . $this->printFestivalDates($item["token"], $item["date"]) . ' </td>
 
             <td> 
               <a href="'. $addUrl .'">  <span class="glyphicon glyphicon-plus"></span> </a> 
@@ -141,7 +144,21 @@ class Festival extends CI_Controller {
 
     }
 
-           
+    function printFestivalDates($token, $dateArray) {
+
+      $html = '';
+
+      foreach($dateArray as $date) {
+
+        $addUrl = site_url('Festival/viewFestivalDuties?token=' . $token . '&date=' . $date["completeDate"]);
+        $html = $html . '<a href="'. $addUrl .'">'. $date['date'] .'</a> , ';
+
+      }
+
+
+      return $html;
+
+    }
 
     /**
      * Add festival view
