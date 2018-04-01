@@ -1,3 +1,7 @@
+<!-- Ionicons -->
+
+
+
 <script >
 
 var events =  <?php  echo json_encode( $data['events']); ?> ;
@@ -647,6 +651,7 @@ table.fc-border-separate {
     
 
 </style>
+
 <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.3/css/star-rating.css" media="all" rel="stylesheet" type="text/css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-star-rating/4.0.3/js/star-rating.js" type="text/javascript"></script> -->
 <body class="hold-transition skin-green sidebar-mini">
@@ -654,25 +659,15 @@ table.fc-border-separate {
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <h1>
-                    Dashboard
-                    <small >Control panel</small>
-                </h1>
-
-                <ol class="breadcrumb">
-
-                                                  <li id="selectJKList">  <select required name="jkselect" id="jk" onchange="ajaxCallDuty()"  id="jk" class="form-control">
+              <div class="col-sm-3" id="selectJKList" ><select required name="jkselect" id="jk" onchange="ajaxCallDuty()"  id="jk" class="form-control">
                                                     <?php
                                                         foreach($data['jk'] as $jk) {
                                                             echo '<option value="'. $jk->id .'"> '. $jk->name .' </option>';
                                                         }
                                                         
                                                     ?>   
-                                                    </select >
-                                                    </li>
-                           
-                  <li id="selectJKList">  
-                  <?php
+                                                    </select ></div>
+                <div class="col-sm-3">  <?php
                     if(isset($data['type']) && $data['type'] == 'Super Admin' ) {
                         echo '
                           <select name="shift" id="shift" class="form-control">
@@ -684,12 +679,8 @@ table.fc-border-separate {
 
                     }
                   ?>
-
-
-                    </li> 
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">Dashboard</li>
-                </ol>
+ </div>
+                    <?php  echo $this->breadcrumbs->show(); ?>
                 </br>
                  </br>
             </section>
@@ -701,12 +692,81 @@ table.fc-border-separate {
                                     
                                     <a href="https://themequarry.com" style="color: rgba(255, 255, 255, 0.9); display: inline-block; margin-right: 7px; text-decoration: none;">
                                         New Notification ! There are total <?php echo $data['user_count'][0]->users; ?> new users signup. Waiting for your approval.</a>
-                                    <a class="btn btn-default btn-sm" href="<?php echo site_url('Admin/user') ?>" style="margin-top: -5px; border: 0px; box-shadow: none; color: rgb(243, 156, 18); font-weight: 600; background: rgb(255, 255, 255);">
-                                        Let's Do It!</a>
+                                    <a class="btn btn-default btn-sm" href="<?php echo site_url('Admin/userList') ?>" style="margin-top: -5px; border: 0px; box-shadow: none; color: rgb(243, 156, 18); font-weight: 600; background: rgb(255, 255, 255);">
+                                        Approve User(s)</a>
                                 </div>
                             </div>
                             <?php  } ?>
+              
                             <br>
+<div class="row" style="padding: 2%;">
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-aqua">
+            <div class="inner">
+               <br>
+               <h2>Users</h2>
+
+
+              <br>
+            </div>
+            <div class="icon">
+              <i class="fa fa-users"></i>
+            </div>
+            <a href="<?php echo site_url('Admin/userList') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-green">
+            <div class="inner">
+               <br>
+
+              <h2>Reports</h2>
+ <br>
+
+            </div>
+            <div class="icon">
+              <i class="fa fa-bar-chart-o"></i>
+            </div>
+            <a href="<?php echo site_url('Report') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-yellow">
+            <div class="inner">
+              <br>
+              <h2>Add</h2>
+
+              <br>
+            </div>
+            <div class="icon">
+              <i class="fa fa-user-plus"></i>
+            </div>
+            <a href="<?php echo site_url('Admin/addNewUser') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+        <div class="col-lg-3 col-xs-6">
+          <!-- small box -->
+          <div class="small-box bg-red">
+            <div class="inner">
+                 <br>
+              <h2>Duty</h2>
+
+              <br>
+            </div>
+            <div class="icon">
+              <i class="fa  fa-list-alt"></i>
+            </div>
+            <a href="<?php echo site_url('Admin/addDuty') ?>" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          </div>
+        </div>
+        <!-- ./col -->
+      </div>              
                                 <div class="row">
                     <div class="col-md-12">
                         <div class="col-md-6">
@@ -960,7 +1020,7 @@ table.fc-border-separate {
             </div>
         <div class="modal-body">
             <div class="form-group" style="text-align: center;">
-                <input type="hidden" id="assignMajalisDutyId" name="assignDuty"/>
+                <input type="text" id="assignMajalisDutyId" name="assignDuty"/>
                 <input id="majalis-duty-rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
             </div>
         </div>

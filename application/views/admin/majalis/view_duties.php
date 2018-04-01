@@ -1,13 +1,22 @@
+<style>
+    @media only screen and (max-width: 576px) {
+        #majalisDuty{
+                position: relative; 
+                overflow-x: scroll;
+        }
+
+
+    } 
+
+</style>
+
 <body class="hold-transition skin-green sidebar-mini">
     <div class="wrapper">
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
                 
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">Dashboard</li>
-                </ol>
+          
             </section>
             <!-- Main content -->
             <section class="content">

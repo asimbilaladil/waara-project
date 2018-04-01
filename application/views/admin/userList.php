@@ -1,6 +1,7 @@
 <!-- DataTables -->
 <link rel="stylesheet" href="https://adminlte.io/themes/AdminLTE/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 
 <body class="hold-transition skin-green sidebar-mini">
@@ -8,10 +9,7 @@
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <h1>
-                    Dashboard
-                    <small >Control panel</small>
-                </h1>
+             
                 <ol class="breadcrumb">
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                     <li class="active">Dashboard</li>
@@ -169,6 +167,7 @@
                                             ?>                                
                                     </tbody>
                                 </table>
+
                    
                             </div>
                             <!-- /.box-body -->
@@ -526,6 +525,7 @@
         }
         $(document).ready(function() {
             var table = $('#table').DataTable({
+							 "scrollX": true,
                 drawCallback: function() {
 
                     $('.paginate_button', this.api().table().container())

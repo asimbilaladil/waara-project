@@ -1,12 +1,18 @@
+
+<style>
+  .btn{
+
+    margin-bottom: 10px;
+
+  }
+
+</style>
 <body class="hold-transition skin-green sidebar-mini">
     <div class="wrapper">
     <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>
-            Dashboard
-            <small >Control panel</small>
-        </h1>
+    
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Dashboard</li>
@@ -19,7 +25,7 @@
         <div class="col-md-12">
         <div class="box box-success">
             <div class="box-header with-border">
-                <h3 class="box-title">Add new Majalis</h3>
+                <h3 class="box-title">Add New Majalis</h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
@@ -31,7 +37,7 @@
 
                         <div class="form-group">
                             <label for="" class="col-sm-2 control-label">Name</label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <input type="text" name="majalisName" class="form-control"  placeholder="" required>
                             </div>
                         </div>
@@ -52,15 +58,16 @@
                             </div> -->
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-2">
-                                <button type="button" onclick="removeDuty();" class="btn btn-primary btn-block">Remove Duty</button>
+                            <div class="col-sm-2">
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-2">
+                            <div class="col-sm-2">
                                 <button type="button" onclick="addDutyClick();" class="btn btn-primary btn-block">Add Duty</button>
+                            </div>                          
+                            <div class="col-sm-2">
+                                <button type="button" onclick="removeDuty();" class="btn btn-danger btn-block">Remove Duty</button>
                             </div>
                         </div>
+                     
 
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-2">
@@ -83,27 +90,29 @@
                         </div>                     
 
                         <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-2">
-                                <button type="button" onclick="removeDate();" class="btn btn-primary btn-block">Remove Date</button>
+                            <div class="col-sm-2">
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-2">
+                            <div class="col-sm-2">
                                 <button type="button" onclick="addDate();" class="btn btn-primary btn-block">Add Date</button>
+                            </div>                          
+                            <div class="col-sm-2">
+                                <button type="button" onclick="removeDate();" class="btn btn-danger btn-block">Remove Date</button>
                             </div>
                         </div>
+                   
 
                         <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-2">
+                              <div class="col-sm-2">
+                            </div>
+                            <div class="col-sm-2">
                                 <button type="button" onClick="prev()" class="btn btn-primary btn-block">Previous</button>
                             </div>
+                            <div class=" col-sm-2">
+                                <button type="submit" class="btn btn-primary btn-block">Save</button>
+                            </div>                          
                         </div>
 
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-2">
-                                <button type="submit" class="btn btn-primary btn-block">Save</button>
-                            </div>
-                        </div>                        
+                                 
 
                     </div>
 
@@ -153,7 +162,7 @@
 
         var dateHtml = `<div class="form-group" id="dateDiv_` + dateCount + `">
                             <label for="" class="col-sm-2 control-label">Date ` + dateCount + `</label>
-                            <div class="col-sm-6">
+                            <div class="col-sm-3">
                                 <input type="date" name="majalisDate[` + dateCount + `]" class="form-control"  placeholder="">
                             </div>
                         </div>`;

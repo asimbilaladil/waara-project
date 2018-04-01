@@ -90,8 +90,8 @@ class AdminMajalis extends CI_Controller {
         $html = '<table class="table table-striped" id="majalisDutyTable">
         <thead>
         <tr>
-            <th> Duty </th>
-            <th> User Fullname </th>
+            <th style="width: 21%;"> Duty </th>
+            <th style="width: 21%;"> User Fullname </th>
             <th> Action </th>
         </tr>
         </thead>
@@ -143,20 +143,20 @@ class AdminMajalis extends CI_Controller {
                 <td style="display:none;">'. $row->id .'</td>
                 <td> '. $row->name .' </td>
                 <td> '. $name  .' </td>
-                <td> <a href="'. $viewUrl .'"> <button class="btn btn-primary">View</button> </a> 
+                <td style="width:  9%;"> <a href="'. $viewUrl .'"> <button class="btn btn-primary btn-block">View</button> </a> 
 
-                    &nbsp;&nbsp;
+                     </td><td style="width:  9%;">
 
-                    <button class="btn btn-primary">Edit</button>
+                    <button class="btn btn-primary btn-block">Edit</button>
 
-                    &nbsp;&nbsp;
+                       </td><td style="width:  9%;">
 
                     <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
-                onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary">Rating</button>
+                onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary btn-block">Rating</button>
 
-                    &nbsp;&nbsp;
 
-                    <button class="btn btn-danger" onclick="deleteDuty(`'. $row->dutyToken .'`)">DELETE</button>
+                    </td><td >
+                    <button class="btn btn-danger " onclick="deleteDuty(`'. $row->dutyToken .'`)">DELETE</button>
 
                     </td>
 
