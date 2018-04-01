@@ -159,7 +159,7 @@
                 'token': token
         },
         success: function(response) {
-            console.log(response);
+            
         }
 
         });
@@ -201,7 +201,7 @@
                         weekStart: 1
                     },
                     success: function (data, config) {
-                        location.reload();
+                        getYearDates();
                     }
                 });
 

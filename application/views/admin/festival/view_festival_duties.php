@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
-            <section class="content-header">
+<!--             <section class="content-header">
                 <h1>
                     Dashboard
                     <small >Control panel</small>
@@ -11,7 +11,7 @@
                     <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
                     <li class="active">Dashboard</li>
                 </ol>
-            </section>
+            </section> -->
             <!-- Main content -->
             <section class="content">
                 <!-- Main row -->
@@ -19,7 +19,7 @@
                     <div class="col-md-12">
                         <div class="box box-success">
                             <div class="box-header with-border">
-                               
+                               <h3 class="box-title"> <?php echo $data->festival ? $data->festival : '' ?> </h3>
                              </div>
                             <!-- /.box-header -->
 
@@ -49,9 +49,9 @@
 
 
                             </br> </br>
-                            <div class="box-header with-border">
+<!--                             <div class="box-header with-border">
                                 <h3 class="box-title">List Of Duties:</h3>
-                            </div>
+                            </div> -->
 
   <!--                           <div class="form-group">
                                 <div class="col-sm-4">

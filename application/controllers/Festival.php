@@ -151,9 +151,11 @@ class Festival extends CI_Controller {
       foreach($dateArray as $date) {
 
         $addUrl = site_url('Festival/viewFestivalDuties?token=' . $token . '&date=' . $date["completeDate"]);
-        $html = $html . '<a href="'. $addUrl .'">'. $date['date'] .'</a> , ';
+        $html = $html . '<a href="'. $addUrl .'">'. $date['date'] .'</a> ,';
 
       }
+
+      $html = rtrim($html, ',');
 
 
       return $html;
@@ -387,9 +389,12 @@ class Festival extends CI_Controller {
      */
     function viewFestivalDuties() {
 
-      if($this->input->get('token')) {        
+      if($this->input->get('token')) { 
 
-        $this->loadView('admin/festival/view_festival_duties', null);
+        $token = $this->input->get('token');
+        $data = $this->FestivalModel->getFestivalByToken($token);       
+
+        $this->loadView('admin/festival/view_festival_duties', $data);
       
       } else {
         redirect('festival/');

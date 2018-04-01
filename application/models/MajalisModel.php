@@ -67,14 +67,7 @@ class MajalisModel extends CI_Model
         return false;        
     }
 
-    public function updateMajalisDate($id, $data) {
-        $this->db->where('id', $id );
-        $result = $this->db->update( 'majalis_date', $data);
-        if ($result) {
-            return true;
-        } 
-        return false;        
-    }
+
 
 
     public function updateAssignedMajalisDuty($id, $data) {

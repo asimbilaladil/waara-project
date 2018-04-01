@@ -16,8 +16,10 @@
                     <div class="col-md-12">
                         <div class="box box-success">
                             <div class="box-header with-border">
-                                <!-- <h3 class="box-title"><?php echo !empty($data) ? $data[0]->name : '' ?> </h3>
- -->                            </div>
+                                 <h3 class="box-title"><?php echo $data['majalis']->name ? $data['majalis']->name : '' ?> </h3>
+                             </div>
+
+
                             <!-- /.box-header -->
 
                             <input type="hidden" value="<?php print_r($data['majalis']->id) ?>" id="majalisId" name="majalisId"/>
@@ -46,9 +48,9 @@
 
 
                             </br> </br>
-                            <div class="box-header with-border">
+                            <!-- <div class="box-header with-border">
                                 <h3 class="box-title">List Of Duties:</h3>
-                            </div>
+                            </div> -->
 
                             <div class="box box-success">
                  

@@ -454,28 +454,26 @@ class Majalis extends CI_Controller {
      */      
     function editMajalisDate() {
 
-
       if ($this->input->post()) {
 
         $id = $this->input->post('pk');
+        $date = $this->input->post('value');
+        $majalisDate = $this->MajalisDateModel->getMajalisIdFromDateById($id);
 
-        $majalisId = $this->MajalisDateModel->getMajalisIdFromDateById($id);
+        $specificDateItem = $this->MajalisDateModel->getSpecificDate($majalisDate->date, $majalisDate->majalis_id);
 
-        $allow = $this->MajalisModel->allowEditDelete($majalisId);
+        $specificDateItem = $specificDateItem ? $specificDateItem[0] : null ;
 
-        if ($allow) {
+        $this->MajalisDateModel->updateMajalisSpecficDate($specificDateItem->id, array('date' => $date));
 
-          $data = array(
-            'date' => $this->input->post('value')
-          );
+        $data = array(
+          'date' => $date
+        );
 
-          $result = $this->MajalisModel->updateMajalisDate($id, $data);
+        $result = $this->MajalisDateModel->updateMajalisDate($id, $data);
 
-          echo json_encode(array('success' => $result));
-
-        }
-
-        
+        echo json_encode(array('success' => $result));
+ 
       }
 
     }

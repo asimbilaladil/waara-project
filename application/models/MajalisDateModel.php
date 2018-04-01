@@ -17,11 +17,30 @@ class MajalisDateModel extends CI_Model {
 
     public function getMajalisIdFromDateById($id) {
 
-        $query = $this->db->query("SELECT majalis_id from majalis_date where majalis_date.id = ". $id);
+        $query = $this->db->query("SELECT majalis_id, date from majalis_date where majalis_date.id = ". $id);
 
         return $query->result()[0];
 
     }
+
+    public function updateMajalisDate($id, $data) {
+        $this->db->where('id', $id );
+        $result = $this->db->update( 'majalis_date', $data);
+        if ($result) {
+            return true;
+        } 
+        return false;        
+    }    
+
+    public function updateMajalisSpecficDate($id, $data) {
+        $this->db->where('id', $id );
+        $result = $this->db->update( 'specfic_date_duties', $data);
+        if ($result) {
+            return true;
+        } 
+        return false;        
+    }    
+
 
     public function getDatesByMajalisIds($ids, $year) {
 
@@ -34,5 +53,21 @@ class MajalisDateModel extends CI_Model {
         return $query->result();
         
     }
+
+
+    public function getSpecificDate($date, $majalisId) {
+
+        $query = $this->db->query("select specfic_date_duties.id, specfic_date_duties.date
+        FROM specfic_date_duties, majalis_duties
+        WHERE specfic_date_duties.date = '". $date ."'
+        AND specfic_date_duties.duty_id = majalis_duties.id
+        AND majalis_duties.majalis_id = " . $majalisId);
+
+        return $query->result();
+        
+    }
+
+
+    
 
 }
