@@ -131,6 +131,9 @@ class AdminMajalis extends CI_Controller {
                 $majalisName = $row->majalisName;
             }
 
+            $editUrl = site_url('AdminMajalis/editMajalisDuty?id=' . $row->assignId );
+
+
             $majalisBoxHideShow =  '<script>$(".majalisBox").show(); $("#majalisHeading").html("'. $majalisName .'"); </script>';
             $assigned = $row->user_id != null ? true : false;
 
@@ -147,7 +150,7 @@ class AdminMajalis extends CI_Controller {
 
                      </td><td style="width:  9%;">
 
-                    <button class="btn btn-primary btn-block">Edit</button>
+                    <a href="'. $editUrl .'"> <button class="btn btn-primary btn-block">Edit</button> </a
 
                        </td><td style="width:  9%;">
 

@@ -66,7 +66,7 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <div>
-                                    <form action="<?php echo site_url('AdminMajalis/assignDuty') ?>" method="post" >
+                                    <!-- <form action="<?php echo site_url('AdminMajalis/assignDuty') ?>" method="post" > -->
                                         
                                         <div class="col-sm-12">
                                      </br>
@@ -108,7 +108,7 @@
                                               </div>
                                               <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save</button>
+                                                <button type="submit" onclick="assignDuty()" class="btn btn-primary">Save</button>
                                               </div>
                                             </div>
                                           </div>
@@ -129,6 +129,32 @@
     </section><!-- /.content -->
     </div>
     </div>
+
+
+<!-- MAJALIS DUTY RATING START -->
+<div id="userMajalisDutyRating" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+    <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">User Rating 1</h4>
+            </div>
+        <div class="modal-body">
+            <div class="form-group" style="text-align: center;">
+                <input type="hidden" id="assignMajalisDutyId" name="assignDuty"/>
+                <input id="majalis-duty-rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
+            </div>
+        </div>
+        <div class="modal-footer"> 
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" onclick="addRatingForMajalisDuty()" class="btn btn-primary">Save</button>
+        </div>
+        </div>
+
+    </div>
+</div>
+<!-- MAJALIS DUTY RATING END -->
 
 
 
@@ -212,6 +238,35 @@ function ajaxGetMajalisDuties() {
     });
 }    
 
+
+function assignDuty() {
+
+    var selectedMajalisUser = $('#selectedMajalisUser').val();
+    var selectedMajalisDuty = $('#selectedMajalisDuty').val();
+    var majalisDate = $('#majalisDate').val();
+
+      $.ajax({
+         url: <?php echo '"' . site_url('AdminMajalis/assignDuty') . '"' ?>,
+         type: "POST",
+         data: {
+             "selectedMajalisUser" : selectedMajalisUser,
+             "selectedMajalisDuty" : selectedMajalisDuty,
+             "majalisDate"         : majalisDate
+         },
+         success: function(response){
+            ajaxGetMajalisDuties();
+            $('#myModal').modal('toggle');
+         },
+         error: function(){  
+
+            $('#myModal').modal('toggle');
+         }
+     });
+
+
+}
+
+
 function ajaxCallUserHistoryForMajalis(dutyId) {
 
    //preferenceAjaxCall(dutyId);
@@ -287,5 +342,41 @@ function deleteDuty(token) {
     }
 
 }
+
+
+
+var setAssignMajalisDutyId = function setAssignMajalisDutyId(id,stars){
+
+    $('#assignMajalisDutyId').val(id);
+    $('#majalis-duty-rating-system').rating('update', stars);
+    //$('#rating-system').val(stars);
+}
+
+function addRatingForMajalisDuty(){
+    var rating = $('#majalis-duty-rating-system').val()
+    var assignDutyId = $('#assignMajalisDutyId').val()
+
+    $.ajax({
+        url: "<?php echo site_url('AdminMajalis/addRating') ?>",
+        type: "POST",
+        data: {
+            'rating' : rating,
+            'assign_duty_id' : assignDutyId
+        },
+        success: function(response){
+
+            $('[id=dutyRating_'+assignDutyId+']').hide();
+            $( '<button id="dutyRating_'+assignDutyId+'" data-toggle="modal" onclick="setAssignMajalisDutyId('+assignDutyId+','+rating+')" data-target="#userMajalisDutyRating" type="button" class="btn btn-primary btn-block"> Edit Rating</button>' ).insertAfter('#dutyRating_'+assignDutyId );
+
+            $('#userMajalisDutyRating').modal('toggle');
+
+        },
+        error: function(){
+            
+        }
+    });
+}
+
+
 
 </script>

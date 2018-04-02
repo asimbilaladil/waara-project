@@ -124,12 +124,13 @@
                                             <th> Type</th>
                                             <th> Status</th>
                                             <th> Approval</th>   
-                                            <th> Action</th>
+                                            <?php 
+                                              if ($this->session->userdata('type') == 'Super Admin') {
+                                                echo '<th> Action</th>';  
+                                              }                                        
+                                            ?>
                                             <th style="display:none;"> </th>
-                                            
-
-
-                             
+                                                                         
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -154,10 +155,13 @@
                                                              $template =   $template .'            <a href="'. site_url('admin/edituser?uid=' . $item->user_id ) .'" ><span class="glyphicon glyphicon-pencil"></span> </a>
                                                                         <span>&nbsp;&nbsp;</span>
                                                                        <a href="deleteUser?id='.$item->user_id.'" > <span class="glyphicon glyphicon-trash"></span></a>';
-                                                           }
+                                                           
                                                            $template =   $template . '<span>&nbsp;&nbsp;</span>
                                                             <a onClick="getId(' . $item->user_id .')" data-toggle="modal" data-target="#myModal" > <span  class="glyphicon glyphicon-user"></span></a>
-                                                        </td>
+                                                        </td>';
+                                                        }
+
+                                                        $template =   $template . '
                                                         <td style="display:none;">'. ( $item->type == "Super Admin" ? "admin0admin" : ( $item->type == "JK Admin" ? "jk0jk": "usr0usr") ).' </td>
                                                        
                                                       

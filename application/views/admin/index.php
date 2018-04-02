@@ -1020,7 +1020,7 @@ table.fc-border-separate {
             </div>
         <div class="modal-body">
             <div class="form-group" style="text-align: center;">
-                <input type="text" id="assignMajalisDutyId" name="assignDuty"/>
+                <input type="hidden" id="assignMajalisDutyId" name="assignDuty"/>
                 <input id="majalis-duty-rating-system"  value="0"  name="input-1" class="rating rating-loading" data-min="0" data-max="5" data-step="1">
             </div>
         </div>

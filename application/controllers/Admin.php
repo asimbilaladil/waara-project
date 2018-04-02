@@ -138,6 +138,13 @@ class Admin extends CI_Controller {
   }
     function index()
     {   
+
+      $type = $this->session->userdata('type');
+
+      if ($type == 'Majalis') {
+        redirect('AdminMajalis');
+      }
+
         $this->breadcrumbs->push('Home', '/index');
     
        
