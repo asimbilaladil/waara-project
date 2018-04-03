@@ -932,7 +932,7 @@ table.fc-border-separate {
                                     </div>
 
 
-                                    <form action="<?php echo site_url('AdminMajalis/assignDuty') ?>" method="post" >
+<!--                                     <form action="<?php //echo site_url('AdminMajalis/assignDuty') ?>" method="post" > -->
 
                                     <input type="hidden" name="selectedMajalisUser" id="selectedMajalisUser"/>
                                     <input type="hidden" name="selectedMajalisDuty" id="selectedMajalisDuty"/>
@@ -955,13 +955,13 @@ table.fc-border-separate {
                                               </div>
                                               <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save</button>
+                                                <button type="submit" onclick="assignDuty();" class="btn btn-primary">Save</button>
                                               </div>
                                             </div>
                                           </div>
                                         </div>
 
-                                    </form>
+                                    <!-- </form> -->
 
 
 <!-- ADD DUTY MODAL START -->
@@ -1482,6 +1482,33 @@ function addDutyModal(majalisId, date) {
     $('#addDutyModal').modal('toggle');
     currentMajalisId = majalisId;
     currentDate = date
+
+}
+
+function assignDuty() {
+
+    var selectedMajalisUser = $('#selectedMajalisUser').val();
+    var selectedMajalisDuty = $('#selectedMajalisDuty').val();
+    var majalisDate = $('#majalisDate').val();
+
+      $.ajax({
+         url: <?php echo '"' . site_url('AdminMajalis/assignDuty') . '"' ?>,
+         type: "POST",
+         data: {
+             "selectedMajalisUser" : selectedMajalisUser,
+             "selectedMajalisDuty" : selectedMajalisDuty,
+             "majalisDate"         : majalisDate
+         },
+         success: function(response){
+            ajaxGetMajalisDuties();
+            $('#majalisUserHistoryModal').modal('toggle');
+         },
+         error: function(){  
+
+            $('#majalisUserHistoryModal').modal('toggle');
+         }
+     });
+
 
 }
 

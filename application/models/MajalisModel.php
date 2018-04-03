@@ -407,58 +407,31 @@ class MajalisModel extends CI_Model
 
     public function getDutiesByDate($date) {
 
-        //if($this->getSortCountByDate($date) > 0) {
-
-        $query =  $this->db->query("SELECT majalis.id as majalisId, majalis.name as majalisName, majalis_duties.id, majalis_duties.token as dutyToken, majalis_duties.name, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort, majalis_date.date
+        $query =  $this->db->query("SELECT majalis.id as majalisId, majalis.name as majalisName, majalis_duties.id, majalis_duties.token as dutyToken, majalis_duties.name, majalis_duty_assign.user_id, majalis_duty_assign.id as majalisAssignDutyId, majalis_duty_assign.id as assignId, majalis_sort.sort, majalis_date.date, majalis_duty_rating.stars
             FROM majalis
             INNER JOIN majalis_date ON majalis.id = majalis_date.majalis_id 
             LEFT JOIN majalis_duties ON majalis_duties.majalis_id = majalis.id AND majalis_duties.type = 'GLOBAL'
             LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
+            LEFT JOIN majalis_duty_rating ON majalis_duty_rating.assign_duty_id = majalis_duty_assign.id
             LEFT JOIN majalis_sort ON majalis_duties.id = majalis_sort.duty_id
-            WHERE majalis_date.date = '". $date ."' ");
+            WHERE majalis_date.date = '". $date ."' 
+            AND majalis_duties.type = 'GLOBAL' ");
 
         return $query->result();
             
-        // } else {
-
-        //     $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, majalis_date.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId
-        //         FROM majalis_date, majalis_duties
-        //         LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
-        //         WHERE majalis_duties.majalis_id = majalis_date.majalis_id
-        //         AND majalis_date.date = '". $date ."'
-        //         AND majalis_duties.type = 'GLOBAL'");
-
-        //     return $query->result();     
-
-        // }
-
-
     }
 
     public function getDutiesFromSpecficTable($date) {
 
-        //if ($this->getSortCountByDate($date) > 0) {
-
-        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token as dutyToken, majalis_duties.name, majalis_duties.majalis_id as majalisId, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort
+        $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token as dutyToken, majalis_duties.name, majalis_duties.majalis_id as majalisId, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId, majalis_sort.sort, majalis_duty_rating.stars
             FROM specfic_date_duties, majalis_duties
             LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
+            LEFT JOIN majalis_duty_rating ON majalis_duty_rating.assign_duty_id = majalis_duty_assign.id
             LEFT JOIN majalis_sort ON majalis_duties.id = majalis_sort.duty_id
             WHERE specfic_date_duties.date = '". $date ."'
             AND majalis_duties.id = specfic_date_duties.duty_id");
 
         return $query->result(); 
-
-        // } else {
-            
-        //     $query =  $this->db->query("SELECT majalis_duties.id, majalis_duties.token, majalis_duties.name, majalis_duties.majalis_id, specfic_date_duties.date, majalis_duty_assign.user_id, majalis_duty_assign.id as assignId
-        //         FROM specfic_date_duties, majalis_duties
-        //         LEFT JOIN majalis_duty_assign ON majalis_duties.id = majalis_duty_assign.duty_id
-        //         WHERE specfic_date_duties.date = '". $date ."'
-        //         AND majalis_duties.id = specfic_date_duties.duty_id");
-
-        //     return $query->result();     
-
-        // }
 
     }    
 
@@ -491,11 +464,5 @@ class MajalisModel extends CI_Model
           return false;
         }
     }
-
-    public function insertMajalisDutyRating($data) {
-        return $this->CommonModel->insertIntoTable('majalis_duty_rating', $data);
-    }
-
-
 
 }

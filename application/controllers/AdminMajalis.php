@@ -12,6 +12,7 @@ class AdminMajalis extends CI_Controller {
             $this->load->model('MajalisModel');
             $this->load->model('MajalisSortModel');
             $this->load->model('MajalisDateModel');
+            $this->load->model('MajalisDutyRating');
             $this->load->model('UserModel');
             $this->load->helper('string');
             $this->load->library('user_agent');
@@ -152,13 +153,18 @@ class AdminMajalis extends CI_Controller {
 
                     <a href="'. $editUrl .'"> <button class="btn btn-primary btn-block">Edit</button> </a
 
-                       </td><td style="width:  9%;">
+                       </td><td style="width:  9%;">';
 
-                    <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
-                onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary btn-block">Rating</button>
+                       if ($row->stars) {
 
+                           $html = $html . '<button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
+                        onclick="setAssignMajalisDutyId('. $row->assignId .','. $row->stars .')" data-target="#userMajalisDutyRating" class="btn btn-primary btn-block">Edit Rating</button>';
+                       } else {
+                            $html = $html . '<button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
+                        onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary btn-block">Rating</button>';
+                       }
 
-                    </td><td >
+                        $html = $html . '</td><td>
                     <button class="btn btn-danger " onclick="deleteDuty(`'. $row->dutyToken .'`)">DELETE</button>
 
                     </td>
@@ -255,17 +261,15 @@ class AdminMajalis extends CI_Controller {
                 </div>
                 <div class="box-body">
 
-<div class="col-sm-12" style="top: 20px;">
-                                                                <div class="col-sm-3">
-                                                                </div>
-                                                                <div class="col-sm-6">
-                                <button class="btn btn-primary btn-block " onclick="addDutyModal('. $majalis[0]->majalisId .', `'. $date .'`)">Add Waara</button>
-                                                                
-<br>
-                                                                </div>
-                                                            </div>                        
-                     
-                           
+                <div class="col-sm-12" style="top: 20px;">
+                    <div class="col-sm-3">
+                    </div>
+                    <div class="col-sm-6">
+                <button class="btn btn-primary btn-block " onclick="addDutyModal('. $majalis[0]->majalisId .', `'. $date .'`)">Add Waara</button>
+                    
+                <br>
+                    </div>
+                </div>                        
 
                     <div class="col-sm-12">
                     </br>
@@ -325,12 +329,23 @@ class AdminMajalis extends CI_Controller {
                 <td> '. $row->name .' </td>
                 <td> '. $name  .' </td>
                 <td> <a href="'. $viewUrl .'"> <button class="btn btn-primary">View</button> </a> </td>
-                <td> <a href="'. $editUrl .'"> <button class="btn btn-primary">Edit</button> </a> </td>
-                <td> <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
-                onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary">Rating</button> </td>
-                <td> <input type="hidden" id="majalisId" name="" value="'. $row->majalisId .'" /></td>
-                </tr> 
-                ';  
+                <td> <a href="'. $editUrl .'"> <button class="btn btn-primary">Edit</button> </a> </td>';
+                
+                if ($row->stars) {
+                    $html = $html . '<td> <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
+                    onclick="setAssignMajalisDutyId('. $row->assignId .','. $row->stars .')" data-target="#userMajalisDutyRating" class="btn btn-primary">Edit Rating</button> </td>
+                    <td> <input type="hidden" id="majalisId" name="" value="'. $row->majalisId .'" /></td>
+
+                    </tr>';
+
+                } else {
+                    $html = $html . '<td> <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
+                    onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary">Rating</button> </td>
+                    <td> <input type="hidden" id="majalisId" name="" value="'. $row->majalisId .'" /></td>
+
+                    </tr>';                    
+                }
+
 
             } else {
 
@@ -447,10 +462,14 @@ class AdminMajalis extends CI_Controller {
 
     function addRating() {
 
-        if($this->input->post()) {
-          
+        if ($this->input->post()) {
+
+            $adminId = $this->session->userdata('user_id');
             $rating = $this->input->post('rating', TRUE);
             $assign_duty_id = $this->input->post('assign_duty_id', TRUE);
+
+            $result = $this->MajalisDutyRating->checkRatingExist($adminId, $assign_duty_id);
+            $respone = '';
 
             $data = array(
                 'stars' => $rating,
@@ -458,7 +477,16 @@ class AdminMajalis extends CI_Controller {
                 'admin_id' =>  $this->session->userdata('user_id')
             );
 
-            $this->MajalisModel->insertMajalisDutyRating( $data);
+
+
+            if (sizeof($result) > 0) {
+                $this->MajalisDutyRating->updateById($result[0]->id, $data);
+            } else {
+                $this->MajalisDutyRating->insert($data);
+            }
+
+            json_encode($respone);
+
         }
     }
 
