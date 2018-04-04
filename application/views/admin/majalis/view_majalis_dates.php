@@ -42,10 +42,10 @@
                                         <div class="form-group">
                                             <label for="" class="col-sm-2  labelAlign">Date</label>
                                             <div class="col-sm-3">
-                                                <input type="date" name="date" class="form-control"  placeholder="" required>
+                                                <input type="date" id="date" name="date" class="form-control"  placeholder="" required>
                                             </div>
                                         <div class=" col-sm-2">
-                                                <button type="submit" class="btn btn-primary btn-block">Add</button>
+                                                <button type="button" onclick="addDate()" class="btn btn-primary btn-block">Add</button>
                                             </div>                                          
                                         </div>
 
@@ -235,6 +235,29 @@
 
         }
      
+    }
+
+    function addDate() {
+
+        var token = $('#dutyToken').val()
+        var date = $('#date').val();     
+
+        $.ajax({
+            url: "<?php echo site_url('Majalis/addMajalisDate') ?>",
+            type: "POST",
+            data: {
+                'token': token,
+                'date': date
+            },
+            success: function(response){
+
+                getYearDates();
+
+            }, error: function(){
+                
+            }
+        }); 
+
     }
 
 </script>       

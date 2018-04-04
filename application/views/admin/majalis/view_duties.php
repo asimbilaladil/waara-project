@@ -33,27 +33,27 @@
 
                             <input type="hidden" value="<?php print_r($data['majalis']->id) ?>" id="majalisId" name="majalisId"/>
 
-                            <form id="defaultForm" class="form-horizontal majalisForm" action="<?php echo site_url('majalis/addDuty') ?>" method="post" >
+                           
                                 <div class="box-body">
 
                                     <div class="form-group">
                                         <label for="" class="col-sm-2 control-label">Duty</label>
                                         <div class="col-sm-3">
-                                            <input type="text" name="duty" class="form-control"  placeholder="" required>
+                                            <input type="text" id="duty" name="duty" class="form-control"  placeholder="" required>
                                         </div>
                                         <div class=" col-sm-2">
-                                            <button type="submit" class="btn btn-primary btn-block">Add</button>
+                                            <button type="button" onclick="addDuty()" class="btn btn-primary btn-block">Add</button>
                                         </div>                                      
                                     </div>
 
-                                    <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
+                                    <input type="hidden" id="token" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
                                     <input type="hidden" id="selectedDate" name="date" value="<?php echo $this->input->get('date', TRUE); ?>"/> 
 
 
 
                                 </div>
-                            </form>
+                            
 
 
                             </br> </br>
@@ -377,6 +377,31 @@ function addRatingForMajalisDuty(){
     });
 }
 
+function addDuty() {
+
+    var token = $('#token').val();
+    var duty = $('#duty').val();
+    var date = $('#selectedDate').val();
+
+    if (duty) {
+
+        $.ajax({
+            url: "<?php echo site_url('Majalis/addDuty') ?>",
+            type: "POST",
+            data: {
+                'token' : token,
+                'duty' : duty,
+                'date' : date
+            },
+            success: function(response){
+                ajaxGetMajalisDuties();
+            },
+            error: function(){
+                
+            }
+        });     
+    }
+}
 
 
 </script>
