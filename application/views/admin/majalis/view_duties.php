@@ -394,6 +394,7 @@ function addDuty() {
                 'date' : date
             },
             success: function(response){
+                $('#duty').val("");
                 ajaxGetMajalisDuties();
             },
             error: function(){

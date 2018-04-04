@@ -158,7 +158,7 @@ class AdminMajalis extends CI_Controller {
                        if ($row->stars) {
 
                            $html = $html . '<button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
-                        onclick="setAssignMajalisDutyId('. $row->assignId .','. $row->stars .')" data-target="#userMajalisDutyRating" class="btn btn-primary btn-block">Edit Rating</button>';
+                        onclick="setAssignMajalisDutyId('. $row->assignId .','. $row->stars .')" data-target="#userMajalisDutyRating" class="btn btn-primary btn-block">Rating</button>';
                        } else {
                             $html = $html . '<button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
                         onclick="setAssignMajalisDutyId('. $row->assignId .',0)" data-target="#userMajalisDutyRating" class="btn btn-primary btn-block">Rating</button>';
@@ -181,9 +181,9 @@ class AdminMajalis extends CI_Controller {
                     <td style="display:none;">'. $row->id .'</td>
                     <td> '. $row->name .' </td>
                     <td> <input type="text" id="majalisDutyUsers_'. $key .'" name="users" class="form-control  ui-autocomplete-input"> </td>
-                    <td class="majalisId_'. $row->majalisId .'"> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForMajalis('. $row->id .')">SAVE</button> 
+                    <td class="majalisId_'. $row->majalisId .'"> <button class="btn btn-primary btn-block" onclick="ajaxCallUserHistoryForMajalis('. $row->id .')">SAVE</button> 
 
-                    &nbsp;&nbsp;
+                    </td> <td>
 
                     <button class="btn btn-danger" onclick="deleteDuty(`'. $row->dutyToken .'`)">DELETE</button> 
 
@@ -333,7 +333,7 @@ class AdminMajalis extends CI_Controller {
                 
                 if ($row->stars) {
                     $html = $html . '<td> <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
-                    onclick="setAssignMajalisDutyId('. $row->assignId .','. $row->stars .')" data-target="#userMajalisDutyRating" class="btn btn-primary">Edit Rating</button> </td>
+                    onclick="setAssignMajalisDutyId('. $row->assignId .','. $row->stars .')" data-target="#userMajalisDutyRating" class="btn btn-primary">Rating</button> </td>
                     <td> <input type="hidden" id="majalisId" name="" value="'. $row->majalisId .'" /></td>
 
                     </tr>';
