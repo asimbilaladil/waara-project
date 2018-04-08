@@ -53,6 +53,10 @@
              <li class="treeview">
                 <a href="<?php echo site_url('majalis'); ?>"><i class="fa  fa-list-alt"></i> <span>Majalis</span></a>                
             </li>
+
+             <li class="treeview">
+                <a href="<?php echo site_url('waaraRequest'); ?>"><i class="fa  fa-list-alt"></i> <span>Waara Request</span></a>                
+            </li>            
           
           
           <?php if($_SESSION['type'] == 'Super Admin'){ ?>

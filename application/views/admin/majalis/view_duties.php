@@ -184,9 +184,9 @@ function ajaxGetMajalisDuties() {
             $( "#majalisDutyTable tbody" ).sortable( {
 
                 update: function( event, ui ) {
-                    $(this).children().each(function(index) {                    
-                        $(this).find('td').last().html(index + 1);
-                    });
+                    // $(this).children().each(function(index) {                    
+                    //     $(this).find('td').last().html(index + 1);
+                    // });
 
                     var duty_id = [];
 

@@ -23,29 +23,29 @@
                              </div>
                             <!-- /.box-header -->
 
-                            <form id="defaultForm" class="form-horizontal" action="<?php echo site_url('festival/addDuty') ?>" method="post" >
+                            <div class="form-horizontal">
                                 <div class="box-body">
 
                                     <div class="form-group">
                                         <label for="" class="col-sm-2 control-label">Duty</label>
                                         <div class="col-sm-6">
-                                            <input type="text" name="duty" class="form-control"  placeholder="" required>
+                                            <input type="text" id="duty" name="duty" class="form-control"  placeholder="" required>
                                         </div>
                                     </div>
 
-                                    <input type="hidden" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
+                                    <input type="hidden" id="token" name="token" value="<?php echo $this->input->get('token', TRUE); ?>"/>
 
                                     <input type="hidden" name="date" id="date" value="<?php echo $this->input->get('date', TRUE); ?>"/> 
 
                                     <div class="form-group">
                                         <div class="col-sm-offset-2 col-sm-2">
-                                            <button type="submit" class="btn btn-primary btn-block">Add</button>
+                                            <button type="submit" onclick="addDuty()" class="btn btn-primary btn-block">Add</button>
                                         </div>
                                     </div>
 
 
                                 </div>
-                            </form>
+                            </div>
 
 
                             </br> </br>
@@ -64,7 +64,7 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <div>
-                                    <form action="<?php echo site_url('Festival/assignDuty') ?>" method="post" >
+                                    <!-- <form action="<?php echo site_url('Festival/assignDuty') ?>" method="post" > -->
                                         
                                         <div class="col-sm-12">
                                      </br>
@@ -108,13 +108,13 @@
                                               </div>
                                               <div class="modal-footer">
                                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save</button>
+                                                <button type="button" onclick="assignDuty()" class="btn btn-primary">Save</button>
                                               </div>
                                             </div>
                                           </div>
                                         </div>
 
-                                    </form>
+                                    <!-- </form> -->
 
             <!-- MAJALIS DUTY RATING START -->
             <div id="userFestivalDutyRating" class="modal fade" role="dialog">
@@ -314,5 +314,75 @@ $(function(){
 });
 
 
+function addDuty() {
+
+    var token = $('#token').val();
+    var date = $('#date').val();
+    var duty = $('#duty').val();
+    
+    $.ajax({
+        url: <?php echo "'" . site_url('Festival/addDuty') . "'" ?>,
+        type: "POST",
+        data: {
+            "duty" : duty,
+            "date" : date,
+            "token": token
+        },
+        success: function(response) {
+            ajaxGetFestivalDuties();
+        },
+        error: function(){ 
+
+        }
+    });    
+}
+
+function deleteDuty(dutyId) {
+
+    if (confirm("Are you sure you want to delete this Duty")) {
+
+        $.ajax({
+            url: <?php echo "'" . site_url('Festival/deleteFestivalDuty') . "'" ?>,
+            type: "GET",
+            data: {
+                "id" : dutyId
+            },
+            success: function(response) {
+                ajaxGetFestivalDuties();
+            },
+            error: function(){ 
+
+            }
+        });     
+    }
+
+}
+
+
+function assignDuty() {
+
+    var festivalDate = $('#festivalDate').val();
+    var selectedFestivalUser = $('#selectedFestivalUser').val();
+    var selectedFestivalDuty = $('#selectedFestivalDuty').val();
+
+    $.ajax({
+        url: <?php echo "'" . site_url('Festival/assignDuty') . "'" ?>,
+        type: "POST",
+        data: {
+            "festivalDate": festivalDate,
+            "selectedFestivalUser": selectedFestivalUser,
+            "selectedFestivalDuty": selectedFestivalDuty
+        },
+        success: function(response) {
+            $('#myModal').modal('toggle');
+            ajaxGetFestivalDuties();
+        },
+        error: function(){ 
+            $('#myModal').modal('toggle');
+        }
+    });
+
+
+}
 
 </script>    

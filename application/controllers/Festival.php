@@ -34,6 +34,57 @@ class Festival extends CI_Controller {
     }
 
 
+    function dutyDetail() {
+
+        if ($this->input->get('id') && $this->input->get('date')) {
+
+            $dutyId = $this->input->get('id');
+            $date = $this->input->get('date');
+
+            $data = $this->FestivalModel->getAssignedFestivalDutyDetail($dutyId, $date);
+
+            if ($data) {
+                $this->loadView('admin/festival/duty_detail', $data);
+            } else {
+                redirect('admin/');
+            }
+
+        } else {
+            redirect('admin/');
+        }        
+    }
+
+
+    function editAssignedDuty() {
+
+        $id = $this->input->get('id');
+
+        $result = $this->FestivalModel->getAssignedDutyUser($id);
+
+        $this->loadView('admin/festival/edit_assigned_duty', $result);      
+    }
+
+    function updateAssignedDuty() {
+        $selectedUser = $this->input->post('selectedUser');
+        $assignId = $this->input->post('assignId');
+
+        $data = array(
+            'user_id' => $selectedUser
+        );
+
+        $this->FestivalModel->updateAssignedDuty($assignId, $data);
+        redirect($this->agent->referrer());      
+    }
+
+    function deleteAssignDuty() {
+    
+        $id = $this->input->post('id');
+
+        $this->FestivalModel->deleteAssignedDuty($id);
+
+        redirect($this->agent->referrer());
+    }    
+
     /**
      * get Festival by year
      * Created By: Moiz
@@ -70,10 +121,6 @@ class Festival extends CI_Controller {
            <a href="'. $addUrl .'"> <span class="glyphicon glyphicon-add"></span> </a>
            </td>
 
-
-
-
-            
         </tr>';
       }
 
@@ -329,13 +376,36 @@ class Festival extends CI_Controller {
     function viewFestivalDates() {
 
       if($this->input->get('token')) {
-        $token = $this->input->get('token');
-        $result = $this->FestivalModel->getFestivalAndDatesByToken($token);
-        $this->loadView('admin/festival/view_festival_dates', $result);
+        $this->loadView('admin/festival/view_festival_dates', null);
       } else {
         redirect('majalis/');
       }
 
+    }
+
+    function getFestivalDates() {
+
+      if($this->input->get('token')) {
+
+        $token = $this->input->get('token');
+        $result = $this->FestivalModel->getFestivalAndDatesByToken($token);
+
+        $html = '';  
+
+        foreach ($result as $key => $item) {
+          $html = $html . '<tr>
+              <td> <a href="'. site_url('festival/viewFestivalDuties?token=' . $item->token .'&date=' . $item->date) .'">' . $item->date . '</a> </td>
+              <td> <a href="deleteFestivalDate?token=' . $item->festivalDateToken . '" onclick="return confirm(`Are you sure you want to Delele?`);" > <span class="glyphicon glyphicon-trash"></span></a>
+              &nbsp;&nbsp;
+              <a href="#" id="date_'.$key.'" name="editDate"  data-type="date" data-pk="'. $item->dateId .'" data-url="'. site_url("majalis/editFestivalDate") .'" data-title="Select date" data-value="'. $item->date .'" ><span class="glyphicon glyphicon-pencil"></span></a> 
+            
+              </td>                                    
+          </tr>';
+        }
+
+        echo $html;
+
+      }
     }
 
 
@@ -407,18 +477,19 @@ class Festival extends CI_Controller {
      * Created By: Moiz
      */
     function deleteFestivalDuty() {
-      if($this->input->get('token')) {
-        
-        $token = $this->input->get('token');
-        $duty = $this->FestivalModel->getDutyByToken($token);
-        $dutyId = $duty->id;
 
-        $this->FestivalModel->deletFestivalDutyByToken($token);
+      if ($this->input->get('id')) {
+        
+        // $token = $this->input->get('token');
+        // $duty = $this->FestivalModel->getDutyByToken($token);
+        $dutyId = $this->input->get('id');
+
+        $this->FestivalModel->deletFestivalDutyById($dutyId);
         $this->FestivalModel->deleteDutyForSpecficDate($dutyId, 'FESTIVAL');
 
-        redirect($this->agent->referrer());
+        //redirect($this->agent->referrer());
       } else {
-        redirect($this->agent->referrer());
+        //redirect($this->agent->referrer());
       }      
     }    
 
@@ -463,7 +534,7 @@ class Festival extends CI_Controller {
         });        
 
 
-        //echo json_encode($result);die;
+        // echo json_encode($result);die;
         $festivalName = '';
 
         foreach($result as $key => $row) {
@@ -478,26 +549,36 @@ class Festival extends CI_Controller {
             if ($assigned) {
 
                 $name = $row->firstName . ' ' . $row->lastName;
-                $viewUrl = site_url('Festival/viewDuty?id=' . $row->id . '&date=' . $row->date );
+                $viewUrl = site_url('Festival/dutyDetail?id=' . $row->dutyId . '&date=' . $row->date );
+                $editUrl = site_url('Festival/editAssignedDuty?id=' . $row->assignId );
+
                 $html = $html . '<tr>
-                <td style="display:none;">'. $row->id .'</td>
+                <td style="display:none;">'. $row->dutyId .'</td>
                 <td> '. strtoupper($row->duty) .' </td>
                 <td> '. $name  .' </td>
-                <td> <a href="'. $viewUrl .'"> <button class="btn btn-primary">View</button> </a> </td>
-                <td><button class="btn btn-primary">Edit</button> </td>
-                <td> <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
-                onclick="setAssignFestivalDutyId('. $row->assignId .',0)" data-target="#userFestivalDutyRating" class="btn btn-primary">Rating</button> </td>';  
+                <td> <a href="'. $viewUrl .'"> <button class="btn btn-primary">View</button> </a> 
+                <a href="'. $editUrl .'"> <button class="btn btn-primary">Edit</button> </a>
+                <button id="dutyRating_'. $row->assignId .'" data-toggle="modal" 
+                onclick="setAssignFestivalDutyId('. $row->assignId .',0)" data-target="#userFestivalDutyRating" class="btn btn-primary">Rating</button> 
+
+                <button class="btn btn-danger" onclick="deleteDuty('. $row->dutyId .')">DELETE</button>
+                </td>';  
 
             } else {
 
-                if ($row->id) {
+                if ($row->dutyId) {
 
                     $html = $html . '<tr>
-                    <td style="display:none;">'. $row->id .'</td>
+                    <td style="display:none;">'. $row->dutyId .'</td>
                     <td> '. strtoupper($row->duty) .' </td>
                     <td> <input type="text" id="festivalDutyUsers_'. $key .'" name="festivalUsers" class="form-control  ui-autocomplete-input"> </td>
-                    <td> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForFestival('. $row->id .')">SAVE</button> </td>
-                    <td> '.  $assigned .' </td>';                
+                    <td> <button class="btn btn-primary" onclick="ajaxCallUserHistoryForFestival('. $row->dutyId .')">SAVE</button> 
+
+                    <button class="btn btn-danger" onclick="deleteDuty('. $row->dutyId .')">DELETE</button>
+
+                    </td>
+
+                   <td> '.  $assigned .' </td>';                
 
                 }
 
