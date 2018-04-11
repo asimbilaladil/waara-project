@@ -138,6 +138,24 @@
 </body>
 
 
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="confirm-modal">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Do you want to request for this duty?</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="confirmModalNo()">No</button>
+        <button type="button" class="btn btn-primary" onclick="confirmModalYes()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="alert" role="alert" id="result"></div>
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.min.js"></script>
 
 <script>
@@ -205,5 +223,17 @@ function ajaxCallDuty() {
 
  //getJK();
 }    
+
+function onRequestClick() {
+    $('#confirm-modal').modal('show');
+}
+
+function confirmModalNo() {
+    $('#confirm-modal').modal('hide');    
+}
+
+function confirmModalYes() {
+    $('#confirm-modal').modal('hide');
+}
 
 </script>

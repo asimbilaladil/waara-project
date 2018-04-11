@@ -22,6 +22,10 @@ class WaaraRequestDisableDatesModel extends CI_Model {
         $this->db->delete( 'waara_request_disable_dates' , array( 'id' => $id) ); 
     }
 
+    public function deleteByDate($date) {
+        $this->db->delete( 'waara_request_disable_dates' , array( 'date' => $date) ); 
+    }    
+
     public function getAll() {
         $this->db->select('*');
         $this->db->from( 'waara_request_disable_dates' );
@@ -57,6 +61,13 @@ class WaaraRequestDisableDatesModel extends CI_Model {
         return $query->result();
 
     }
+
+    public function getAllDates() { 
+        $query = $this->db->query("SELECT id, date as start, date as end, 'Disable' as title FROM waara_request_disable_dates");
+
+        return $query->result();
+    }    
+
 
 
 }

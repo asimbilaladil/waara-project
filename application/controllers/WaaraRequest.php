@@ -9,84 +9,120 @@ class WaaraRequest extends CI_Controller {
 
     function index() {
         
-        $this->loadView('admin/waara_request/request_dates', null);
+        $this->loadView('admin/waara_request/disable_dates', null);
 
     }
 
 
-    function getDays() {
+    // function getDays() {
 
-        $date = $this->input->get('date');
+    //     $date = $this->input->get('date');
 
-        $startDate = $this->getStartedDateOfWeek($date);
-        $endDate = date('Y-m-d', strtotime('+6 days', strtotime($startDate )));
+    //     $startDate = $this->getStartedDateOfWeek($date);
+    //     $endDate = date('Y-m-d', strtotime('+6 days', strtotime($startDate )));
 
-        $days = $startDate . ',';
-        $dayName = date('l', strtotime($startDate));
+    //     $days = $startDate . ',';
+    //     $dayName = date('l', strtotime($startDate));
 
-        $result = $this->WaaraRequestDisableDatesModel->getByDate('2018-04-16');
+    //     $result = $this->WaaraRequestDisableDatesModel->getByDate('2018-04-16');
 
-        $html = '<table class="table table-striped" id="table" width="80%">
-                    <h4> Starting Date: '. $startDate .' <br> Ending Date: '. $endDate .'
-                                <tbody>
-                                    <tr>';
+    //     $html = '<table class="table table-striped" id="table" width="80%">
+    //                 <h4> Starting Date: '. $startDate .' <br> Ending Date: '. $endDate .'
+    //                             <tbody>
+    //                                 <tr>';
 
-        for ($i = 0; $i < 7; $i++) {
+    //     for ($i = 0; $i < 7; $i++) {
 
-            $disableDate = $this->WaaraRequestDisableDatesModel->getByDate($startDate);
-            $checked = '';
+    //         $disableDate = $this->WaaraRequestDisableDatesModel->getByDate($startDate);
+    //         $checked = '';
 
-            if (sizeof($disableDate) > 0) {
-                $checked = 'checked';
-            }          
+    //         if (sizeof($disableDate) > 0) {
+    //             $checked = 'checked';
+    //         }          
 
-            $html = $html . '<td> '. $dayName .' <input type="checkbox" name="day" '. $checked .' value="'. $startDate .'"/> </td>';
+    //         $html = $html . '<td> '. $dayName .' <input type="checkbox" name="day" '. $checked .' value="'. $startDate .'"/> </td>';
 
-            $startDate = date('Y-m-d', strtotime('+1 days', strtotime($startDate)));
-            $dayName = date('l', strtotime($startDate));
-            $days = $days . $startDate . ',';
+    //         $startDate = date('Y-m-d', strtotime('+1 days', strtotime($startDate)));
+    //         $dayName = date('l', strtotime($startDate));
+    //         $days = $days . $startDate . ',';
 
-        }
+    //     }
 
-        $days = rtrim($days,',');
+    //     $days = rtrim($days,',');
 
-        $html = $html . '</tr></tbody></table>';
+    //     $html = $html . '</tr></tbody></table>';
 
-        echo $html;
-    }
+    //     echo $html;
+    // }
 
 
-    function addDays() {
+    // function addDays() {
 
-        if ($this->input->post()) {
+    //     if ($this->input->post()) {
 
-            $dates = $this->input->post('dates');
-            $selectedDate = $this->input->post('selectedDate');
+    //         $dates = $this->input->post('dates');
+    //         $selectedDate = $this->input->post('selectedDate');
 
-            $startDate = $this->getStartedDateOfWeek($selectedDate);
-            // $days = '"' . $startDate . '",';
-            $days = '';
+    //         $startDate = $this->getStartedDateOfWeek($selectedDate);
+    //         // $days = '"' . $startDate . '",';
+    //         $days = '';
 
-            for ($i = 0; $i < 7; $i++) {
-                $days = $days . '"' . $startDate . '",';
-                $startDate = date('Y-m-d', strtotime('+1 days', strtotime($startDate)));
-            }
+    //         for ($i = 0; $i < 7; $i++) {
+    //             $days = $days . '"' . $startDate . '",';
+    //             $startDate = date('Y-m-d', strtotime('+1 days', strtotime($startDate)));
+    //         }
 
-            $days = rtrim($days,',');
+    //         $days = rtrim($days,',');
 
-            $this->WaaraRequestDisableDatesModel->deleteDates($days);
+    //         $this->WaaraRequestDisableDatesModel->deleteDates($days);
 
-            if ($dates) {
+    //         if ($dates) {
                 
-                foreach ($dates as $date) {
-                    $this->WaaraRequestDisableDatesModel->insert(array('date' => $date));
-                }
+    //             foreach ($dates as $date) {
+    //                 $this->WaaraRequestDisableDatesModel->insert(array('date' => $date));
+    //             }
             
-            }
-        }
+    //         }
+    //     }
 
         
 
+    // }
+
+
+    function getDaysV2() {
+        $result = $this->WaaraRequestDisableDatesModel->getAllDates();
+
+        echo json_encode($result);
+    }
+
+    function addDaysV2() {
+        $startDate = $this->input->post('startDate');
+        $endDate = $this->input->post('endDate');
+        $weekDays = $this->input->post('weekDays');
+
+        $date1 = new DateTime($startDate);
+        $date2 = new DateTime($endDate);
+
+        $diff = $date2->diff($date1)->format("%a");
+
+        $dateCursor = $startDate;
+
+        for ($i = 0; $i < $diff + 1; $i++) {
+            
+            $weekDay = date('w', strtotime($dateCursor));
+
+            $contains = in_array($weekDay, $weekDays);
+
+            if ($contains) {
+                $this->WaaraRequestDisableDatesModel->deleteByDate( $dateCursor );
+                $this->WaaraRequestDisableDatesModel->insert(array('date' => $dateCursor));
+            }
+
+            $dateCursor = date('Y-m-d', strtotime('+1 days', strtotime($dateCursor)));
+        }
+
+        echo json_encode( array('success' => 'true') );        
     }
 
 

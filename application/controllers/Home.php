@@ -100,7 +100,7 @@ class Home extends CI_Controller {
                                     <td style="display:none;"> '. $row->duty_id .' </td>
                                     <td> '. $row->name .' </td>
     
-                                    <td class="waaraDuty"> <button type="button" class="btn btn-primary btn-block"  onclick="">REQUEST</button> </td>
+                                    <td class="waaraDuty"> <button type="button" class="btn btn-primary btn-block"  onclick="onRequestClick()">REQUEST</button> </td>
                                     <td style="display:none;"></td>
                                     <td style="display:none;"></td>
                                     
