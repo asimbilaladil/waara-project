@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 //$config['base_url'] = 'http://waaranet.ca/';
-$config['base_url'] = 'http://localhost:8888/waara';
+$config['base_url'] = 'http://localhost/waara';
 /*
 |--------------------------------------------------------------------------
 | Index File

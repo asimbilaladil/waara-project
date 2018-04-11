@@ -6,6 +6,7 @@ class Login extends CI_Controller {
             $this->load->model('MajalisModel');
         error_reporting(0);
     }
+
     function index() {
         
         if($this->input->post()) {
@@ -57,7 +58,13 @@ class Login extends CI_Controller {
 
                     //redirect('admin/');
                     
-                } else{ 
+                } else if ($data['type'] == 'User') {
+
+                    $data['user_id'] = $item->user_id;
+                    $this->session->set_userdata($data);
+                    $redirect = 'home/';                    
+
+                } else {
                     $data['message'] = ' Your Email ID or Password is invalid  !!!!! ';
                     $redirect = 'login/';
                     //redirect('login/');                    
