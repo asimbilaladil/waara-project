@@ -85,9 +85,26 @@
     </div>
 </body>
 
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="confirm-modal">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Do you want to Delete this date?</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="confirmModalNo()">No</button>
+        <button type="button" class="btn btn-primary" onclick="confirmModalYes()">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/1.6.4/fullcalendar.min.js"></script>
 
 <script>
+
+var selectedId = 0;
 
 function formatDate(date) {
     var d = new Date(date),
@@ -115,12 +132,17 @@ function updateCalendar(events) {
         defaultView: 'basicWeek',
           eventClick: function (calEvent, jsEvent, view) {
 
-            console.log('eventClick', calEvent.start);
+            console.log('eventClick', calEvent.id);
+            selectedId = calEvent.id;
+
+            $('#confirm-modal').modal('show');
 
         },
         dayClick: function(date, allDay, jsEvent, view) {
 
             $('#date').val( formatDate(date) );
+
+            
 
 
         }
@@ -180,6 +202,29 @@ function addDays() {
     } else {
 
     }
+}
+
+function confirmModalNo() {
+    $('#confirm-modal').modal('hide');
+}
+
+function confirmModalYes() {
+    console.log(selectedId);
+    $.ajax({
+        url: "<?php echo site_url('WaaraRequest/deleteDate') ?>",
+        type: "POST",
+        data: {
+            'id': selectedId
+        },
+        success: function(response) {
+            selectedId = 0;
+            getDays();
+
+        }, error: function(){
+            
+        }
+    });    
+    $('#confirm-modal').modal('hide');
 }
 
 </script>

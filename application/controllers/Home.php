@@ -5,6 +5,8 @@ class Home extends CI_Controller {
         parent::__construct();
 
         $this->load->model('AdminModel');
+        $this->load->model('WaaraRequestModel');
+        $this->load->model('WaaraRequestDisableDatesModel');       
         $this->load->helper('string');
         $this->load->library('user_agent');
         $this->load->helper('custom_helper');
@@ -12,10 +14,19 @@ class Home extends CI_Controller {
     }
 
     function index() {
-        
+
+
         $this->loadView('user/home', null);
 
     }
+
+    function getCalendarData() {
+        $disableDates = $this->WaaraRequestDisableDatesModel->getAllDates();
+        $requestedWaara = $this->WaaraRequestModel->getRequestedWaara();
+        $events = array_merge($disableDates, $requestedWaara);
+        echo json_encode($events);
+
+    }   
 
 
     function loadView($view, $data) {
@@ -69,6 +80,8 @@ class Home extends CI_Controller {
 
             $count = 0;
 
+            // echo json_encode($duty); die;
+
             foreach($duty as $row) { 
 
                 $count++;
@@ -100,7 +113,7 @@ class Home extends CI_Controller {
                                     <td style="display:none;"> '. $row->duty_id .' </td>
                                     <td> '. $row->name .' </td>
     
-                                    <td class="waaraDuty"> <button type="button" class="btn btn-primary btn-block"  onclick="onRequestClick()">REQUEST</button> </td>
+                                    <td class="waaraDuty"> <button type="button" class="btn btn-primary btn-block"  onclick="onRequestClick('. $row->duty_id .')">REQUEST</button> </td>
                                     <td style="display:none;"></td>
                                     <td style="display:none;"></td>
                                     
@@ -116,5 +129,39 @@ class Home extends CI_Controller {
         echo $html;
 
     }    
+
+    function waaraRequest() {
+        $date = $this->input->post('date');
+        $dutyId = $this->input->post('dutyId');
+        $userId = $this->session->userdata('user_id');
+
+        $disableDate = $this->WaaraRequestDisableDatesModel->getByDate($date);
+
+
+
+        if (count($disableDate)) {
+            echo json_encode(array('success' => false, 'message' => 'This date is disabled for request'));
+        } else {
+
+            $requestedWaaras = $this->WaaraRequestModel->getAllRequestWaaraOnDate($dutyId, $date);
+
+            if (count($requestedWaaras) < 2) {
+                $data = array (
+                    'date' => $date,
+                    'duty_id' => $dutyId,
+                    'user_id' => $userId
+                );
+
+                $this->WaaraRequestModel->insert($data);
+
+                echo json_encode(array('success' => true, 'message' => 'Successfully requested for waara.'));
+
+            } else {
+                echo json_encode(array('success' => false, 'message' => 'Two Person already requested for this waara.'));  
+            }
+         
+        }
+
+    }
 
 }
